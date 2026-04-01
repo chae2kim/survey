@@ -238,7 +238,25 @@ body{font-family:'Noto Sans KR',sans-serif;background:#f0f2f7;min-height:100vh;d
   <div class="sec" id="s6">
     <div class="stitle">기본 정보</div>
     <div class="qb">
-      <div class="ql"><span class="qn">1</span>귀하의 주요 업무 분야는 무엇입니까?</div>
+      <div class="ql"><span class="qn">1</span>귀하의 성별은 무엇입니까?</div>
+      <div class="sg">
+        <label><input type="radio" name="qgender" value="남성"><div class="sb">남성</div></label>
+        <label><input type="radio" name="qgender" value="여성"><div class="sb">여성</div></label>
+        <label><input type="radio" name="qgender" value="응답하지 않음"><div class="sb">응답하지 않음</div></label>
+      </div>
+    </div>
+    <div class="qb">
+      <div class="ql"><span class="qn">2</span>귀하의 연령대는 어떻게 되십니까?</div>
+      <div class="sg">
+        <label><input type="radio" name="qage" value="20대"><div class="sb">20대</div></label>
+        <label><input type="radio" name="qage" value="30대"><div class="sb">30대</div></label>
+        <label><input type="radio" name="qage" value="40대"><div class="sb">40대</div></label>
+        <label><input type="radio" name="qage" value="50대"><div class="sb">50대</div></label>
+        <label><input type="radio" name="qage" value="60대 이상"><div class="sb">60대 이상</div></label>
+      </div>
+    </div>
+    <div class="qb">
+      <div class="ql"><span class="qn">3</span>귀하의 주요 업무 분야는 무엇입니까?</div>
       <div class="sg">
         <label><input type="radio" name="qfield" value="품질관리"><div class="sb">품질관리 (Quality Management)</div></label>
         <label><input type="radio" name="qfield" value="인증심사"><div class="sb">인증심사 (Certification Auditing)</div></label>
@@ -249,7 +267,22 @@ body{font-family:'Noto Sans KR',sans-serif;background:#f0f2f7;min-height:100vh;d
       <input type="text" class="oinput" id="field-etc" placeholder="업무 분야를 입력해 주세요">
     </div>
     <div class="qb">
-      <div class="ql"><span class="qn">2</span>귀하의 직급은 무엇입니까?</div>
+      <div class="ql"><span class="qn">4</span>귀하가 종사하는 산업 직군은 무엇입니까?</div>
+      <div class="sg">
+        <label><input type="radio" name="qindustry" value="제조업(자동차·전자·기계)"><div class="sb">제조업 (자동차, 전자, 기계 등)</div></label>
+        <label><input type="radio" name="qindustry" value="제약·바이오·의료기기"><div class="sb">제약·바이오·의료기기</div></label>
+        <label><input type="radio" name="qindustry" value="식품·음료"><div class="sb">식품·음료</div></label>
+        <label><input type="radio" name="qindustry" value="화학·석유화학"><div class="sb">화학·석유화학</div></label>
+        <label><input type="radio" name="qindustry" value="건설·엔지니어링"><div class="sb">건설·엔지니어링</div></label>
+        <label><input type="radio" name="qindustry" value="IT·소프트웨어"><div class="sb">IT·소프트웨어</div></label>
+        <label><input type="radio" name="qindustry" value="공공기관·정부"><div class="sb">공공기관·정부</div></label>
+        <label><input type="radio" name="qindustry" value="서비스업"><div class="sb">서비스업</div></label>
+        <label><input type="radio" name="qindustry" value="기타"><div class="sb">기타</div></label>
+      </div>
+      <input type="text" class="oinput" id="industry-etc" placeholder="산업 직군을 입력해 주세요">
+    </div>
+    <div class="qb">
+      <div class="ql"><span class="qn">5</span>귀하의 직급은 무엇입니까?</div>
       <div class="sg">
         <label><input type="radio" name="qrank" value="사원"><div class="sb">사원</div></label>
         <label><input type="radio" name="qrank" value="주임"><div class="sb">주임</div></label>
@@ -263,17 +296,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:#f0f2f7;min-height:100vh;d
       <input type="text" class="oinput" id="rank-etc" placeholder="직급을 입력해 주세요">
     </div>
     <div class="qb">
-      <div class="ql"><span class="qn">3</span>귀하의 최종 학력은 무엇입니까?</div>
-      <div class="sg">
-        <label><input type="radio" name="qedu" value="고졸"><div class="sb">고등학교 졸업</div></label>
-        <label><input type="radio" name="qedu" value="초대졸"><div class="sb">전문대학 졸업 (2~3년제)</div></label>
-        <label><input type="radio" name="qedu" value="대졸"><div class="sb">대학교 졸업 (4년제)</div></label>
-        <label><input type="radio" name="qedu" value="석사"><div class="sb">석사 졸업 / 재학</div></label>
-        <label><input type="radio" name="qedu" value="박사"><div class="sb">박사 졸업 / 재학</div></label>
-      </div>
-    </div>
-    <div class="qb">
-      <div class="ql"><span class="qn">4</span>관련 업무 경력은 몇 년입니까?</div>
+      <div class="ql"><span class="qn">6</span>관련 업무 경력은 몇 년입니까?</div>
       <div class="sg">
         <label><input type="radio" name="qexp" value="1년 미만"><div class="sb">1년 미만</div></label>
         <label><input type="radio" name="qexp" value="1~3년"><div class="sb">1~3년</div></label>
@@ -283,7 +306,17 @@ body{font-family:'Noto Sans KR',sans-serif;background:#f0f2f7;min-height:100vh;d
       </div>
     </div>
     <div class="qb">
-      <div class="ql"><span class="qn">5</span>AI 도구 사용 경험이 있으십니까? <span style="font-size:12px;color:#888;font-weight:400;">(예: ChatGPT, Gemini, Claude 등)</span></div>
+      <div class="ql"><span class="qn">7</span>귀하의 최종 학력은 무엇입니까?</div>
+      <div class="sg">
+        <label><input type="radio" name="qedu" value="고졸"><div class="sb">고등학교 졸업</div></label>
+        <label><input type="radio" name="qedu" value="초대졸"><div class="sb">전문대학 졸업 (2~3년제)</div></label>
+        <label><input type="radio" name="qedu" value="대졸"><div class="sb">대학교 졸업 (4년제)</div></label>
+        <label><input type="radio" name="qedu" value="석사"><div class="sb">석사 졸업 / 재학</div></label>
+        <label><input type="radio" name="qedu" value="박사"><div class="sb">박사 졸업 / 재학</div></label>
+      </div>
+    </div>
+    <div class="qb">
+      <div class="ql"><span class="qn">8</span>AI 도구 사용 경험이 있으십니까? <span style="font-size:12px;color:#888;font-weight:400;">(예: ChatGPT, Gemini, Claude 등)</span></div>
       <div class="sg">
         <label><input type="radio" name="qai" value="없음"><div class="sb">없음</div></label>
         <label><input type="radio" name="qai" value="가끔 사용"><div class="sb">가끔 사용 (월 1~3회 수준)</div></label>
@@ -503,7 +536,7 @@ function validate(){
   if(cur===3)return expItems.every(function(i){return document.querySelector('input[name="'+i.id+'"]:checked');});
   if(cur===4)return s4Items.every(function(i){return document.querySelector('input[name="'+i.id+'"]:checked');});
   if(cur===5)return s5Items.every(function(i){return document.querySelector('input[name="'+i.id+'"]:checked');});
-  if(cur===6)return['qfield','qrank','qedu','qexp','qai'].every(function(n){return document.querySelector('input[name="'+n+'"]:checked');});
+  if(cur===6)return['qgender','qage','qfield','qindustry','qrank','qexp','qedu','qai'].every(function(n){return document.querySelector('input[name="'+n+'"]:checked');});
   return true;
 }
 
@@ -511,7 +544,7 @@ function gv(name){
   var el=document.querySelector('input[name="'+name+'"]:checked');
   if(!el)return'';
   if(el.value==='기타'){
-    var m={'qfield':'field-etc','qrank':'rank-etc'};
+    var m={'qfield':'field-etc','qrank':'rank-etc','qindustry':'industry-etc'};
     if(m[name]){var t=document.getElementById(m[name]).value.trim();return t?'기타: '+t:'기타';}
   }
   return el.value;
@@ -524,7 +557,9 @@ function collectData(){
     MC1:(document.querySelector('input[name="MC1"]:checked')||{}).value||'',
     MC2:(document.querySelector('input[name="MC2"]:checked')||{}).value||'',
     MC3:(document.querySelector('input[name="MC3"]:checked')||{}).value||'',
-    field:gv('qfield'),rank:gv('qrank'),
+    gender:(document.querySelector('input[name="qgender"]:checked')||{}).value||'',
+    age:(document.querySelector('input[name="qage"]:checked')||{}).value||'',
+    field:gv('qfield'),industry:gv('qindustry'),rank:gv('qrank'),
     education:(document.querySelector('input[name="qedu"]:checked')||{}).value||'',
     experience:(document.querySelector('input[name="qexp"]:checked')||{}).value||'',
     ai_usage:(document.querySelector('input[name="qai"]:checked')||{}).value||'',
