@@ -12,7 +12,7 @@ body { font-family: 'Noto Sans KR', sans-serif; background: #f0f2f7; min-height:
 .header-band { background: #1a2744; padding: 32px 24px 28px; }
 .header-band .tag { font-size: 11px; letter-spacing: .13em; text-transform: uppercase; color: #7a9bcc; margin-bottom: 12px; }
 .header-band h1 { font-size: 17px; font-weight: 500; line-height: 1.6; color: #fff; }
-.header-band .sub { font-size: 13px; color: #8fa8d8; margin-top: 10px; line-height: 1.6; }
+.header-band .sub { font-size: 13px; color: #8fa8d8; margin-top: 10px; line-height: 1.7; }
 .progress-bar-wrap { background: #1a2744; padding: 0 24px 22px; }
 .progress-track { height: 3px; background: rgba(255,255,255,.15); border-radius: 2px; overflow: hidden; }
 .progress-fill { height: 100%; background: #5a9cf5; border-radius: 2px; transition: width .4s ease; }
@@ -37,6 +37,8 @@ body { font-family: 'Noto Sans KR', sans-serif; background: #f0f2f7; min-height:
 .select-box { display: block; border: 1px solid #e5e7eb; border-radius: 10px; padding: 13px 16px; font-size: 14px; color: #333; line-height: 1.5; background: #f9fafb; transition: all .15s; font-family: 'Noto Sans KR', sans-serif; }
 .select-group input[type="radio"]:checked ~ .select-box { border-color: #1a2744; background: #eef2fb; color: #1a2744; font-weight: 500; }
 .select-box:hover { border-color: #1a2744; }
+.other-input { display: none; margin-top: 8px; width: 100%; padding: 12px 14px; border: 1px solid #e5e7eb; border-radius: 10px; font-size: 14px; font-family: 'Noto Sans KR', sans-serif; background: #f9fafb; color: #333; outline: none; }
+.other-input:focus { border-color: #1a2744; }
 .consent-box { background: #f7f8fc; border: 1px solid #e5e7eb; border-radius: 12px; padding: 18px; font-size: 13px; color: #555; line-height: 1.8; margin-bottom: 20px; }
 .consent-box strong { color: #1a2744; font-weight: 700; }
 .consent-check { display: flex; align-items: flex-start; gap: 12px; cursor: pointer; margin-bottom: 8px; }
@@ -47,40 +49,44 @@ body { font-family: 'Noto Sans KR', sans-serif; background: #f0f2f7; min-height:
 .consent-text { font-size: 13.5px; color: #333; line-height: 1.6; padding-top: 2px; }
 
 /* 자격 확인 */
-.qualify-card { background: #f7f8fc; border: 1px solid #e0e2ea; border-radius: 14px; padding: 20px; margin-bottom: 20px; }
-.qualify-card .qc-title { font-size: 14px; font-weight: 700; color: #1a2744; margin-bottom: 14px; line-height: 1.6; }
-.qualify-card ul { padding-left: 18px; margin-bottom: 16px; }
-.qualify-card ul li { font-size: 13.5px; color: #444; line-height: 1.8; margin-bottom: 4px; }
-.yn-row { display: flex; gap: 10px; }
-.yn-row label { flex: 1; cursor: pointer; }
-.yn-row input[type="radio"] { display: none; }
-.yn-btn { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 14px; border-radius: 10px; border: 1.5px solid #e5e7eb; font-size: 15px; font-weight: 700; background: #f9fafb; transition: all .15s; font-family: 'Noto Sans KR', sans-serif; }
-.yn-btn.yes { color: #1a2744; }
-.yn-btn.no  { color: #888; }
-.yn-row input:checked + .yn-btn.yes { background: #1a2744; color: #fff; border-color: #1a2744; }
-.yn-row input:checked + .yn-btn.no  { background: #fee2e2; color: #991b1b; border-color: #fca5a5; }
+.eligibility-card { background: #f0f4ff; border: 1px solid #c7d7f8; border-radius: 14px; padding: 20px; margin-bottom: 20px; }
+.eligibility-card .ec-title { font-size: 14px; font-weight: 700; color: #1a2744; margin-bottom: 12px; line-height: 1.5; }
+.check-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; }
+.check-item { display: flex; align-items: flex-start; gap: 10px; font-size: 13.5px; color: #333; line-height: 1.6; }
+.check-item::before { content:'✓'; color: #3b6de8; font-weight: 700; margin-top: 1px; flex-shrink: 0; }
+.yn-group { display: flex; gap: 10px; }
+.yn-label { flex: 1; cursor: pointer; }
+.yn-label input[type="radio"] { display: none; }
+.yn-btn { display: flex; align-items: center; justify-content: center; padding: 14px; border-radius: 10px; border: 1.5px solid #e5e7eb; font-size: 15px; font-weight: 700; background: #f9fafb; color: #666; transition: all .15s; }
+.yn-label input:checked + .yn-btn.yes { background: #1a2744; color: #fff; border-color: #1a2744; }
+.yn-label input:checked + .yn-btn.no { background: #fee2e2; color: #991b1b; border-color: #fca5a5; }
 
 /* 종료 화면 */
-.disqualify-wrap { display: none; padding: 60px 24px 40px; text-align: center; }
-.disqualify-icon { width: 72px; height: 72px; border-radius: 50%; background: #f7f8fc; margin: 0 auto 24px; display: flex; align-items: center; justify-content: center; font-size: 32px; }
-.disqualify-wrap h2 { font-size: 20px; font-weight: 700; color: #1a2744; margin-bottom: 12px; }
-.disqualify-wrap p { font-size: 14px; color: #666; line-height: 1.8; }
+.end-wrap { display: none; padding: 60px 24px 40px; text-align: center; }
+.end-icon { width: 72px; height: 72px; border-radius: 50%; background: #fef3c7; margin: 0 auto 24px; display: flex; align-items: center; justify-content: center; font-size: 32px; }
+.end-wrap h2 { font-size: 20px; font-weight: 700; color: #1a2744; margin-bottom: 12px; }
+.end-wrap p { font-size: 14px; color: #666; line-height: 1.8; }
 
-.situation-card { background: #1a2744; border-radius: 14px; padding: 22px; margin-bottom: 20px; }
-.situation-card .sc-tag { font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: #7a9bcc; margin-bottom: 10px; }
-.situation-card .sc-text { font-size: 13.5px; line-height: 1.85; color: #dde6f5; }
-.situation-card .sc-text strong { color: #fff; }
-.badge-high { display: inline-block; background: #c0392b; color: #fff; font-size: 11px; font-weight: 700; padding: 4px 12px; border-radius: 20px; margin-bottom: 12px; }
-.badge-low  { display: inline-block; background: #27ae60; color: #fff; font-size: 11px; font-weight: 700; padding: 4px 12px; border-radius: 20px; margin-bottom: 12px; }
+/* 상황 카드 - 밝은 버전 */
+.situation-card { background: #f0f4ff; border: 1.5px solid #c7d7f8; border-radius: 14px; padding: 22px; margin-bottom: 20px; }
+.situation-card .sc-tag { font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: #3b6de8; margin-bottom: 10px; font-weight: 700; }
+.situation-card .sc-text { font-size: 13.5px; line-height: 1.85; color: #2c3e6b; }
+.situation-card .sc-text strong { color: #1a2744; }
+.situation-card .sc-badge { display: inline-block; font-size: 11px; font-weight: 700; padding: 4px 12px; border-radius: 20px; margin-bottom: 12px; }
+.badge-high { background: #fee2e2; color: #991b1b; }
+.badge-low  { background: #dcfce7; color: #166534; }
+
 .check-intro { background: #fffbeb; border: 1px solid #fde68a; border-radius: 10px; padding: 14px 16px; font-size: 13px; color: #78350f; line-height: 1.7; margin-bottom: 20px; }
+
+/* AI 채팅 UI */
 .ai-ui-wrap { background: #f3f4f8; border-radius: 16px; overflow: hidden; margin-bottom: 24px; border: 1px solid #e0e2ea; }
 .ai-ui-topbar { background: #1a2744; padding: 12px 16px; display: flex; align-items: center; gap: 8px; }
 .dot { width: 9px; height: 9px; border-radius: 50%; }
-.dot-r { background: #ff5f57; } .dot-y { background: #febc2e; } .dot-g { background: #28c840; }
+.dot-r{background:#ff5f57;}.dot-y{background:#febc2e;}.dot-g{background:#28c840;}
 .app-name { font-size: 12px; color: #8fa8d8; margin-left: 4px; }
 .status-dot { width: 7px; height: 7px; border-radius: 50%; background: #28c840; margin-left: auto; }
 .status-text { font-size: 11px; color: #5a9cf5; }
-.chat-messages { padding: 16px; min-height: 200px; display: flex; flex-direction: column; gap: 10px; }
+.chat-messages { padding: 16px; min-height: 180px; display: flex; flex-direction: column; gap: 10px; }
 .chat-row { display: flex; align-items: flex-end; gap: 8px; opacity: 0; transform: translateY(8px); transition: all .35s ease; }
 .chat-row.show { opacity: 1; transform: translateY(0); }
 .chat-row.user-row { flex-direction: row-reverse; }
@@ -109,30 +115,27 @@ body { font-family: 'Noto Sans KR', sans-serif; background: #f0f2f7; min-height:
 .ra-secondary { background: #f3f4f8; color: #555; border: 1px solid #e0e2ea; }
 .typing-dots { display: flex; gap: 4px; align-items: center; padding: 4px 2px; }
 .typing-dots span { width: 7px; height: 7px; border-radius: 50%; background: #bbb; animation: blink 1.2s infinite ease-in-out; }
-.typing-dots span:nth-child(2) { animation-delay: .2s; }
-.typing-dots span:nth-child(3) { animation-delay: .4s; }
+.typing-dots span:nth-child(2){animation-delay:.2s;}.typing-dots span:nth-child(3){animation-delay:.4s;}
 @keyframes blink { 0%,80%,100%{opacity:.25;transform:scale(.9);}40%{opacity:1;transform:scale(1);} }
 .scenario-progress { background: #f7f8fc; border: 1px solid #e0e2ea; border-radius: 10px; padding: 12px 14px; font-size: 12.5px; color: #555; line-height: 1.7; margin-bottom: 20px; }
 .scenario-progress strong { color: #1a2744; }
 
 /* 개인정보 */
-.privacy-optional { background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 10px; padding: 12px 16px; font-size: 12.5px; color: #14532d; line-height: 1.7; margin-bottom: 20px; }
-.input-field { width: 100%; padding: 13px 16px; border: 1px solid #e5e7eb; border-radius: 10px; font-size: 14px; background: #f9fafb; color: #333; outline: none; font-family: 'Noto Sans KR', sans-serif; transition: border .15s; margin-top: 8px; }
-.input-field:focus { border-color: #1a2744; background: #fff; }
-.privacy-consent-row { display: flex; gap: 10px; margin-bottom: 20px; }
-.privacy-consent-row label { flex: 1; cursor: pointer; }
-.privacy-consent-row input[type="radio"] { display: none; }
-.pc-btn { display: flex; align-items: center; justify-content: center; padding: 13px; border-radius: 10px; border: 1px solid #e5e7eb; font-size: 14px; font-weight: 700; background: #f9fafb; transition: all .15s; font-family: 'Noto Sans KR', sans-serif; color: #555; }
-.privacy-consent-row input:checked + .pc-btn { background: #1a2744; color: #fff; border-color: #1a2744; }
+.privacy-box { background: #f7f8fc; border: 1px solid #e5e7eb; border-radius: 12px; padding: 16px; font-size: 13px; color: #555; line-height: 1.8; margin-bottom: 20px; }
+.privacy-box strong { color: #1a2744; font-weight: 700; }
+.optional-tag { display: inline-block; font-size: 11px; background: #e0e7ff; color: #3730a3; padding: 2px 8px; border-radius: 20px; margin-left: 6px; font-weight: 700; vertical-align: middle; }
+.text-input { width: 100%; padding: 13px 14px; border: 1px solid #e5e7eb; border-radius: 10px; font-size: 14px; font-family: 'Noto Sans KR', sans-serif; background: #f9fafb; color: #333; outline: none; margin-top: 8px; transition: border .15s; }
+.text-input:focus { border-color: #1a2744; }
 
+/* Nav */
 .nav-row { display: flex; gap: 10px; padding: 20px 24px 32px; }
 .btn-prev { flex: 1; padding: 15px; border: 1px solid #ddd; border-radius: 10px; background: #fff; color: #666; font-size: 14px; font-family: 'Noto Sans KR', sans-serif; cursor: pointer; }
 .btn-next { flex: 2; padding: 15px; border: none; border-radius: 10px; background: #1a2744; color: #fff; font-size: 14px; font-weight: 700; font-family: 'Noto Sans KR', sans-serif; cursor: pointer; transition: opacity .2s; }
-.btn-next:hover { opacity: .88; } .btn-next:active { opacity: .75; } .btn-next:disabled { opacity: .4; cursor: not-allowed; }
+.btn-next:hover{opacity:.88;}.btn-next:active{opacity:.75;}.btn-next:disabled{opacity:.4;cursor:not-allowed;}
 .loading-overlay { display: none; position: fixed; inset: 0; background: rgba(26,39,68,.55); z-index: 999; align-items: center; justify-content: center; flex-direction: column; gap: 16px; }
 .loading-overlay.show { display: flex; }
 .spinner { width: 40px; height: 40px; border: 3px solid rgba(255,255,255,.3); border-top-color: #fff; border-radius: 50%; animation: spin .8s linear infinite; }
-@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes spin{to{transform:rotate(360deg);}}
 .loading-text { color: #fff; font-size: 14px; }
 .thank-wrap { display: none; padding: 60px 24px 40px; text-align: center; }
 .thank-icon { width: 76px; height: 76px; border-radius: 50%; background: #eef2fb; margin: 0 auto 24px; display: flex; align-items: center; justify-content: center; }
@@ -140,10 +143,9 @@ body { font-family: 'Noto Sans KR', sans-serif; background: #f0f2f7; min-height:
 .thank-wrap p { font-size: 14px; color: #666; line-height: 1.8; margin-bottom: 4px; }
 .thank-detail { margin-top: 28px; background: #f7f8fc; border-radius: 12px; padding: 18px; text-align: left; }
 .td-row { display: flex; justify-content: space-between; align-items: center; font-size: 13px; padding: 8px 0; border-bottom: 1px solid #eee; }
-.td-row:last-child { border-bottom: none; }
-.td-key { color: #888; } .td-val { color: #1a2744; font-weight: 700; }
+.td-row:last-child{border-bottom:none;}.td-key{color:#888;}.td-val{color:#1a2744;font-weight:700;}
 .error-msg { display: none; background: #fff3f3; border: 1px solid #ffcdd2; border-radius: 8px; padding: 12px 16px; font-size: 13px; color: #c0392b; margin: 0 24px 16px; line-height: 1.5; }
-.error-msg.show { display: block; }
+.error-msg.show{display:block;}
 </style>
 </head>
 <body>
@@ -154,16 +156,20 @@ body { font-family: 'Noto Sans KR', sans-serif; background: #f0f2f7; min-height:
 
 <div class="survey-wrap">
   <div class="header-band">
-    <div class="tag">경희대학교 석사학위 논문 연구</div>
+    <div class="tag">경희대학교 경영대학원 석사학위 논문 연구</div>
     <h1>AI 문서 지원 도구에 대한<br>인식 및 수용 연구</h1>
-    <div class="sub">품질·인증 전문가를 대상으로 한 설문조사입니다.</div>
+    <div class="sub">
+      연구자: 경희대학교 경영대학원 AI비즈니스 전공 김채이<br>
+      연락처: codl_121@khu.ac.kr<br>
+      지도교수: 경희대학교 경영대학원 김상균 교수
+    </div>
   </div>
   <div class="progress-bar-wrap">
     <div class="progress-track"><div class="progress-fill" id="progress" style="width:0%"></div></div>
     <div class="progress-meta"><span id="prog-text">시작하기</span><span id="prog-pct">0%</span></div>
   </div>
 
-  <!-- 섹션 0: 연구 참여 동의 -->
+  <!-- 섹션 0: 연구 동의 -->
   <div class="section active" id="sec-0">
     <div class="section-title">연구 참여 동의</div>
     <div class="consent-box">
@@ -173,7 +179,9 @@ body { font-family: 'Noto Sans KR', sans-serif; background: #f0f2f7; min-height:
       • 소요 시간: 약 10~15분<br>
       • 응답은 익명으로 처리되며 연구 목적 외에는 사용되지 않습니다.<br>
       • 참여 도중 언제든지 중단하실 수 있습니다.<br><br>
-      <strong>연구자</strong>: 경희대학교 대학원 &nbsp;|&nbsp; <strong>IRB 승인</strong>: 지도교수 승인 하 진행
+      <strong>연구자</strong>: 경희대학교 경영대학원 AI비즈니스 전공 김채이<br>
+      <strong>지도교수</strong>: 경희대학교 경영대학원 김상균 교수<br>
+      <strong>연락처</strong>: codl_121@khu.ac.kr
     </div>
     <label class="consent-check">
       <input type="checkbox" id="consent-chk">
@@ -185,27 +193,19 @@ body { font-family: 'Noto Sans KR', sans-serif; background: #f0f2f7; min-height:
   <!-- 섹션 1: 자격 확인 -->
   <div class="section" id="sec-1">
     <div class="section-title">참여 자격 확인</div>
-    <div class="qualify-card">
-      <div class="qc-title">최근 1년간 아래 사항에 해당되는 업무를 수행한 적이 있으십니까?</div>
-      <ul>
-        <li>ISO 9001 등 품질경영시스템 인증 관련 업무</li>
-        <li>내부심사 또는 외부 인증심사 참여·준비</li>
-        <li>품질 문서 작성, 검토, 관리 업무</li>
-        <li>규제 준수(Compliance) 또는 공정 품질관리 업무</li>
-      </ul>
-      <div class="yn-row">
-        <label><input type="radio" name="qualify" value="yes"><div class="yn-btn yes">✔ 예, 해당됩니다</div></label>
-        <label><input type="radio" name="qualify" value="no"><div class="yn-btn no">✘ 아니오</div></label>
+    <div class="eligibility-card">
+      <div class="ec-title">최근 1년간 아래 항목 중 하나라도 해당되는 업무를 수행하신 적이 있으십니까?</div>
+      <div class="check-list">
+        <div class="check-item">품질경영시스템(ISO 9001 등) 관련 문서 작성·검토·관리</div>
+        <div class="check-item">인증 심사 준비, 대응 또는 심사원으로서의 활동</div>
+        <div class="check-item">내부심사, 공정관리, 품질 개선 업무 수행</div>
+        <div class="check-item">규제·컴플라이언스 문서 검토 및 준수 업무</div>
+      </div>
+      <div class="yn-group">
+        <label class="yn-label"><input type="radio" name="eligible" value="yes"><div class="yn-btn yes">예, 해당됩니다</div></label>
+        <label class="yn-label"><input type="radio" name="eligible" value="no"><div class="yn-btn no">아니오</div></label>
       </div>
     </div>
-  </div>
-
-  <!-- 종료 화면 (자격 미달) -->
-  <div class="disqualify-wrap" id="disqualify-wrap">
-    <div class="disqualify-icon">🙏</div>
-    <h2>설문이 종료되었습니다</h2>
-    <p>본 연구는 품질·인증·심사 관련<br>업무 경험자를 대상으로 합니다.</p>
-    <p style="margin-top:12px;">참여해 주셔서 진심으로 감사드립니다.</p>
   </div>
 
   <!-- 섹션 2: 상황 제시 + 조작 점검 -->
@@ -260,6 +260,7 @@ body { font-family: 'Noto Sans KR', sans-serif; background: #f0f2f7; min-height:
   <!-- 섹션 6: 인구통계 -->
   <div class="section" id="sec-6">
     <div class="section-title">기본 정보</div>
+
     <div class="q-block">
       <div class="q-label"><span class="q-num">1</span>귀하의 주요 업무 분야는 무엇입니까?</div>
       <div class="select-group">
@@ -267,11 +268,39 @@ body { font-family: 'Noto Sans KR', sans-serif; background: #f0f2f7; min-height:
         <label><input type="radio" name="q_field" value="인증심사"><div class="select-box">인증심사 (Certification Auditing)</div></label>
         <label><input type="radio" name="q_field" value="규제준수"><div class="select-box">규제준수 (Regulatory Compliance)</div></label>
         <label><input type="radio" name="q_field" value="공정관리"><div class="select-box">공정관리 (Process Management)</div></label>
-        <label><input type="radio" name="q_field" value="기타"><div class="select-box">기타</div></label>
+        <label><input type="radio" name="q_field" value="기타" id="field-other-radio"><div class="select-box">기타</div></label>
+      </div>
+      <input type="text" class="other-input" id="field-other-input" placeholder="업무 분야를 입력해 주세요">
+    </div>
+
+    <div class="q-block">
+      <div class="q-label"><span class="q-num">2</span>귀하의 직급은 무엇입니까?</div>
+      <div class="select-group">
+        <label><input type="radio" name="q_rank" value="사원"><div class="select-box">사원</div></label>
+        <label><input type="radio" name="q_rank" value="주임"><div class="select-box">주임</div></label>
+        <label><input type="radio" name="q_rank" value="대리"><div class="select-box">대리</div></label>
+        <label><input type="radio" name="q_rank" value="과장"><div class="select-box">과장</div></label>
+        <label><input type="radio" name="q_rank" value="차장"><div class="select-box">차장</div></label>
+        <label><input type="radio" name="q_rank" value="부장"><div class="select-box">부장</div></label>
+        <label><input type="radio" name="q_rank" value="임원"><div class="select-box">임원 (이사·상무·전무·부사장 등)</div></label>
+        <label><input type="radio" name="q_rank" value="기타" id="rank-other-radio"><div class="select-box">기타</div></label>
+      </div>
+      <input type="text" class="other-input" id="rank-other-input" placeholder="직급을 입력해 주세요">
+    </div>
+
+    <div class="q-block">
+      <div class="q-label"><span class="q-num">3</span>귀하의 최종 학력은 무엇입니까?</div>
+      <div class="select-group">
+        <label><input type="radio" name="q_edu" value="고졸"><div class="select-box">고등학교 졸업</div></label>
+        <label><input type="radio" name="q_edu" value="초대졸"><div class="select-box">전문대학 졸업 (2~3년제)</div></label>
+        <label><input type="radio" name="q_edu" value="대졸"><div class="select-box">대학교 졸업 (4년제)</div></label>
+        <label><input type="radio" name="q_edu" value="석사"><div class="select-box">석사 졸업 / 재학</div></label>
+        <label><input type="radio" name="q_edu" value="박사"><div class="select-box">박사 졸업 / 재학</div></label>
       </div>
     </div>
+
     <div class="q-block">
-      <div class="q-label"><span class="q-num">2</span>관련 업무 경력은 몇 년입니까?</div>
+      <div class="q-label"><span class="q-num">4</span>관련 업무 경력은 몇 년입니까?</div>
       <div class="select-group">
         <label><input type="radio" name="q_exp" value="1년 미만"><div class="select-box">1년 미만</div></label>
         <label><input type="radio" name="q_exp" value="1~3년"><div class="select-box">1~3년</div></label>
@@ -280,8 +309,9 @@ body { font-family: 'Noto Sans KR', sans-serif; background: #f0f2f7; min-height:
         <label><input type="radio" name="q_exp" value="16년 이상"><div class="select-box">16년 이상</div></label>
       </div>
     </div>
+
     <div class="q-block">
-      <div class="q-label"><span class="q-num">3</span>AI 도구 사용 경험이 있으십니까?</div>
+      <div class="q-label"><span class="q-num">5</span>AI 도구 사용 경험이 있으십니까?</div>
       <div class="select-group">
         <label><input type="radio" name="q_ai" value="없음"><div class="select-box">없음</div></label>
         <label><input type="radio" name="q_ai" value="가끔 사용"><div class="select-box">가끔 사용 (월 1회 미만)</div></label>
@@ -291,29 +321,29 @@ body { font-family: 'Noto Sans KR', sans-serif; background: #f0f2f7; min-height:
     </div>
   </div>
 
-  <!-- 섹션 7: 개인정보 동의 (선택) -->
+  <!-- 섹션 7: 개인정보 (선택) -->
   <div class="section" id="sec-7">
-    <div class="section-title">개인정보 활용 동의 (선택)</div>
-    <div class="privacy-optional">
-      ✅ 이 섹션은 <strong>선택 사항</strong>입니다. 응답하지 않으셔도 설문 제출에 문제가 없습니다.<br><br>
-      추후 연구 결과 공유 또는 소정의 감사 표시를 위해 연락처를 수집할 수 있습니다.<br>
-      수집된 정보는 해당 목적 외에는 사용되지 않습니다.
+    <div class="section-title">개인정보 수집 동의 <span class="optional-tag">선택</span></div>
+    <div class="privacy-box">
+      <strong>수집 목적</strong>: 연구 결과 회신 및 감사 연락<br>
+      <strong>수집 항목</strong>: 이름, 연락처 (이메일 또는 전화번호)<br>
+      <strong>보유 기간</strong>: 연구 종료 후 즉시 파기<br>
+      <strong>제공 거부 권리</strong>: 동의하지 않으셔도 설문 제출이 가능합니다.<br><br>
+      🎁 <strong>개인정보 동의를 해주신 분께는 추첨을 통하여 스타벅스 기프트카드를 보내드립니다!</strong><br><br>
+      위 내용에 동의하고 개인정보를 제공하시겠습니까?
     </div>
-    <div class="q-block">
-      <div class="q-label">개인정보 수집·활용에 동의하십니까?</div>
-      <div class="privacy-consent-row">
-        <label><input type="radio" name="priv_consent" value="동의"><div class="pc-btn">동의합니다</div></label>
-        <label><input type="radio" name="priv_consent" value="미동의"><div class="pc-btn">동의하지 않습니다</div></label>
-      </div>
+    <div class="yn-group" style="margin-bottom:20px;">
+      <label class="yn-label"><input type="radio" name="privacy_agree" value="yes" id="privacy-yes"><div class="yn-btn yes">동의합니다</div></label>
+      <label class="yn-label"><input type="radio" name="privacy_agree" value="no" id="privacy-no"><div class="yn-btn no">동의하지 않습니다</div></label>
     </div>
-    <div id="priv-fields" style="display:none;">
+    <div id="personal-info-fields" style="display:none;">
       <div class="q-block">
-        <div class="q-label">성함 (선택)</div>
-        <input type="text" class="input-field" id="priv-name" placeholder="홍길동">
+        <div class="q-label">이름</div>
+        <input type="text" class="text-input" id="input-name" placeholder="성함을 입력해 주세요">
       </div>
       <div class="q-block">
-        <div class="q-label">연락처 (선택)</div>
-        <input type="text" class="input-field" id="priv-contact" placeholder="010-0000-0000 또는 이메일">
+        <div class="q-label">연락처 (이메일 또는 전화번호)</div>
+        <input type="text" class="text-input" id="input-contact" placeholder="이메일 또는 전화번호를 입력해 주세요">
       </div>
     </div>
   </div>
@@ -324,7 +354,15 @@ body { font-family: 'Noto Sans KR', sans-serif; background: #f0f2f7; min-height:
     <button class="btn-next" id="btn-next" onclick="navigate(1)">다음 →</button>
   </div>
 
-  <!-- 완료 화면 -->
+  <!-- 자격 미달 종료 -->
+  <div class="end-wrap" id="end-wrap">
+    <div class="end-icon">🙏</div>
+    <h2>설문이 종료되었습니다</h2>
+    <p>본 연구는 품질·인증·심사 관련 업무 경험자를<br>대상으로 진행됩니다.</p>
+    <p style="margin-top:12px;">참여해 주셔서 진심으로 감사드립니다.</p>
+  </div>
+
+  <!-- 완료 -->
   <div class="thank-wrap" id="thank-wrap">
     <div class="thank-icon">
       <svg viewBox="0 0 38 38" fill="none"><circle cx="19" cy="19" r="19" fill="#1a2744"/><path d="M11 19l6 6 10-12" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -339,25 +377,51 @@ body { font-family: 'Noto Sans KR', sans-serif; background: #f0f2f7; min-height:
 
 <script>
 const SHEET_URL = 'https://script.google.com/macros/s/AKfycbxewOPqzNbp9Ni_CvRnn-qjtMhFQY-khf7kFzP9NqIKO8nVi_X3zJ_NisAqwtORMRjr/exec';
-const TOTAL_SECTIONS = 8; // 0~7
+const TOTAL_SECTIONS = 8;
 let cur = 0;
 let grp = Math.random() < 0.5 ? 'A' : 'B';
 let chatDone = false;
 
-// 개인정보 동의 토글
+// 기타 선택시 주관식 표시
 document.addEventListener('change', function(e) {
-  if (e.target.name === 'priv_consent') {
-    document.getElementById('priv-fields').style.display = e.target.value === '동의' ? 'block' : 'none';
+  if (e.target.name === 'q_field') {
+    document.getElementById('field-other-input').style.display = e.target.value === '기타' ? 'block' : 'none';
+  }
+  if (e.target.name === 'q_rank') {
+    document.getElementById('rank-other-input').style.display = e.target.value === '기타' ? 'block' : 'none';
+  }
+  if (e.target.name === 'privacy_agree') {
+    document.getElementById('personal-info-fields').style.display = e.target.value === 'yes' ? 'block' : 'none';
+  }
+  if (e.target.name === 'eligible' && e.target.value === 'no') {
+    showIneligible();
   }
 });
 
+// 시나리오 (그룹 표시 없음)
 const situations = {
-  A: `<div class="situation-card"><div class="sc-tag">업무 시나리오</div><span class="badge-high">고책임 조건 (Group A)</span><div class="sc-text">귀하는 내일 오전 10시, 외부 인증기관에서 실시하는 <strong>ISO 9001 정기 사후심사</strong>를 앞두고 있는 품질·인증 실무 담당자입니다.<br><br>귀하는 지금 심사원에게 최종 제출할 <strong>'품질경영계획서 및 내부심사 보고서'</strong>의 마지막 검토를 진행하고 있습니다.<br><br>이 문서는 <strong>귀하의 이름으로 제출</strong>되며, 만약 중대한 부적합이 발견될 경우 인증 유지에 심각한 문제가 발생하고 <strong>그 책임은 실무자인 귀하에게 돌아옵니다.</strong><br><br>현재 시간은 퇴근을 불과 <strong>1시간 앞둔 오후 5시</strong>로, 시간이 매우 촉박한 상황입니다.</div></div>`,
-  B: `<div class="situation-card"><div class="sc-tag">업무 시나리오</div><span class="badge-low">저책임 조건 (Group B)</span><div class="sc-text">귀하는 ISO 9001 인증 업무를 지원하는 <strong>품질·인증 실무자</strong>입니다.<br><br>오늘 귀하는 <strong>내부 검토용 심사 보조 자료</strong>를 정리하고 있습니다.<br><br>이 자료는 <strong>참고용으로만 활용</strong>되며, 최종 심사 보고서는 별도의 책임자가 작성합니다. 귀하에게는 해당 내용에 대한 <strong>공식적인 책임이 없습니다.</strong><br><br>귀하의 회사는 최근 AI 기반 문서 지원 도구를 도입하였습니다. 귀하는 아래 AI 도구의 분석 결과를 <strong>참고하여 보조 자료를 정리</strong>하면 됩니다.</div></div>`
+  A: `<div class="situation-card">
+    <div class="sc-tag">📋 업무 상황</div>
+    <div class="sc-text">
+      귀하는 내일 오전 10시, 외부 인증기관에서 실시하는 <strong>ISO 9001 정기 사후심사</strong>를 앞두고 있는 품질·인증 실무 담당자입니다.<br><br>
+      귀하는 지금 심사원에게 최종 제출할 <strong>'품질경영계획서 및 내부심사 보고서'</strong>의 마지막 검토를 진행하고 있습니다.<br><br>
+      이 문서는 <strong>귀하의 이름으로 제출</strong>되며, 만약 중대한 부적합이 발견될 경우 인증 갱신(사후심사 통과)에 심각한 문제가 발생하고 <strong>그 책임은 실무자인 귀하에게 돌아옵니다.</strong><br><br>
+      현재 시간은 퇴근을 불과 <strong>1시간 앞둔 오후 5시</strong>로, 시간이 매우 촉박한 상황입니다.
+    </div>
+  </div>`,
+  B: `<div class="situation-card">
+    <div class="sc-tag">📋 업무 상황</div>
+    <div class="sc-text">
+      귀하는 ISO 9001 인증 업무를 지원하는 <strong>품질·인증 실무자</strong>입니다.<br><br>
+      오늘 귀하는 <strong>내부 검토용 심사 보조 자료</strong>를 정리하고 있습니다.<br><br>
+      이 자료는 <strong>참고용으로만 활용</strong>되며, 최종 심사 보고서는 별도의 책임자가 작성합니다. 귀하에게는 해당 내용에 대한 <strong>공식적인 책임이 없습니다.</strong><br><br>
+      귀하의 회사는 최근 AI 기반 문서 지원 도구를 도입하였습니다. 귀하는 아래 AI 도구의 분석 결과를 <strong>참고하여 보조 자료를 정리</strong>하면 됩니다.
+    </div>
+  </div>`
 };
 
 const progressTxt = {
-  A: '⏰ <strong>시간이 촉박한 귀하</strong>는 최근 도입된 "AI 기반 품질 문서 검토 도구"에 품질경영계획서 파일을 업로드하여 빠른 검토를 지시했습니다. 1분 뒤, AI의 분석 결과가 아래와 같이 나타났습니다.',
+  A: '⏰ <strong>시간이 촉박한 귀하</strong>는 최근 도입된 "AI 기반 품질 문서 검토 도구"에 품질경영계획서 파일을 업로드하여 빠른 검토를 지시했습니다. 잠시 후, AI의 분석 결과가 아래와 같이 나타났습니다.',
   B: 'ℹ️ 귀하는 참고용 보조 자료 정리를 위해 AI 도구에 문서를 업로드했습니다. 잠시 후, 아래와 같은 분석 결과가 나타났습니다.'
 };
 
@@ -377,16 +441,18 @@ function mkReportB() {
 
 const chatScripts = {
   A: [
-    {t:'user', text:'품질경영계획서 최종 검토 부탁해. 내일 심사 제출용이야.'},
-    {t:'typing'},{t:'reportA'},
+    {t:'user', text:'품질경영계획서 최종 검토 부탁해. 내일 사후심사 제출용이야.'},
+    {t:'typing'},
+    {t:'reportA'},
     {t:'user', text:'수정 초안 작성해줘. 내가 최종 확인하고 제출할게.'},
-    {t:'ai', text:'수정 초안을 생성합니다. 최종 심사 보고서는 귀하의 이름으로 제출되며, 인증 결정에 대한 책임은 귀하께 있습니다.'},
+    {t:'ai', text:'수정 초안을 생성합니다. 해당 문서는 귀하의 이름으로 제출되며, 사후심사 결과에 대한 최종 책임은 귀하께 있습니다.'},
   ],
   B: [
     {t:'user', text:'내부 검토용 보조 자료 정리하려고. 문서 분석해줘.'},
-    {t:'typing'},{t:'reportB'},
+    {t:'typing'},
+    {t:'reportB'},
     {t:'user', text:'알겠어, 참고할게.'},
-    {t:'ai', text:'보조 자료에 참고하시면 됩니다. 최종 판단과 보고서 작성은 책임자께서 진행하십니다.'},
+    {t:'ai', text:'보조 자료 정리에 참고하시면 됩니다. 최종 판단과 보고서 작성은 책임자께서 진행하십니다.'},
   ]
 };
 
@@ -402,24 +468,24 @@ function runChat() {
         const r = document.createElement('div');
         r.className = 'chat-row'; r.id = 'typing-row';
         r.innerHTML = '<div class="chat-avatar avatar-ai">AI</div><div class="chat-bubble bubble-ai"><div class="typing-dots"><span></span><span></span><span></span></div></div>';
-        wrap.appendChild(r); setTimeout(()=>r.classList.add('show'),30);
-        setTimeout(()=>{ const x=document.getElementById('typing-row'); if(x)x.remove(); },1600);
+        wrap.appendChild(r); setTimeout(() => r.classList.add('show'), 30);
+        setTimeout(() => { const x = document.getElementById('typing-row'); if(x) x.remove(); }, 1600);
       }, delay); delay += 1900;
     } else if (msg.t === 'reportA') {
-      setTimeout(()=>{ const r=mkReportA(); wrap.appendChild(r); setTimeout(()=>r.classList.add('show'),30); wrap.scrollTop=wrap.scrollHeight; }, delay); delay += 1100;
+      setTimeout(() => { const r = mkReportA(); wrap.appendChild(r); setTimeout(() => r.classList.add('show'), 30); wrap.scrollTop = wrap.scrollHeight; }, delay); delay += 1100;
     } else if (msg.t === 'reportB') {
-      setTimeout(()=>{ const r=mkReportB(); wrap.appendChild(r); setTimeout(()=>r.classList.add('show'),30); wrap.scrollTop=wrap.scrollHeight; }, delay); delay += 1100;
+      setTimeout(() => { const r = mkReportB(); wrap.appendChild(r); setTimeout(() => r.classList.add('show'), 30); wrap.scrollTop = wrap.scrollHeight; }, delay); delay += 1100;
     } else if (msg.t === 'user') {
-      setTimeout(()=>{
-        const r=document.createElement('div'); r.className='chat-row user-row';
-        r.innerHTML=`<div class="chat-bubble bubble-user">${msg.text}</div><div class="chat-avatar avatar-user">나</div>`;
-        wrap.appendChild(r); setTimeout(()=>r.classList.add('show'),30); wrap.scrollTop=wrap.scrollHeight;
+      setTimeout(() => {
+        const r = document.createElement('div'); r.className = 'chat-row user-row';
+        r.innerHTML = `<div class="chat-bubble bubble-user">${msg.text}</div><div class="chat-avatar avatar-user">나</div>`;
+        wrap.appendChild(r); setTimeout(() => r.classList.add('show'), 30); wrap.scrollTop = wrap.scrollHeight;
       }, delay); delay += 1000;
     } else if (msg.t === 'ai') {
-      setTimeout(()=>{
-        const r=document.createElement('div'); r.className='chat-row';
-        r.innerHTML=`<div class="chat-avatar avatar-ai">AI</div><div class="chat-bubble bubble-ai">${msg.text}</div>`;
-        wrap.appendChild(r); setTimeout(()=>r.classList.add('show'),30); wrap.scrollTop=wrap.scrollHeight;
+      setTimeout(() => {
+        const r = document.createElement('div'); r.className = 'chat-row';
+        r.innerHTML = `<div class="chat-avatar avatar-ai">AI</div><div class="chat-bubble bubble-ai">${msg.text}</div>`;
+        wrap.appendChild(r); setTimeout(() => r.classList.add('show'), 30); wrap.scrollTop = wrap.scrollHeight;
       }, delay); delay += 1000;
     }
   });
@@ -432,12 +498,12 @@ const expItems = [
   {id:'EXP4', label:'나는 이 AI 도구가 치명적 오류라는 결론을 도출해 낸 논리적 과정을 추적하고 파악할 수 있다.'},
 ];
 const sec4Items = [
-  {id:'PU1',  label:'이 AI 도구는 업무 효율을 높여줄 것이다.'},
-  {id:'PU2',  label:'이 AI 도구를 사용하면 업무 성과가 향상될 것이다.'},
-  {id:'PU3',  label:'이 AI 도구는 전반적으로 유용하다.'},
+  {id:'PU1', label:'이 AI 도구는 업무 효율을 높여줄 것이다.'},
+  {id:'PU2', label:'이 AI 도구를 사용하면 업무 성과가 향상될 것이다.'},
+  {id:'PU3', label:'이 AI 도구는 전반적으로 유용하다.'},
   {id:'EPR1', label:'이 AI 시스템 사용 시 개인정보 유출이 우려된다.'},
   {id:'EPR2', label:'이 AI 시스템은 내 업무 데이터를 안전하게 처리할 것이다.'},
-  {id:'AA1',  label:'AI 판단 결과에 대한 책임 소재가 명확하다고 생각한다.'},
+  {id:'AA1', label:'AI 판단 결과에 대한 책임 소재가 명확하다고 생각한다.'},
   {id:'TRU1', label:'이 AI 시스템은 신뢰할 수 있다.'},
   {id:'TRU2', label:'이 AI 시스템은 일관되고 믿을 수 있는 결과를 제공한다.'},
   {id:'TRU3', label:'이 AI 시스템의 추천을 믿고 따를 수 있다.'},
@@ -471,13 +537,12 @@ function initAll() {
   makeLikert(sec5Items,'qs-5');
 }
 
-const sectionLabels = ['연구 동의','자격 확인','상황 제시','AI 분석·EXP','인식 측정','사용 의도','기본 정보','개인정보(선택)'];
-
 function updateProgress() {
   const pct = Math.round((cur/(TOTAL_SECTIONS-1))*100);
   document.getElementById('progress').style.width = pct+'%';
   document.getElementById('prog-pct').textContent = pct+'%';
-  document.getElementById('prog-text').textContent = sectionLabels[cur]||'';
+  const labels = ['연구 동의','참여 자격','상황 제시','AI 분석·EXP','인식 측정','사용 의도','기본 정보','개인정보'];
+  document.getElementById('prog-text').textContent = labels[cur]||'';
 }
 
 function showSection(n) {
@@ -492,61 +557,83 @@ function showSection(n) {
   if (n===3) setTimeout(runChat,400);
 }
 
-function showDisqualify() {
+function showIneligible() {
   document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
-  document.getElementById('disqualify-wrap').style.display='block';
-  document.getElementById('nav-row').style.display='none';
-  document.getElementById('progress').style.width='100%';
-  document.getElementById('prog-pct').textContent='종료';
-  document.getElementById('prog-text').textContent='참여 불가';
+  document.getElementById('nav-row').style.display = 'none';
+  document.getElementById('progress').style.width = '100%';
+  document.getElementById('prog-pct').textContent = '';
+  document.getElementById('prog-text').textContent = '설문 종료';
+  document.getElementById('end-wrap').style.display = 'block';
   window.scrollTo({top:0,behavior:'smooth'});
 }
 
 function validate() {
   if (cur===0) return document.getElementById('consent-chk').checked;
-  if (cur===1) return !!document.querySelector('input[name="qualify"]:checked');
+  if (cur===1) {
+    const val = (document.querySelector('input[name="eligible"]:checked')||{}).value;
+    if (val === 'no') { showIneligible(); return false; }
+    return val === 'yes';
+  }
   if (cur===2) return ['MC1','MC2'].every(n=>document.querySelector(`input[name="${n}"]:checked`));
   if (cur===3) return expItems.every(i=>document.querySelector(`input[name="${i.id}"]:checked`));
   if (cur===4) return sec4Items.every(i=>document.querySelector(`input[name="${i.id}"]:checked`));
   if (cur===5) return sec5Items.every(i=>document.querySelector(`input[name="${i.id}"]:checked`));
-  if (cur===6) return ['q_field','q_exp','q_ai'].every(n=>document.querySelector(`input[name="${n}"]:checked`));
-  return true; // 섹션 7(개인정보)은 선택
+  if (cur===6) {
+    const required = ['q_field','q_rank','q_edu','q_exp','q_ai'];
+    return required.every(n=>document.querySelector(`input[name="${n}"]:checked`));
+  }
+  return true; // 섹션 7은 선택사항
+}
+
+function getFieldValue(name) {
+  const el = document.querySelector(`input[name="${name}"]:checked`);
+  if (!el) return '';
+  if (el.value === '기타') {
+    const otherMap = { q_field: 'field-other-input', q_rank: 'rank-other-input' };
+    if (otherMap[name]) {
+      const txt = document.getElementById(otherMap[name]).value.trim();
+      return txt ? '기타: ' + txt : '기타';
+    }
+  }
+  return el.value;
 }
 
 function collectData() {
   const data = {
     timestamp: new Date().toLocaleString('ko-KR'),
     group: grp,
-    field: (document.querySelector('input[name="q_field"]:checked')||{}).value||'',
-    experience: (document.querySelector('input[name="q_exp"]:checked')||{}).value||'',
-    ai_usage: (document.querySelector('input[name="q_ai"]:checked')||{}).value||'',
     MC1: (document.querySelector('input[name="MC1"]:checked')||{}).value||'',
     MC2: (document.querySelector('input[name="MC2"]:checked')||{}).value||'',
-    priv_consent: (document.querySelector('input[name="priv_consent"]:checked')||{}).value||'',
-    priv_name: document.getElementById('priv-name').value||'',
-    priv_contact: document.getElementById('priv-contact').value||'',
+    field: getFieldValue('q_field'),
+    rank: getFieldValue('q_rank'),
+    education: (document.querySelector('input[name="q_edu"]:checked')||{}).value||'',
+    experience: (document.querySelector('input[name="q_exp"]:checked')||{}).value||'',
+    ai_usage: (document.querySelector('input[name="q_ai"]:checked')||{}).value||'',
+    privacy_agree: (document.querySelector('input[name="privacy_agree"]:checked')||{}).value||'미응답',
+    respondent_name: document.getElementById('input-name').value.trim()||'',
+    respondent_contact: document.getElementById('input-contact').value.trim()||'',
   };
   [...expItems,...sec4Items,...sec5Items].forEach(item=>{
-    const el=document.querySelector(`input[name="${item.id}"]:checked`);
-    data[item.id]=el?parseInt(el.value):'';
+    const el = document.querySelector(`input[name="${item.id}"]:checked`);
+    data[item.id] = el ? parseInt(el.value) : '';
   });
   return data;
 }
 
-function avg(items,data) {
-  const vals=items.map(i=>data[i.id]).filter(v=>v!=='');
-  return vals.length?(vals.reduce((a,b)=>a+b,0)/vals.length).toFixed(2):'-';
+function avg(items, data) {
+  const vals = items.map(i=>data[i.id]).filter(v=>v!=='');
+  return vals.length ? (vals.reduce((a,b)=>a+b,0)/vals.length).toFixed(2) : '-';
 }
 
 async function submitData(data) {
   document.getElementById('loading-overlay').classList.add('show');
-  document.getElementById('btn-next').disabled=true;
+  document.getElementById('btn-next').disabled = true;
   try {
     await fetch(SHEET_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
     showThank(data);
   } catch(e) {
     document.getElementById('error-msg').classList.add('show');
-    document.getElementById('btn-next').disabled=false;
+    document.getElementById('btn-next').disabled = false;
   } finally {
     document.getElementById('loading-overlay').classList.remove('show');
   }
@@ -559,8 +646,7 @@ function showThank(data) {
   document.getElementById('prog-pct').textContent='완료';
   document.getElementById('prog-text').textContent='제출 완료';
   const mc1=parseInt(data.MC1)||0, mc2=parseInt(data.MC2)||0;
-  document.getElementById('thank-detail').innerHTML=`
-    <div class="td-row"><span class="td-key">배정 그룹</span><span class="td-val">그룹 ${data.group} (${data.group==='A'?'고책임':'저책임'})</span></div>
+  document.getElementById('thank-detail').innerHTML = `
     <div class="td-row"><span class="td-key">업무 분야</span><span class="td-val">${data.field||'-'}</span></div>
     <div class="td-row"><span class="td-key">조작 점검 평균</span><span class="td-val">${((mc1+mc2)/2).toFixed(1)} / 7</span></div>
     <div class="td-row"><span class="td-key">설명가능성 평균 (EXP)</span><span class="td-val">${avg(expItems,data)} / 7</span></div>
@@ -572,14 +658,12 @@ function showThank(data) {
 }
 
 function navigate(dir) {
-  if (dir===1 && !validate()) { alert('모든 항목에 응답해 주세요.'); return; }
-  // 자격 확인에서 아니오 선택 시 종료
-  if (dir===1 && cur===1) {
-    const ans = document.querySelector('input[name="qualify"]:checked');
-    if (ans && ans.value === 'no') { showDisqualify(); return; }
+  if (dir===1 && !validate()) {
+    if (cur!==1) alert('모든 항목에 응답해 주세요.');
+    return;
   }
   if (dir===1 && cur===TOTAL_SECTIONS-1) { submitData(collectData()); return; }
-  cur=Math.max(0,Math.min(TOTAL_SECTIONS-1,cur+dir));
+  cur = Math.max(0,Math.min(TOTAL_SECTIONS-1,cur+dir));
   showSection(cur);
 }
 
