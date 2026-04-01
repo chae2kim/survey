@@ -6,356 +6,147 @@
 <title>AI 문서 지원 도구 인식 연구 설문</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Noto Sans KR', sans-serif; background: #f0f2f7; min-height: 100vh; display: flex; justify-content: center; align-items: flex-start; padding: 0 0 60px; }
+.survey-wrap { width: 100%; max-width: 520px; background: #fff; min-height: 100vh; }
+.header-band { background: #1a2744; padding: 32px 24px 28px; }
+.header-band .tag { font-size: 11px; letter-spacing: .13em; text-transform: uppercase; color: #7a9bcc; margin-bottom: 12px; }
+.header-band h1 { font-size: 17px; font-weight: 500; line-height: 1.6; color: #fff; }
+.header-band .sub { font-size: 13px; color: #8fa8d8; margin-top: 10px; line-height: 1.6; }
+.progress-bar-wrap { background: #1a2744; padding: 0 24px 22px; }
+.progress-track { height: 3px; background: rgba(255,255,255,.15); border-radius: 2px; overflow: hidden; }
+.progress-fill { height: 100%; background: #5a9cf5; border-radius: 2px; transition: width .4s ease; }
+.progress-meta { font-size: 12px; color: #7a9bcc; margin-top: 8px; display: flex; justify-content: space-between; }
+.section { display: none; padding: 24px 24px 0; animation: fadeUp .3s ease; }
+.section.active { display: block; }
+@keyframes fadeUp { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+.section-title { font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: #888; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid #eee; }
+.q-block { margin-bottom: 28px; }
+.q-label { font-size: 14px; font-weight: 500; color: #1a2744; line-height: 1.6; margin-bottom: 14px; display: flex; align-items: flex-start; gap: 8px; }
+.q-num { display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; min-width: 22px; border-radius: 50%; background: #1a2744; color: #fff; font-size: 11px; font-weight: 700; margin-top: 1px; }
+.likert-anchor { display: flex; justify-content: space-between; font-size: 11px; color: #999; margin-bottom: 8px; }
+.likert-row { display: flex; gap: 5px; }
+.likert-row label { flex: 1; }
+.likert-row input[type="radio"] { display: none; }
+.likert-btn { display: flex; align-items: center; justify-content: center; height: 42px; border-radius: 8px; border: 1px solid #e5e7eb; font-size: 13px; color: #666; cursor: pointer; background: #f9fafb; width: 100%; transition: all .15s; user-select: none; }
+.likert-row input[type="radio"]:checked + .likert-btn { background: #1a2744; color: #fff; border-color: #1a2744; font-weight: 700; }
+.likert-btn:hover { border-color: #1a2744; color: #1a2744; }
+.select-group { display: flex; flex-direction: column; gap: 8px; }
+.select-group label { cursor: pointer; }
+.select-group input[type="radio"] { display: none; }
+.select-box { display: block; border: 1px solid #e5e7eb; border-radius: 10px; padding: 13px 16px; font-size: 14px; color: #333; line-height: 1.5; background: #f9fafb; transition: all .15s; font-family: 'Noto Sans KR', sans-serif; }
+.select-group input[type="radio"]:checked ~ .select-box { border-color: #1a2744; background: #eef2fb; color: #1a2744; font-weight: 500; }
+.select-box:hover { border-color: #1a2744; }
+.consent-box { background: #f7f8fc; border: 1px solid #e5e7eb; border-radius: 12px; padding: 18px; font-size: 13px; color: #555; line-height: 1.8; margin-bottom: 20px; }
+.consent-box strong { color: #1a2744; font-weight: 700; }
+.consent-check { display: flex; align-items: flex-start; gap: 12px; cursor: pointer; margin-bottom: 8px; }
+.consent-check input[type="checkbox"] { display: none; }
+.check-box { width: 22px; height: 22px; min-width: 22px; border: 1.5px solid #ccc; border-radius: 6px; display: flex; align-items: center; justify-content: center; background: #fff; transition: all .15s; margin-top: 1px; }
+.consent-check input:checked + .check-box { background: #1a2744; border-color: #1a2744; }
+.consent-check input:checked + .check-box::after { content:''; width:11px; height:7px; border-left:2.5px solid #fff; border-bottom:2.5px solid #fff; transform:rotate(-45deg) translateY(-1px); display:block; }
+.consent-text { font-size: 13.5px; color: #333; line-height: 1.6; padding-top: 2px; }
 
-  body {
-    font-family: 'Noto Sans KR', sans-serif;
-    background: #f0f2f7;
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    padding: 0 0 60px;
-  }
+/* 자격 확인 */
+.qualify-card { background: #f7f8fc; border: 1px solid #e0e2ea; border-radius: 14px; padding: 20px; margin-bottom: 20px; }
+.qualify-card .qc-title { font-size: 14px; font-weight: 700; color: #1a2744; margin-bottom: 14px; line-height: 1.6; }
+.qualify-card ul { padding-left: 18px; margin-bottom: 16px; }
+.qualify-card ul li { font-size: 13.5px; color: #444; line-height: 1.8; margin-bottom: 4px; }
+.yn-row { display: flex; gap: 10px; }
+.yn-row label { flex: 1; cursor: pointer; }
+.yn-row input[type="radio"] { display: none; }
+.yn-btn { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 14px; border-radius: 10px; border: 1.5px solid #e5e7eb; font-size: 15px; font-weight: 700; background: #f9fafb; transition: all .15s; font-family: 'Noto Sans KR', sans-serif; }
+.yn-btn.yes { color: #1a2744; }
+.yn-btn.no  { color: #888; }
+.yn-row input:checked + .yn-btn.yes { background: #1a2744; color: #fff; border-color: #1a2744; }
+.yn-row input:checked + .yn-btn.no  { background: #fee2e2; color: #991b1b; border-color: #fca5a5; }
 
-  .survey-wrap {
-    width: 100%;
-    max-width: 520px;
-    background: #fff;
-    min-height: 100vh;
-  }
+/* 종료 화면 */
+.disqualify-wrap { display: none; padding: 60px 24px 40px; text-align: center; }
+.disqualify-icon { width: 72px; height: 72px; border-radius: 50%; background: #f7f8fc; margin: 0 auto 24px; display: flex; align-items: center; justify-content: center; font-size: 32px; }
+.disqualify-wrap h2 { font-size: 20px; font-weight: 700; color: #1a2744; margin-bottom: 12px; }
+.disqualify-wrap p { font-size: 14px; color: #666; line-height: 1.8; }
 
-  /* Header */
-  .header-band {
-    background: #1a2744;
-    padding: 32px 24px 28px;
-  }
-  .header-band .tag {
-    font-size: 11px;
-    letter-spacing: 0.13em;
-    text-transform: uppercase;
-    color: #7a9bcc;
-    margin-bottom: 12px;
-  }
-  .header-band h1 {
-    font-size: 17px;
-    font-weight: 500;
-    line-height: 1.6;
-    color: #fff;
-  }
-  .header-band .sub {
-    font-size: 13px;
-    color: #8fa8d8;
-    margin-top: 10px;
-    line-height: 1.6;
-  }
+.situation-card { background: #1a2744; border-radius: 14px; padding: 22px; margin-bottom: 20px; }
+.situation-card .sc-tag { font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: #7a9bcc; margin-bottom: 10px; }
+.situation-card .sc-text { font-size: 13.5px; line-height: 1.85; color: #dde6f5; }
+.situation-card .sc-text strong { color: #fff; }
+.badge-high { display: inline-block; background: #c0392b; color: #fff; font-size: 11px; font-weight: 700; padding: 4px 12px; border-radius: 20px; margin-bottom: 12px; }
+.badge-low  { display: inline-block; background: #27ae60; color: #fff; font-size: 11px; font-weight: 700; padding: 4px 12px; border-radius: 20px; margin-bottom: 12px; }
+.check-intro { background: #fffbeb; border: 1px solid #fde68a; border-radius: 10px; padding: 14px 16px; font-size: 13px; color: #78350f; line-height: 1.7; margin-bottom: 20px; }
+.ai-ui-wrap { background: #f3f4f8; border-radius: 16px; overflow: hidden; margin-bottom: 24px; border: 1px solid #e0e2ea; }
+.ai-ui-topbar { background: #1a2744; padding: 12px 16px; display: flex; align-items: center; gap: 8px; }
+.dot { width: 9px; height: 9px; border-radius: 50%; }
+.dot-r { background: #ff5f57; } .dot-y { background: #febc2e; } .dot-g { background: #28c840; }
+.app-name { font-size: 12px; color: #8fa8d8; margin-left: 4px; }
+.status-dot { width: 7px; height: 7px; border-radius: 50%; background: #28c840; margin-left: auto; }
+.status-text { font-size: 11px; color: #5a9cf5; }
+.chat-messages { padding: 16px; min-height: 200px; display: flex; flex-direction: column; gap: 10px; }
+.chat-row { display: flex; align-items: flex-end; gap: 8px; opacity: 0; transform: translateY(8px); transition: all .35s ease; }
+.chat-row.show { opacity: 1; transform: translateY(0); }
+.chat-row.user-row { flex-direction: row-reverse; }
+.chat-avatar { width: 30px; height: 30px; min-width: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; }
+.avatar-ai { background: #1a2744; color: #fff; }
+.avatar-user { background: #e0e7ff; color: #3730a3; }
+.chat-bubble { max-width: 78%; padding: 10px 14px; border-radius: 14px; font-size: 13px; line-height: 1.65; }
+.bubble-ai { background: #fff; color: #1a2744; border: 1px solid #e0e2ea; border-bottom-left-radius: 4px; }
+.bubble-user { background: #1a2744; color: #fff; border-bottom-right-radius: 4px; }
+.bubble-report { background: #fff; border: 1px solid #e0e2ea; border-bottom-left-radius: 4px; padding: 0; overflow: hidden; max-width: 90%; }
+.report-header { background: #1a2744; padding: 10px 14px; display: flex; align-items: center; gap: 8px; }
+.rh-icon { width: 20px; height: 20px; background: #5a9cf5; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #fff; }
+.rh-title { font-size: 11px; color: #fff; font-weight: 700; }
+.rh-sub { font-size: 10px; color: #7a9bcc; }
+.report-body { padding: 12px 14px; }
+.report-badge { display: inline-flex; align-items: center; gap: 5px; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; margin-bottom: 10px; }
+.rb-danger { background: #fee2e2; color: #991b1b; }
+.rb-info   { background: #dbeafe; color: #1e40af; }
+.report-section { margin-bottom: 10px; }
+.rs-label { font-size: 10px; color: #888; font-weight: 700; letter-spacing: .05em; margin-bottom: 4px; text-transform: uppercase; }
+.rs-content { font-size: 12px; color: #333; line-height: 1.6; background: #f7f8fc; border-radius: 6px; padding: 8px 10px; }
+.report-divider { height: 1px; background: #eee; margin: 8px 0; }
+.report-actions { display: flex; gap: 8px; padding: 0 14px 12px; }
+.ra-btn { flex: 1; padding: 8px; border-radius: 7px; font-size: 12px; font-weight: 700; text-align: center; cursor: pointer; border: none; font-family: 'Noto Sans KR', sans-serif; }
+.ra-primary { background: #1a2744; color: #fff; }
+.ra-secondary { background: #f3f4f8; color: #555; border: 1px solid #e0e2ea; }
+.typing-dots { display: flex; gap: 4px; align-items: center; padding: 4px 2px; }
+.typing-dots span { width: 7px; height: 7px; border-radius: 50%; background: #bbb; animation: blink 1.2s infinite ease-in-out; }
+.typing-dots span:nth-child(2) { animation-delay: .2s; }
+.typing-dots span:nth-child(3) { animation-delay: .4s; }
+@keyframes blink { 0%,80%,100%{opacity:.25;transform:scale(.9);}40%{opacity:1;transform:scale(1);} }
+.scenario-progress { background: #f7f8fc; border: 1px solid #e0e2ea; border-radius: 10px; padding: 12px 14px; font-size: 12.5px; color: #555; line-height: 1.7; margin-bottom: 20px; }
+.scenario-progress strong { color: #1a2744; }
 
-  /* Progress */
-  .progress-bar-wrap {
-    background: #1a2744;
-    padding: 0 24px 22px;
-  }
-  .progress-track {
-    height: 3px;
-    background: rgba(255,255,255,0.15);
-    border-radius: 2px;
-    overflow: hidden;
-  }
-  .progress-fill {
-    height: 100%;
-    background: #5a9cf5;
-    border-radius: 2px;
-    transition: width 0.4s ease;
-  }
-  .progress-meta {
-    font-size: 12px;
-    color: #7a9bcc;
-    margin-top: 8px;
-    display: flex;
-    justify-content: space-between;
-  }
+/* 개인정보 */
+.privacy-optional { background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 10px; padding: 12px 16px; font-size: 12.5px; color: #14532d; line-height: 1.7; margin-bottom: 20px; }
+.input-field { width: 100%; padding: 13px 16px; border: 1px solid #e5e7eb; border-radius: 10px; font-size: 14px; background: #f9fafb; color: #333; outline: none; font-family: 'Noto Sans KR', sans-serif; transition: border .15s; margin-top: 8px; }
+.input-field:focus { border-color: #1a2744; background: #fff; }
+.privacy-consent-row { display: flex; gap: 10px; margin-bottom: 20px; }
+.privacy-consent-row label { flex: 1; cursor: pointer; }
+.privacy-consent-row input[type="radio"] { display: none; }
+.pc-btn { display: flex; align-items: center; justify-content: center; padding: 13px; border-radius: 10px; border: 1px solid #e5e7eb; font-size: 14px; font-weight: 700; background: #f9fafb; transition: all .15s; font-family: 'Noto Sans KR', sans-serif; color: #555; }
+.privacy-consent-row input:checked + .pc-btn { background: #1a2744; color: #fff; border-color: #1a2744; }
 
-  /* Sections */
-  .section { display: none; padding: 24px 24px 0; animation: fadeUp 0.3s ease; }
-  .section.active { display: block; }
-
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(10px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-
-  .section-title {
-    font-size: 11px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: #888;
-    margin-bottom: 20px;
-    padding-bottom: 10px;
-    border-bottom: 1px solid #eee;
-  }
-
-  /* Question block */
-  .q-block { margin-bottom: 28px; }
-  .q-label {
-    font-size: 14px;
-    font-weight: 500;
-    color: #1a2744;
-    line-height: 1.6;
-    margin-bottom: 14px;
-    display: flex;
-    align-items: flex-start;
-    gap: 8px;
-  }
-  .q-num {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 22px;
-    height: 22px;
-    min-width: 22px;
-    border-radius: 50%;
-    background: #1a2744;
-    color: #fff;
-    font-size: 11px;
-    font-weight: 700;
-    margin-top: 1px;
-  }
-
-  /* Likert */
-  .likert-anchor {
-    display: flex;
-    justify-content: space-between;
-    font-size: 11px;
-    color: #999;
-    margin-bottom: 8px;
-  }
-  .likert-row {
-    display: flex;
-    gap: 5px;
-  }
-  .likert-row label { flex: 1; }
-  .likert-row input[type="radio"] { display: none; }
-  .likert-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 42px;
-    border-radius: 8px;
-    border: 1px solid #e5e7eb;
-    font-size: 13px;
-    color: #666;
-    cursor: pointer;
-    background: #f9fafb;
-    width: 100%;
-    transition: all 0.15s;
-    user-select: none;
-  }
-  .likert-row input[type="radio"]:checked + .likert-btn {
-    background: #1a2744;
-    color: #fff;
-    border-color: #1a2744;
-    font-weight: 700;
-  }
-  .likert-btn:hover { border-color: #1a2744; color: #1a2744; }
-
-  /* Select group */
-  .select-group { display: flex; flex-direction: column; gap: 8px; }
-  .select-group label { cursor: pointer; }
-  .select-group input[type="radio"] { display: none; }
-  .select-box {
-    display: block;
-    border: 1px solid #e5e7eb;
-    border-radius: 10px;
-    padding: 13px 16px;
-    font-size: 14px;
-    color: #333;
-    line-height: 1.5;
-    background: #f9fafb;
-    transition: all 0.15s;
-    font-family: 'Noto Sans KR', sans-serif;
-  }
-  .select-group input[type="radio"]:checked ~ .select-box {
-    border-color: #1a2744;
-    background: #eef2fb;
-    color: #1a2744;
-    font-weight: 500;
-  }
-  .select-box:hover { border-color: #1a2744; }
-
-  /* Consent */
-  .consent-box {
-    background: #f7f8fc;
-    border: 1px solid #e5e7eb;
-    border-radius: 12px;
-    padding: 18px;
-    font-size: 13px;
-    color: #555;
-    line-height: 1.8;
-    margin-bottom: 20px;
-  }
-  .consent-box strong { color: #1a2744; font-weight: 700; }
-
-  .consent-check { display: flex; align-items: flex-start; gap: 12px; cursor: pointer; margin-bottom: 8px; }
-  .consent-check input[type="checkbox"] { display: none; }
-  .check-box {
-    width: 22px; height: 22px; min-width: 22px;
-    border: 1.5px solid #ccc;
-    border-radius: 6px;
-    display: flex; align-items: center; justify-content: center;
-    background: #fff;
-    transition: all 0.15s;
-    margin-top: 1px;
-  }
-  .consent-check input:checked + .check-box { background: #1a2744; border-color: #1a2744; }
-  .consent-check input:checked + .check-box::after {
-    content: '';
-    width: 11px; height: 7px;
-    border-left: 2.5px solid #fff;
-    border-bottom: 2.5px solid #fff;
-    transform: rotate(-45deg) translateY(-1px);
-    display: block;
-  }
-  .consent-text { font-size: 13.5px; color: #333; line-height: 1.6; padding-top: 2px; }
-
-  /* Vignette card */
-  .vignette-card {
-    background: #1a2744;
-    border-radius: 14px;
-    padding: 22px;
-    margin-bottom: 20px;
-  }
-  .vignette-card .vc-label {
-    font-size: 11px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: #7a9bcc;
-    margin-bottom: 10px;
-  }
-  .vignette-card .vc-text { font-size: 14px; line-height: 1.8; color: #dde6f5; }
-  .badge-high {
-    display: inline-block;
-    background: #c0392b; color: #fff;
-    font-size: 11px; font-weight: 700;
-    padding: 4px 12px; border-radius: 20px; margin-bottom: 12px;
-  }
-  .badge-low {
-    display: inline-block;
-    background: #27ae60; color: #fff;
-    font-size: 11px; font-weight: 700;
-    padding: 4px 12px; border-radius: 20px; margin-bottom: 12px;
-  }
-
-  /* Navigation */
-  .nav-row {
-    display: flex;
-    gap: 10px;
-    padding: 20px 24px 32px;
-  }
-  .btn-prev {
-    flex: 1;
-    padding: 15px;
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    background: #fff;
-    color: #666;
-    font-size: 14px;
-    font-family: 'Noto Sans KR', sans-serif;
-    cursor: pointer;
-    transition: all 0.15s;
-  }
-  .btn-prev:hover { background: #f5f5f5; }
-  .btn-next {
-    flex: 2;
-    padding: 15px;
-    border: none;
-    border-radius: 10px;
-    background: #1a2744;
-    color: #fff;
-    font-size: 14px;
-    font-weight: 700;
-    font-family: 'Noto Sans KR', sans-serif;
-    cursor: pointer;
-    transition: opacity 0.2s;
-  }
-  .btn-next:hover { opacity: 0.88; }
-  .btn-next:active { opacity: 0.75; }
-  .btn-next:disabled { opacity: 0.4; cursor: not-allowed; }
-
-  /* Loading overlay */
-  .loading-overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(26,39,68,0.55);
-    z-index: 999;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    gap: 16px;
-  }
-  .loading-overlay.show { display: flex; }
-  .spinner {
-    width: 40px; height: 40px;
-    border: 3px solid rgba(255,255,255,0.3);
-    border-top-color: #fff;
-    border-radius: 50%;
-    animation: spin 0.8s linear infinite;
-  }
-  @keyframes spin { to { transform: rotate(360deg); } }
-  .loading-text { color: #fff; font-size: 14px; }
-
-  /* Thank you */
-  .thank-wrap {
-    display: none;
-    padding: 60px 24px 40px;
-    text-align: center;
-  }
-  .thank-icon {
-    width: 76px; height: 76px;
-    border-radius: 50%;
-    background: #eef2fb;
-    margin: 0 auto 24px;
-    display: flex; align-items: center; justify-content: center;
-  }
-  .thank-icon svg { width: 38px; height: 38px; }
-  .thank-wrap h2 { font-size: 22px; font-weight: 700; color: #1a2744; margin-bottom: 12px; }
-  .thank-wrap p { font-size: 14px; color: #666; line-height: 1.8; margin-bottom: 4px; }
-  .thank-detail {
-    margin-top: 28px;
-    background: #f7f8fc;
-    border-radius: 12px;
-    padding: 18px;
-    text-align: left;
-  }
-  .td-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 13px;
-    padding: 8px 0;
-    border-bottom: 1px solid #eee;
-  }
-  .td-row:last-child { border-bottom: none; }
-  .td-key { color: #888; }
-  .td-val { color: #1a2744; font-weight: 700; }
-
-  /* Error message */
-  .error-msg {
-    display: none;
-    background: #fff3f3;
-    border: 1px solid #ffcdd2;
-    border-radius: 8px;
-    padding: 12px 16px;
-    font-size: 13px;
-    color: #c0392b;
-    margin: 0 24px 16px;
-    line-height: 1.5;
-  }
-  .error-msg.show { display: block; }
+.nav-row { display: flex; gap: 10px; padding: 20px 24px 32px; }
+.btn-prev { flex: 1; padding: 15px; border: 1px solid #ddd; border-radius: 10px; background: #fff; color: #666; font-size: 14px; font-family: 'Noto Sans KR', sans-serif; cursor: pointer; }
+.btn-next { flex: 2; padding: 15px; border: none; border-radius: 10px; background: #1a2744; color: #fff; font-size: 14px; font-weight: 700; font-family: 'Noto Sans KR', sans-serif; cursor: pointer; transition: opacity .2s; }
+.btn-next:hover { opacity: .88; } .btn-next:active { opacity: .75; } .btn-next:disabled { opacity: .4; cursor: not-allowed; }
+.loading-overlay { display: none; position: fixed; inset: 0; background: rgba(26,39,68,.55); z-index: 999; align-items: center; justify-content: center; flex-direction: column; gap: 16px; }
+.loading-overlay.show { display: flex; }
+.spinner { width: 40px; height: 40px; border: 3px solid rgba(255,255,255,.3); border-top-color: #fff; border-radius: 50%; animation: spin .8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.loading-text { color: #fff; font-size: 14px; }
+.thank-wrap { display: none; padding: 60px 24px 40px; text-align: center; }
+.thank-icon { width: 76px; height: 76px; border-radius: 50%; background: #eef2fb; margin: 0 auto 24px; display: flex; align-items: center; justify-content: center; }
+.thank-wrap h2 { font-size: 22px; font-weight: 700; color: #1a2744; margin-bottom: 12px; }
+.thank-wrap p { font-size: 14px; color: #666; line-height: 1.8; margin-bottom: 4px; }
+.thank-detail { margin-top: 28px; background: #f7f8fc; border-radius: 12px; padding: 18px; text-align: left; }
+.td-row { display: flex; justify-content: space-between; align-items: center; font-size: 13px; padding: 8px 0; border-bottom: 1px solid #eee; }
+.td-row:last-child { border-bottom: none; }
+.td-key { color: #888; } .td-val { color: #1a2744; font-weight: 700; }
+.error-msg { display: none; background: #fff3f3; border: 1px solid #ffcdd2; border-radius: 8px; padding: 12px 16px; font-size: 13px; color: #c0392b; margin: 0 24px 16px; line-height: 1.5; }
+.error-msg.show { display: block; }
 </style>
 </head>
 <body>
-
 <div class="loading-overlay" id="loading-overlay">
   <div class="spinner"></div>
   <div class="loading-text">응답을 저장하는 중...</div>
@@ -368,16 +159,11 @@
     <div class="sub">품질·인증 전문가를 대상으로 한 설문조사입니다.</div>
   </div>
   <div class="progress-bar-wrap">
-    <div class="progress-track">
-      <div class="progress-fill" id="progress" style="width:0%"></div>
-    </div>
-    <div class="progress-meta">
-      <span id="prog-text">시작하기</span>
-      <span id="prog-pct">0%</span>
-    </div>
+    <div class="progress-track"><div class="progress-fill" id="progress" style="width:0%"></div></div>
+    <div class="progress-meta"><span id="prog-text">시작하기</span><span id="prog-pct">0%</span></div>
   </div>
 
-  <!-- 섹션 0: 동의 -->
+  <!-- 섹션 0: 연구 참여 동의 -->
   <div class="section active" id="sec-0">
     <div class="section-title">연구 참여 동의</div>
     <div class="consent-box">
@@ -387,8 +173,7 @@
       • 소요 시간: 약 10~15분<br>
       • 응답은 익명으로 처리되며 연구 목적 외에는 사용되지 않습니다.<br>
       • 참여 도중 언제든지 중단하실 수 있습니다.<br><br>
-      <strong>연구자</strong>: 경희대학교 대학원<br>
-      <strong>IRB 승인</strong>: 지도교수 승인 하 진행
+      <strong>연구자</strong>: 경희대학교 대학원 &nbsp;|&nbsp; <strong>IRB 승인</strong>: 지도교수 승인 하 진행
     </div>
     <label class="consent-check">
       <input type="checkbox" id="consent-chk">
@@ -397,10 +182,84 @@
     </label>
   </div>
 
-  <!-- 섹션 1: 기본 정보 -->
+  <!-- 섹션 1: 자격 확인 -->
   <div class="section" id="sec-1">
-    <div class="section-title">기본 정보</div>
+    <div class="section-title">참여 자격 확인</div>
+    <div class="qualify-card">
+      <div class="qc-title">최근 1년간 아래 사항에 해당되는 업무를 수행한 적이 있으십니까?</div>
+      <ul>
+        <li>ISO 9001 등 품질경영시스템 인증 관련 업무</li>
+        <li>내부심사 또는 외부 인증심사 참여·준비</li>
+        <li>품질 문서 작성, 검토, 관리 업무</li>
+        <li>규제 준수(Compliance) 또는 공정 품질관리 업무</li>
+      </ul>
+      <div class="yn-row">
+        <label><input type="radio" name="qualify" value="yes"><div class="yn-btn yes">✔ 예, 해당됩니다</div></label>
+        <label><input type="radio" name="qualify" value="no"><div class="yn-btn no">✘ 아니오</div></label>
+      </div>
+    </div>
+  </div>
 
+  <!-- 종료 화면 (자격 미달) -->
+  <div class="disqualify-wrap" id="disqualify-wrap">
+    <div class="disqualify-icon">🙏</div>
+    <h2>설문이 종료되었습니다</h2>
+    <p>본 연구는 품질·인증·심사 관련<br>업무 경험자를 대상으로 합니다.</p>
+    <p style="margin-top:12px;">참여해 주셔서 진심으로 감사드립니다.</p>
+  </div>
+
+  <!-- 섹션 2: 상황 제시 + 조작 점검 -->
+  <div class="section" id="sec-2">
+    <div class="section-title">업무 상황 제시</div>
+    <div id="situation-content"></div>
+    <div class="check-intro">📋 <strong>아래 문항은 방금 읽으신 상황에 대한 질문입니다.</strong><br>읽으신 내용을 떠올리며 솔직하게 응답해 주세요.</div>
+    <div class="q-block">
+      <div class="q-label"><span class="q-num">1</span>이 업무 상황은 실수가 발생했을 때 나에게 돌아올 책임과 불이익이 크다고 느껴진다.</div>
+      <div class="likert-anchor"><span>전혀 아니다</span><span>매우 그렇다</span></div>
+      <div class="likert-row" id="mc1-row"></div>
+    </div>
+    <div class="q-block">
+      <div class="q-label"><span class="q-num">2</span>이 문서를 검토하는 과정에서 나는 상당한 심리적 압박감(부담감)을 느낀다.</div>
+      <div class="likert-anchor"><span>전혀 아니다</span><span>매우 그렇다</span></div>
+      <div class="likert-row" id="mc2-row"></div>
+    </div>
+  </div>
+
+  <!-- 섹션 3: AI UI + EXP -->
+  <div class="section" id="sec-3">
+    <div class="section-title">AI 도구 분석 결과</div>
+    <div class="scenario-progress" id="scenario-progress-text"></div>
+    <div class="ai-ui-wrap">
+      <div class="ai-ui-topbar">
+        <div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div>
+        <span class="app-name">AI Document Assistant</span>
+        <div class="status-dot"></div><span class="status-text">연결됨</span>
+      </div>
+      <div class="chat-messages" id="chat-wrap"></div>
+    </div>
+    <div style="font-size:12px;color:#888;margin-bottom:20px;line-height:1.6;padding:0 2px;">
+      위 AI 도구의 분석 결과를 보신 후, 아래 문항에 응답해 주세요.<br>(1점: 전혀 아니다 ~ 7점: 매우 그렇다)
+    </div>
+    <div id="qs-exp"></div>
+  </div>
+
+  <!-- 섹션 4: PU + EPR + AA + TRU -->
+  <div class="section" id="sec-4">
+    <div class="section-title">AI 시스템에 대한 인식</div>
+    <div style="font-size:12px;color:#888;margin-bottom:20px;line-height:1.6;">(1점: 전혀 아니다 ~ 7점: 매우 그렇다)</div>
+    <div id="qs-4"></div>
+  </div>
+
+  <!-- 섹션 5: ITU -->
+  <div class="section" id="sec-5">
+    <div class="section-title">사용 의도</div>
+    <div style="font-size:12px;color:#888;margin-bottom:20px;line-height:1.6;">(1점: 전혀 아니다 ~ 7점: 매우 그렇다)</div>
+    <div id="qs-5"></div>
+  </div>
+
+  <!-- 섹션 6: 인구통계 -->
+  <div class="section" id="sec-6">
+    <div class="section-title">기본 정보</div>
     <div class="q-block">
       <div class="q-label"><span class="q-num">1</span>귀하의 주요 업무 분야는 무엇입니까?</div>
       <div class="select-group">
@@ -411,7 +270,6 @@
         <label><input type="radio" name="q_field" value="기타"><div class="select-box">기타</div></label>
       </div>
     </div>
-
     <div class="q-block">
       <div class="q-label"><span class="q-num">2</span>관련 업무 경력은 몇 년입니까?</div>
       <div class="select-group">
@@ -422,7 +280,6 @@
         <label><input type="radio" name="q_exp" value="16년 이상"><div class="select-box">16년 이상</div></label>
       </div>
     </div>
-
     <div class="q-block">
       <div class="q-label"><span class="q-num">3</span>AI 도구 사용 경험이 있으십니까?</div>
       <div class="select-group">
@@ -434,48 +291,34 @@
     </div>
   </div>
 
-  <!-- 섹션 2: 비네트 시나리오 -->
-  <div class="section" id="sec-2">
-    <div class="section-title">시나리오 제시</div>
-    <div id="vignette-content"></div>
+  <!-- 섹션 7: 개인정보 동의 (선택) -->
+  <div class="section" id="sec-7">
+    <div class="section-title">개인정보 활용 동의 (선택)</div>
+    <div class="privacy-optional">
+      ✅ 이 섹션은 <strong>선택 사항</strong>입니다. 응답하지 않으셔도 설문 제출에 문제가 없습니다.<br><br>
+      추후 연구 결과 공유 또는 소정의 감사 표시를 위해 연락처를 수집할 수 있습니다.<br>
+      수집된 정보는 해당 목적 외에는 사용되지 않습니다.
+    </div>
     <div class="q-block">
-      <div class="q-label" style="font-weight:400; color:#666; font-size:13px;">
-        위 시나리오를 천천히 읽으신 후, 해당 상황에서 귀하가 AI 도구를 사용한다고 상상하며 다음 문항에 응답해 주세요.
+      <div class="q-label">개인정보 수집·활용에 동의하십니까?</div>
+      <div class="privacy-consent-row">
+        <label><input type="radio" name="priv_consent" value="동의"><div class="pc-btn">동의합니다</div></label>
+        <label><input type="radio" name="priv_consent" value="미동의"><div class="pc-btn">동의하지 않습니다</div></label>
+      </div>
+    </div>
+    <div id="priv-fields" style="display:none;">
+      <div class="q-block">
+        <div class="q-label">성함 (선택)</div>
+        <input type="text" class="input-field" id="priv-name" placeholder="홍길동">
+      </div>
+      <div class="q-block">
+        <div class="q-label">연락처 (선택)</div>
+        <input type="text" class="input-field" id="priv-contact" placeholder="010-0000-0000 또는 이메일">
       </div>
     </div>
   </div>
 
-  <!-- 섹션 3: EXP + PU -->
-  <div class="section" id="sec-3">
-    <div class="section-title">AI 시스템에 대한 인식 (1/2)</div>
-    <div style="font-size:12px; color:#888; margin-bottom:20px; line-height:1.6;">
-      아래 각 문항에 대해 1(전혀 아니다)부터 7(매우 그렇다) 중 해당하는 숫자를 선택해 주세요.
-    </div>
-    <div id="qs-3"></div>
-  </div>
-
-  <!-- 섹션 4: EPR + AA + TRU -->
-  <div class="section" id="sec-4">
-    <div class="section-title">AI 시스템에 대한 인식 (2/2)</div>
-    <div style="font-size:12px; color:#888; margin-bottom:20px; line-height:1.6;">
-      아래 각 문항에 대해 1(전혀 아니다)부터 7(매우 그렇다) 중 해당하는 숫자를 선택해 주세요.
-    </div>
-    <div id="qs-4"></div>
-  </div>
-
-  <!-- 섹션 5: ITU -->
-  <div class="section" id="sec-5">
-    <div class="section-title">사용 의도</div>
-    <div style="font-size:12px; color:#888; margin-bottom:20px; line-height:1.6;">
-      아래 각 문항에 대해 1(전혀 아니다)부터 7(매우 그렇다) 중 해당하는 숫자를 선택해 주세요.
-    </div>
-    <div id="qs-5"></div>
-  </div>
-
-  <div class="error-msg" id="error-msg">
-    응답 저장 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.
-  </div>
-
+  <div class="error-msg" id="error-msg">응답 저장 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.</div>
   <div class="nav-row" id="nav-row">
     <button class="btn-prev" id="btn-prev" onclick="navigate(-1)" style="display:none">이전</button>
     <button class="btn-next" id="btn-next" onclick="navigate(1)">다음 →</button>
@@ -484,215 +327,260 @@
   <!-- 완료 화면 -->
   <div class="thank-wrap" id="thank-wrap">
     <div class="thank-icon">
-      <svg viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="19" cy="19" r="19" fill="#1a2744"/>
-        <path d="M11 19l6 6 10-12" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
+      <svg viewBox="0 0 38 38" fill="none"><circle cx="19" cy="19" r="19" fill="#1a2744"/><path d="M11 19l6 6 10-12" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </div>
     <h2>설문이 완료되었습니다</h2>
     <p>소중한 시간을 내어 참여해 주셔서</p>
     <p>진심으로 감사드립니다 🙏</p>
-    <p style="margin-top:8px; font-size:13px;">응답 내용은 논문 연구에 소중하게 활용됩니다.</p>
+    <p style="margin-top:8px;font-size:13px;">응답 내용은 논문 연구에 소중하게 활용됩니다.</p>
     <div class="thank-detail" id="thank-detail"></div>
   </div>
 </div>
 
 <script>
-// =============================================
-// Google Sheets 웹앱 URL
-// =============================================
 const SHEET_URL = 'https://script.google.com/macros/s/AKfycbxewOPqzNbp9Ni_CvRnn-qjtMhFQY-khf7kFzP9NqIKO8nVi_X3zJ_NisAqwtORMRjr/exec';
+const TOTAL_SECTIONS = 8; // 0~7
+let cur = 0;
+let grp = Math.random() < 0.5 ? 'A' : 'B';
+let chatDone = false;
 
-// =============================================
-// 설문 데이터 구성
-// =============================================
-const TOTAL_SECTIONS = 6;
-let currentSection = 0;
-let assignedGroup = Math.random() < 0.5 ? 'A' : 'B';
+// 개인정보 동의 토글
+document.addEventListener('change', function(e) {
+  if (e.target.name === 'priv_consent') {
+    document.getElementById('priv-fields').style.display = e.target.value === '동의' ? 'block' : 'none';
+  }
+});
 
-const vignettes = {
-  A: `
-    <div class="vignette-card">
-      <div class="vc-label">제시 시나리오</div>
-      <span class="badge-high">고책임 조건 (Group A)</span>
-      <div class="vc-text">
-        귀하는 ISO 9001 인증 심사를 앞두고 품질 문서를 검토하고 있습니다.
-        AI 문서 분석 도구가 특정 항목에서 불적합 사항을 발견하였으며,
-        <strong style="color:#fff;">"왜 이 항목이 불적합인지"</strong>에 대한 분석 근거와 판단 과정을 상세히 제공합니다.
-        <br><br>
-        이 AI 분석 결과를 기반으로 <strong style="color:#fff;">귀하가 최종 심사 보고서를 작성</strong>하고,
-        인증 기관에 제출하는 인증 결정에 직접 책임을 집니다.
-      </div>
-    </div>`,
-  B: `
-    <div class="vignette-card">
-      <div class="vc-label">제시 시나리오</div>
-      <span class="badge-low">저책임 조건 (Group B)</span>
-      <div class="vc-text">
-        귀하는 내부 문서 검토 업무를 수행 중입니다.
-        AI 도구가 개선 가능 항목을 탐지하였으나,
-        <strong style="color:#fff;">판단 근거나 분석 과정은 제공되지 않습니다.</strong>
-        <br><br>
-        최종 결정은 상급자가 내리며, 귀하는 AI 결과를 <strong style="color:#fff;">참고자료로만 활용</strong>합니다.
-        이 결과에 대한 책임은 귀하에게 없습니다.
-      </div>
-    </div>`
+const situations = {
+  A: `<div class="situation-card"><div class="sc-tag">업무 시나리오</div><span class="badge-high">고책임 조건 (Group A)</span><div class="sc-text">귀하는 내일 오전 10시, 외부 인증기관에서 실시하는 <strong>ISO 9001 정기 사후심사</strong>를 앞두고 있는 품질·인증 실무 담당자입니다.<br><br>귀하는 지금 심사원에게 최종 제출할 <strong>'품질경영계획서 및 내부심사 보고서'</strong>의 마지막 검토를 진행하고 있습니다.<br><br>이 문서는 <strong>귀하의 이름으로 제출</strong>되며, 만약 중대한 부적합이 발견될 경우 인증 유지에 심각한 문제가 발생하고 <strong>그 책임은 실무자인 귀하에게 돌아옵니다.</strong><br><br>현재 시간은 퇴근을 불과 <strong>1시간 앞둔 오후 5시</strong>로, 시간이 매우 촉박한 상황입니다.</div></div>`,
+  B: `<div class="situation-card"><div class="sc-tag">업무 시나리오</div><span class="badge-low">저책임 조건 (Group B)</span><div class="sc-text">귀하는 ISO 9001 인증 업무를 지원하는 <strong>품질·인증 실무자</strong>입니다.<br><br>오늘 귀하는 <strong>내부 검토용 심사 보조 자료</strong>를 정리하고 있습니다.<br><br>이 자료는 <strong>참고용으로만 활용</strong>되며, 최종 심사 보고서는 별도의 책임자가 작성합니다. 귀하에게는 해당 내용에 대한 <strong>공식적인 책임이 없습니다.</strong><br><br>귀하의 회사는 최근 AI 기반 문서 지원 도구를 도입하였습니다. 귀하는 아래 AI 도구의 분석 결과를 <strong>참고하여 보조 자료를 정리</strong>하면 됩니다.</div></div>`
 };
 
-const sec3Items = [
-  { id:'EXP1', label:'AI 시스템이 어떻게 결론에 도달했는지 이해할 수 있다.' },
-  { id:'EXP2', label:'AI 시스템의 분석 근거가 명확하게 제시된다.' },
-  { id:'EXP3', label:'AI 시스템의 설명이 내 업무 판단에 도움이 된다.' },
-  { id:'PU1',  label:'이 AI 도구는 업무 효율을 높여줄 것이다.' },
-  { id:'PU2',  label:'이 AI 도구를 사용하면 업무 성과가 향상될 것이다.' },
-  { id:'PU3',  label:'이 AI 도구는 전반적으로 유용하다.' },
-];
+const progressTxt = {
+  A: '⏰ <strong>시간이 촉박한 귀하</strong>는 최근 도입된 "AI 기반 품질 문서 검토 도구"에 품질경영계획서 파일을 업로드하여 빠른 검토를 지시했습니다. 1분 뒤, AI의 분석 결과가 아래와 같이 나타났습니다.',
+  B: 'ℹ️ 귀하는 참고용 보조 자료 정리를 위해 AI 도구에 문서를 업로드했습니다. 잠시 후, 아래와 같은 분석 결과가 나타났습니다.'
+};
 
+function mkReportA() {
+  const d = document.createElement('div');
+  d.className = 'chat-row';
+  d.innerHTML = `<div class="chat-avatar avatar-ai">AI</div><div class="chat-bubble bubble-report"><div class="report-header"><div class="rh-icon">📄</div><div><div class="rh-title">AI Analysis Report</div><div class="rh-sub">ISO 9001:2015 · 문서 자동 검토</div></div></div><div class="report-body"><div class="report-badge rb-danger">⚠ 치명적 오류 1건 발견</div><div class="report-section"><div class="rs-label">오류 위치</div><div class="rs-content">6.2.2항 — 품질목표 달성 기획 (위험도: 높음)</div></div><div class="report-divider"></div><div class="report-section"><div class="rs-label">AI 분석 근거</div><div class="rs-content">해당 항목에서 요구하는 <strong>'분기별 세부 달성 계획'이 누락</strong>되었으며, 목표를 실행할 <strong>'담당자(책임자)'가 명확히 지정되지 않았습니다.</strong> ISO 9001:2015 6.2.2(b)(c)(d) 요구사항 미충족.</div></div><div class="report-divider"></div><div class="report-section"><div class="rs-label">AI 수정 초안 제안</div><div class="rs-content">과거 유사 부서 데이터를 바탕으로 1~4분기별 달성 계획 및 담당자를 추가한 수정 초안을 생성하시겠습니까?</div></div></div><div class="report-actions"><div class="ra-btn ra-primary">수정 초안 자동 작성</div><div class="ra-btn ra-secondary">무시하고 원본 유지</div></div></div>`;
+  return d;
+}
+
+function mkReportB() {
+  const d = document.createElement('div');
+  d.className = 'chat-row';
+  d.innerHTML = `<div class="chat-avatar avatar-ai">AI</div><div class="chat-bubble bubble-report"><div class="report-header"><div class="rh-icon">📄</div><div><div class="rh-title">AI Analysis Report</div><div class="rh-sub">ISO 9001:2015 · 문서 자동 검토</div></div></div><div class="report-body"><div class="report-badge rb-info">⚠ 부적합 우려 항목 감지</div><div class="report-section"><div class="rs-label">판정</div><div class="rs-content">ISO 9001:2015 6.2.2항 위배 가능성</div></div><div class="report-divider"></div><div class="report-section"><div class="rs-label">권고 사항</div><div class="rs-content">6.2.2항을 참조하여 품질 목표 달성 계획의 구체적 일정 및 담당자를 추가하십시오.</div></div><div class="report-divider"></div><div class="report-section"><div class="rs-label">AI 수정 초안 제안</div><div class="rs-content" style="font-family:monospace;font-size:11px;color:#444;">6.2.2 품질 목표 달성 계획 [수정안]<br>본 조직은 품질 목표 달성을 위해 분기별 검토 일정(3월·6월·9월·12월) 및 담당 부서장 책임을 명시하여 관리한다.</div></div></div><div class="report-actions"><div class="ra-btn ra-primary">수정안 적용</div><div class="ra-btn ra-secondary">직접 수정</div></div></div>`;
+  return d;
+}
+
+const chatScripts = {
+  A: [
+    {t:'user', text:'품질경영계획서 최종 검토 부탁해. 내일 심사 제출용이야.'},
+    {t:'typing'},{t:'reportA'},
+    {t:'user', text:'수정 초안 작성해줘. 내가 최종 확인하고 제출할게.'},
+    {t:'ai', text:'수정 초안을 생성합니다. 최종 심사 보고서는 귀하의 이름으로 제출되며, 인증 결정에 대한 책임은 귀하께 있습니다.'},
+  ],
+  B: [
+    {t:'user', text:'내부 검토용 보조 자료 정리하려고. 문서 분석해줘.'},
+    {t:'typing'},{t:'reportB'},
+    {t:'user', text:'알겠어, 참고할게.'},
+    {t:'ai', text:'보조 자료에 참고하시면 됩니다. 최종 판단과 보고서 작성은 책임자께서 진행하십니다.'},
+  ]
+};
+
+function runChat() {
+  if (chatDone) return;
+  chatDone = true;
+  const wrap = document.getElementById('chat-wrap');
+  wrap.innerHTML = '';
+  let delay = 300;
+  chatScripts[grp].forEach(msg => {
+    if (msg.t === 'typing') {
+      setTimeout(() => {
+        const r = document.createElement('div');
+        r.className = 'chat-row'; r.id = 'typing-row';
+        r.innerHTML = '<div class="chat-avatar avatar-ai">AI</div><div class="chat-bubble bubble-ai"><div class="typing-dots"><span></span><span></span><span></span></div></div>';
+        wrap.appendChild(r); setTimeout(()=>r.classList.add('show'),30);
+        setTimeout(()=>{ const x=document.getElementById('typing-row'); if(x)x.remove(); },1600);
+      }, delay); delay += 1900;
+    } else if (msg.t === 'reportA') {
+      setTimeout(()=>{ const r=mkReportA(); wrap.appendChild(r); setTimeout(()=>r.classList.add('show'),30); wrap.scrollTop=wrap.scrollHeight; }, delay); delay += 1100;
+    } else if (msg.t === 'reportB') {
+      setTimeout(()=>{ const r=mkReportB(); wrap.appendChild(r); setTimeout(()=>r.classList.add('show'),30); wrap.scrollTop=wrap.scrollHeight; }, delay); delay += 1100;
+    } else if (msg.t === 'user') {
+      setTimeout(()=>{
+        const r=document.createElement('div'); r.className='chat-row user-row';
+        r.innerHTML=`<div class="chat-bubble bubble-user">${msg.text}</div><div class="chat-avatar avatar-user">나</div>`;
+        wrap.appendChild(r); setTimeout(()=>r.classList.add('show'),30); wrap.scrollTop=wrap.scrollHeight;
+      }, delay); delay += 1000;
+    } else if (msg.t === 'ai') {
+      setTimeout(()=>{
+        const r=document.createElement('div'); r.className='chat-row';
+        r.innerHTML=`<div class="chat-avatar avatar-ai">AI</div><div class="chat-bubble bubble-ai">${msg.text}</div>`;
+        wrap.appendChild(r); setTimeout(()=>r.classList.add('show'),30); wrap.scrollTop=wrap.scrollHeight;
+      }, delay); delay += 1000;
+    }
+  });
+}
+
+const expItems = [
+  {id:'EXP1', label:'화면에 제시된 AI의 분석 결과는 오류의 위치와 그 이유를 내가 이해하기 쉽게 설명해 준다.'},
+  {id:'EXP2', label:'나는 이 AI 도구가 어떤 근거(규정, 데이터)를 바탕으로 수정 초안을 제안했는지 명확하게 알 수 있다.'},
+  {id:'EXP3', label:'AI가 제공하는 부가적인 설명(오류 위험도 등)은 내가 상황을 파악하기에 충분히 구체적이다.'},
+  {id:'EXP4', label:'나는 이 AI 도구가 치명적 오류라는 결론을 도출해 낸 논리적 과정을 추적하고 파악할 수 있다.'},
+];
 const sec4Items = [
-  { id:'EPR1', label:'이 AI 시스템 사용 시 개인정보 유출이 우려된다.' },
-  { id:'EPR2', label:'이 AI 시스템은 내 업무 데이터를 안전하게 처리할 것이다.' },
-  { id:'AA1',  label:'AI 판단 결과에 대한 책임 소재가 명확하다고 생각한다.' },
-  { id:'TRU1', label:'이 AI 시스템은 신뢰할 수 있다.' },
-  { id:'TRU2', label:'이 AI 시스템은 일관되고 믿을 수 있는 결과를 제공한다.' },
-  { id:'TRU3', label:'이 AI 시스템의 추천을 믿고 따를 수 있다.' },
+  {id:'PU1',  label:'이 AI 도구는 업무 효율을 높여줄 것이다.'},
+  {id:'PU2',  label:'이 AI 도구를 사용하면 업무 성과가 향상될 것이다.'},
+  {id:'PU3',  label:'이 AI 도구는 전반적으로 유용하다.'},
+  {id:'EPR1', label:'이 AI 시스템 사용 시 개인정보 유출이 우려된다.'},
+  {id:'EPR2', label:'이 AI 시스템은 내 업무 데이터를 안전하게 처리할 것이다.'},
+  {id:'AA1',  label:'AI 판단 결과에 대한 책임 소재가 명확하다고 생각한다.'},
+  {id:'TRU1', label:'이 AI 시스템은 신뢰할 수 있다.'},
+  {id:'TRU2', label:'이 AI 시스템은 일관되고 믿을 수 있는 결과를 제공한다.'},
+  {id:'TRU3', label:'이 AI 시스템의 추천을 믿고 따를 수 있다.'},
 ];
-
 const sec5Items = [
-  { id:'ITU1', label:'나는 이 AI 도구를 실제 업무에 사용할 의향이 있다.' },
-  { id:'ITU2', label:'나는 이 AI 도구를 지속적으로 활용할 것이다.' },
-  { id:'ITU3', label:'나는 동료에게 이 AI 도구를 추천할 것이다.' },
+  {id:'ITU1', label:'나는 이 AI 도구를 실제 업무에 사용할 의향이 있다.'},
+  {id:'ITU2', label:'나는 이 AI 도구를 지속적으로 활용할 것이다.'},
+  {id:'ITU3', label:'나는 동료에게 이 AI 도구를 추천할 것이다.'},
 ];
 
-function makeLikert(items, targetId) {
-  document.getElementById(targetId).innerHTML = items.map((item, i) => `
+function makeLikert(items, tid) {
+  document.getElementById(tid).innerHTML = items.map((item,i) => `
     <div class="q-block">
       <div class="q-label"><span class="q-num">${i+1}</span>${item.label}</div>
       <div class="likert-anchor"><span>전혀 아니다</span><span>매우 그렇다</span></div>
-      <div class="likert-row">
-        ${[1,2,3,4,5,6,7].map(v=>`
-          <label>
-            <input type="radio" name="${item.id}" value="${v}">
-            <div class="likert-btn">${v}</div>
-          </label>`).join('')}
-      </div>
-    </div>
-  `).join('');
+      <div class="likert-row">${[1,2,3,4,5,6,7].map(v=>`<label><input type="radio" name="${item.id}" value="${v}"><div class="likert-btn">${v}</div></label>`).join('')}</div>
+    </div>`).join('');
+}
+
+function makeMCRow(name, cid) {
+  document.getElementById(cid).innerHTML = [1,2,3,4,5,6,7].map(v=>`<label style="flex:1"><input type="radio" name="${name}" value="${v}"><div class="likert-btn">${v}</div></label>`).join('');
 }
 
 function initAll() {
-  document.getElementById('vignette-content').innerHTML = vignettes[assignedGroup];
-  makeLikert(sec3Items, 'qs-3');
-  makeLikert(sec4Items, 'qs-4');
-  makeLikert(sec5Items, 'qs-5');
+  document.getElementById('situation-content').innerHTML = situations[grp];
+  document.getElementById('scenario-progress-text').innerHTML = progressTxt[grp];
+  makeMCRow('MC1','mc1-row');
+  makeMCRow('MC2','mc2-row');
+  makeLikert(expItems,'qs-exp');
+  makeLikert(sec4Items,'qs-4');
+  makeLikert(sec5Items,'qs-5');
 }
 
+const sectionLabels = ['연구 동의','자격 확인','상황 제시','AI 분석·EXP','인식 측정','사용 의도','기본 정보','개인정보(선택)'];
+
 function updateProgress() {
-  const pct = Math.round((currentSection / (TOTAL_SECTIONS - 1)) * 100);
-  document.getElementById('progress').style.width = pct + '%';
-  document.getElementById('prog-pct').textContent = pct + '%';
-  const labels = ['연구 동의', '기본 정보', '시나리오', '인식 1/2', '인식 2/2', '사용 의도'];
-  document.getElementById('prog-text').textContent = labels[currentSection] || '';
+  const pct = Math.round((cur/(TOTAL_SECTIONS-1))*100);
+  document.getElementById('progress').style.width = pct+'%';
+  document.getElementById('prog-pct').textContent = pct+'%';
+  document.getElementById('prog-text').textContent = sectionLabels[cur]||'';
 }
 
 function showSection(n) {
-  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-  const sec = document.getElementById('sec-' + n);
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  const sec = document.getElementById('sec-'+n);
   if (sec) sec.classList.add('active');
-  document.getElementById('btn-prev').style.display = n === 0 ? 'none' : '';
-  const isLast = n === TOTAL_SECTIONS - 1;
-  document.getElementById('btn-next').textContent = isLast ? '제출하기 ✓' : '다음 →';
+  document.getElementById('btn-prev').style.display = n===0?'none':'';
+  document.getElementById('btn-next').textContent = n===TOTAL_SECTIONS-1?'제출하기 ✓':'다음 →';
   document.getElementById('error-msg').classList.remove('show');
   updateProgress();
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+  window.scrollTo({top:0,behavior:'smooth'});
+  if (n===3) setTimeout(runChat,400);
+}
+
+function showDisqualify() {
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.getElementById('disqualify-wrap').style.display='block';
+  document.getElementById('nav-row').style.display='none';
+  document.getElementById('progress').style.width='100%';
+  document.getElementById('prog-pct').textContent='종료';
+  document.getElementById('prog-text').textContent='참여 불가';
+  window.scrollTo({top:0,behavior:'smooth'});
 }
 
 function validate() {
-  if (currentSection === 0) return document.getElementById('consent-chk').checked;
-  if (currentSection === 1) {
-    return ['q_field','q_exp','q_ai'].every(n => document.querySelector(`input[name="${n}"]:checked`));
-  }
-  if (currentSection === 3) {
-    return sec3Items.every(item => document.querySelector(`input[name="${item.id}"]:checked`));
-  }
-  if (currentSection === 4) {
-    return sec4Items.every(item => document.querySelector(`input[name="${item.id}"]:checked`));
-  }
-  if (currentSection === 5) {
-    return sec5Items.every(item => document.querySelector(`input[name="${item.id}"]:checked`));
-  }
-  return true;
+  if (cur===0) return document.getElementById('consent-chk').checked;
+  if (cur===1) return !!document.querySelector('input[name="qualify"]:checked');
+  if (cur===2) return ['MC1','MC2'].every(n=>document.querySelector(`input[name="${n}"]:checked`));
+  if (cur===3) return expItems.every(i=>document.querySelector(`input[name="${i.id}"]:checked`));
+  if (cur===4) return sec4Items.every(i=>document.querySelector(`input[name="${i.id}"]:checked`));
+  if (cur===5) return sec5Items.every(i=>document.querySelector(`input[name="${i.id}"]:checked`));
+  if (cur===6) return ['q_field','q_exp','q_ai'].every(n=>document.querySelector(`input[name="${n}"]:checked`));
+  return true; // 섹션 7(개인정보)은 선택
 }
 
 function collectData() {
   const data = {
     timestamp: new Date().toLocaleString('ko-KR'),
-    group: assignedGroup,
-    field: (document.querySelector('input[name="q_field"]:checked') || {}).value || '',
-    experience: (document.querySelector('input[name="q_exp"]:checked') || {}).value || '',
-    ai_usage: (document.querySelector('input[name="q_ai"]:checked') || {}).value || '',
+    group: grp,
+    field: (document.querySelector('input[name="q_field"]:checked')||{}).value||'',
+    experience: (document.querySelector('input[name="q_exp"]:checked')||{}).value||'',
+    ai_usage: (document.querySelector('input[name="q_ai"]:checked')||{}).value||'',
+    MC1: (document.querySelector('input[name="MC1"]:checked')||{}).value||'',
+    MC2: (document.querySelector('input[name="MC2"]:checked')||{}).value||'',
+    priv_consent: (document.querySelector('input[name="priv_consent"]:checked')||{}).value||'',
+    priv_name: document.getElementById('priv-name').value||'',
+    priv_contact: document.getElementById('priv-contact').value||'',
   };
-  [...sec3Items, ...sec4Items, ...sec5Items].forEach(item => {
-    const el = document.querySelector(`input[name="${item.id}"]:checked`);
-    data[item.id] = el ? parseInt(el.value) : '';
+  [...expItems,...sec4Items,...sec5Items].forEach(item=>{
+    const el=document.querySelector(`input[name="${item.id}"]:checked`);
+    data[item.id]=el?parseInt(el.value):'';
   });
   return data;
 }
 
-function avg(items, data) {
-  const vals = items.map(i => data[i.id]).filter(v => v !== '');
-  return vals.length ? (vals.reduce((a,b)=>a+b,0)/vals.length).toFixed(2) : '-';
+function avg(items,data) {
+  const vals=items.map(i=>data[i.id]).filter(v=>v!=='');
+  return vals.length?(vals.reduce((a,b)=>a+b,0)/vals.length).toFixed(2):'-';
 }
 
 async function submitData(data) {
   document.getElementById('loading-overlay').classList.add('show');
-  document.getElementById('btn-next').disabled = true;
+  document.getElementById('btn-next').disabled=true;
   try {
-    await fetch(SHEET_URL, {
-      method: 'POST',
-      mode: 'no-cors',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data)
-    });
+    await fetch(SHEET_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
     showThank(data);
   } catch(e) {
     document.getElementById('error-msg').classList.add('show');
-    document.getElementById('btn-next').disabled = false;
+    document.getElementById('btn-next').disabled=false;
   } finally {
     document.getElementById('loading-overlay').classList.remove('show');
   }
 }
 
 function showThank(data) {
-  document.getElementById('nav-row').style.display = 'none';
-  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-  document.getElementById('progress').style.width = '100%';
-  document.getElementById('prog-pct').textContent = '완료';
-  document.getElementById('prog-text').textContent = '제출 완료';
-
-  document.getElementById('thank-detail').innerHTML = `
+  document.getElementById('nav-row').style.display='none';
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.getElementById('progress').style.width='100%';
+  document.getElementById('prog-pct').textContent='완료';
+  document.getElementById('prog-text').textContent='제출 완료';
+  const mc1=parseInt(data.MC1)||0, mc2=parseInt(data.MC2)||0;
+  document.getElementById('thank-detail').innerHTML=`
     <div class="td-row"><span class="td-key">배정 그룹</span><span class="td-val">그룹 ${data.group} (${data.group==='A'?'고책임':'저책임'})</span></div>
-    <div class="td-row"><span class="td-key">업무 분야</span><span class="td-val">${data.field || '-'}</span></div>
-    <div class="td-row"><span class="td-key">설명가능성 평균 (EXP)</span><span class="td-val">${avg(sec3Items.slice(0,3), data)} / 7</span></div>
-    <div class="td-row"><span class="td-key">지각된 유용성 평균 (PU)</span><span class="td-val">${avg(sec3Items.slice(3,6), data)} / 7</span></div>
-    <div class="td-row"><span class="td-key">신뢰 평균 (TRU)</span><span class="td-val">${avg(sec4Items.slice(3,6), data)} / 7</span></div>
-    <div class="td-row"><span class="td-key">사용 의도 평균 (ITU)</span><span class="td-val">${avg(sec5Items, data)} / 7</span></div>
-    <div class="td-row"><span class="td-key">응답 시각</span><span class="td-val">${data.timestamp}</span></div>
-  `;
-  document.getElementById('thank-wrap').style.display = 'block';
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+    <div class="td-row"><span class="td-key">업무 분야</span><span class="td-val">${data.field||'-'}</span></div>
+    <div class="td-row"><span class="td-key">조작 점검 평균</span><span class="td-val">${((mc1+mc2)/2).toFixed(1)} / 7</span></div>
+    <div class="td-row"><span class="td-key">설명가능성 평균 (EXP)</span><span class="td-val">${avg(expItems,data)} / 7</span></div>
+    <div class="td-row"><span class="td-key">신뢰 평균 (TRU)</span><span class="td-val">${avg(sec4Items.slice(6,9),data)} / 7</span></div>
+    <div class="td-row"><span class="td-key">사용 의도 평균 (ITU)</span><span class="td-val">${avg(sec5Items,data)} / 7</span></div>
+    <div class="td-row"><span class="td-key">응답 시각</span><span class="td-val">${data.timestamp}</span></div>`;
+  document.getElementById('thank-wrap').style.display='block';
+  window.scrollTo({top:0,behavior:'smooth'});
 }
 
 function navigate(dir) {
-  if (dir === 1 && !validate()) {
-    alert('모든 항목에 응답해 주세요.');
-    return;
+  if (dir===1 && !validate()) { alert('모든 항목에 응답해 주세요.'); return; }
+  // 자격 확인에서 아니오 선택 시 종료
+  if (dir===1 && cur===1) {
+    const ans = document.querySelector('input[name="qualify"]:checked');
+    if (ans && ans.value === 'no') { showDisqualify(); return; }
   }
-  if (dir === 1 && currentSection === TOTAL_SECTIONS - 1) {
-    submitData(collectData());
-    return;
-  }
-  currentSection = Math.max(0, Math.min(TOTAL_SECTIONS - 1, currentSection + dir));
-  showSection(currentSection);
+  if (dir===1 && cur===TOTAL_SECTIONS-1) { submitData(collectData()); return; }
+  cur=Math.max(0,Math.min(TOTAL_SECTIONS-1,cur+dir));
+  showSection(cur);
 }
 
 initAll();
