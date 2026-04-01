@@ -160,7 +160,7 @@ body { font-family: 'Noto Sans KR', sans-serif; background: #f0f2f7; min-height:
     <h1>AI 문서 지원 도구에 대한<br>인식 및 수용 연구</h1>
     <div class="sub">
       연구자: 경희대학교 경영대학원 AI비즈니스 전공 김채이<br>
-      연락처: codl_121@khu.ac.kr<br>
+      연락처: <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="eb88848f87b4dad9daab80839ec58a88c58099">[email&#160;protected]</a><br>
       지도교수: 경희대학교 경영대학원 김상균 교수
     </div>
   </div>
@@ -173,15 +173,16 @@ body { font-family: 'Noto Sans KR', sans-serif; background: #f0f2f7; min-height:
   <div class="section active" id="sec-0">
     <div class="section-title">연구 참여 동의</div>
     <div class="consent-box">
-      <strong>연구 목적</strong><br>
-      본 연구는 AI 기반 문서 지원 도구의 설명 가능성(XAI)이 품질·인증 전문가의 신뢰 및 사용 의도에 미치는 영향을 분석합니다.<br><br>
+      <strong>연구 배경 및 목적</strong><br>
+      최근 품질·인증 업무 현장에서 AI 기반 문서 지원 도구의 도입 가능성은 확대되고 있으나, 고책임·고위험 업무 맥락에서 AI에 대한 신뢰가 충분히 형성되지 않아 실제 활용은 제한적인 경우가 많습니다.<br><br>
+      본 연구는 <strong>설명 가능성(XAI), 지각된 유용성, 오류 가능성 인식, 책임 불안</strong>이 AI 신뢰 형성에 미치는 영향을 분석하고, <strong>업무 책임 수준(고책임 vs 일반 업무)</strong>이 이 관계를 어떻게 조절하는지 검증합니다.<br><br>
       <strong>참여 안내</strong><br>
       • 소요 시간: 약 10~15분<br>
       • 응답은 익명으로 처리되며 연구 목적 외에는 사용되지 않습니다.<br>
       • 참여 도중 언제든지 중단하실 수 있습니다.<br><br>
       <strong>연구자</strong>: 경희대학교 경영대학원 AI비즈니스 전공 김채이<br>
       <strong>지도교수</strong>: 경희대학교 경영대학원 김상균 교수<br>
-      <strong>연락처</strong>: codl_121@khu.ac.kr
+      <strong>연락처</strong>: <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="a7c4c8c3cbf8969596e7cccfd289c6c489ccd5">[email&#160;protected]</a>
     </div>
     <label class="consent-check">
       <input type="checkbox" id="consent-chk">
@@ -311,12 +312,12 @@ body { font-family: 'Noto Sans KR', sans-serif; background: #f0f2f7; min-height:
     </div>
 
     <div class="q-block">
-      <div class="q-label"><span class="q-num">5</span>AI 도구 사용 경험이 있으십니까?</div>
+      <div class="q-label"><span class="q-num">5</span>AI 도구 사용 경험이 있으십니까? <span style="font-size:12px;color:#888;font-weight:400;">(예: ChatGPT, Gemini, Claude 등)</span></div>
       <div class="select-group">
         <label><input type="radio" name="q_ai" value="없음"><div class="select-box">없음</div></label>
-        <label><input type="radio" name="q_ai" value="가끔 사용"><div class="select-box">가끔 사용 (월 1회 미만)</div></label>
-        <label><input type="radio" name="q_ai" value="자주 사용"><div class="select-box">자주 사용 (월 1회 이상)</div></label>
-        <label><input type="radio" name="q_ai" value="업무에 통합"><div class="select-box">업무에 통합하여 일상적으로 사용</div></label>
+        <label><input type="radio" name="q_ai" value="가끔 사용"><div class="select-box">가끔 사용 (월 1~3회 수준)</div></label>
+        <label><input type="radio" name="q_ai" value="자주 사용"><div class="select-box">자주 사용 (주 1회 이상)</div></label>
+        <label><input type="radio" name="q_ai" value="업무에 통합"><div class="select-box">업무에 통합하여 거의 매일 사용</div></label>
       </div>
     </div>
   </div>
@@ -375,7 +376,7 @@ body { font-family: 'Noto Sans KR', sans-serif; background: #f0f2f7; min-height:
   </div>
 </div>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 const SHEET_URL = 'https://script.google.com/macros/s/AKfycbxewOPqzNbp9Ni_CvRnn-qjtMhFQY-khf7kFzP9NqIKO8nVi_X3zJ_NisAqwtORMRjr/exec';
 const TOTAL_SECTIONS = 8;
 let cur = 0;
@@ -501,9 +502,12 @@ const sec4Items = [
   {id:'PU1', label:'이 AI 도구는 업무 효율을 높여줄 것이다.'},
   {id:'PU2', label:'이 AI 도구를 사용하면 업무 성과가 향상될 것이다.'},
   {id:'PU3', label:'이 AI 도구는 전반적으로 유용하다.'},
-  {id:'EPR1', label:'이 AI 시스템 사용 시 개인정보 유출이 우려된다.'},
-  {id:'EPR2', label:'이 AI 시스템은 내 업무 데이터를 안전하게 처리할 것이다.'},
-  {id:'AA1', label:'AI 판단 결과에 대한 책임 소재가 명확하다고 생각한다.'},
+  {id:'EPR1', label:'이 AI 도구는 잘못된 분석 결과를 출력할 가능성이 있다.'},
+  {id:'EPR2', label:'이 AI 도구의 결과를 그대로 신뢰하기 어렵다고 느낀다.'},
+  {id:'EPR3', label:'이 AI 도구가 제시하는 결론에는 오류가 포함될 수 있다.'},
+  {id:'AA1', label:'이 AI 도구의 판단이 틀렸을 때 책임이 나에게 돌아올 것 같아 불안하다.'},
+  {id:'AA2', label:'AI 결과를 활용했다가 문제가 생기면 내가 책임을 져야 할 것 같다.'},
+  {id:'AA3', label:'AI 추천을 따랐을 때 발생하는 결과에 대한 책임 소재가 불명확하다.'},
   {id:'TRU1', label:'이 AI 시스템은 신뢰할 수 있다.'},
   {id:'TRU2', label:'이 AI 시스템은 일관되고 믿을 수 있는 결과를 제공한다.'},
   {id:'TRU3', label:'이 AI 시스템의 추천을 믿고 따를 수 있다.'},
@@ -532,6 +536,7 @@ function initAll() {
   document.getElementById('scenario-progress-text').innerHTML = progressTxt[grp];
   makeMCRow('MC1','mc1-row');
   makeMCRow('MC2','mc2-row');
+  makeMCRow('MC3','mc3-row');
   makeLikert(expItems,'qs-exp');
   makeLikert(sec4Items,'qs-4');
   makeLikert(sec5Items,'qs-5');
@@ -574,7 +579,7 @@ function validate() {
     if (val === 'no') { showIneligible(); return false; }
     return val === 'yes';
   }
-  if (cur===2) return ['MC1','MC2'].every(n=>document.querySelector(`input[name="${n}"]:checked`));
+  if (cur===2) return ['MC1','MC2','MC3'].every(n=>document.querySelector(`input[name="${n}"]:checked`));
   if (cur===3) return expItems.every(i=>document.querySelector(`input[name="${i.id}"]:checked`));
   if (cur===4) return sec4Items.every(i=>document.querySelector(`input[name="${i.id}"]:checked`));
   if (cur===5) return sec5Items.every(i=>document.querySelector(`input[name="${i.id}"]:checked`));
@@ -604,6 +609,7 @@ function collectData() {
     group: grp,
     MC1: (document.querySelector('input[name="MC1"]:checked')||{}).value||'',
     MC2: (document.querySelector('input[name="MC2"]:checked')||{}).value||'',
+    MC3: (document.querySelector('input[name="MC3"]:checked')||{}).value||'',
     field: getFieldValue('q_field'),
     rank: getFieldValue('q_rank'),
     education: (document.querySelector('input[name="q_edu"]:checked')||{}).value||'',
@@ -645,30 +651,15 @@ function showThank(data) {
   document.getElementById('progress').style.width='100%';
   document.getElementById('prog-pct').textContent='완료';
   document.getElementById('prog-text').textContent='제출 완료';
-  const mc1=parseInt(data.MC1)||0, mc2=parseInt(data.MC2)||0;
+  const mc1=parseInt(data.MC1)||0, mc2=parseInt(data.MC2)||0, mc3=parseInt(data.MC3)||0;
   document.getElementById('thank-detail').innerHTML = `
     <div class="td-row"><span class="td-key">업무 분야</span><span class="td-val">${data.field||'-'}</span></div>
-    <div class="td-row"><span class="td-key">조작 점검 평균</span><span class="td-val">${((mc1+mc2)/2).toFixed(1)} / 7</span></div>
+    <div class="td-row"><span class="td-key">조작 점검 평균</span><span class="td-val">${((mc1+mc2+mc3)/3).toFixed(1)} / 7</span></div>
     <div class="td-row"><span class="td-key">설명가능성 평균 (EXP)</span><span class="td-val">${avg(expItems,data)} / 7</span></div>
-    <div class="td-row"><span class="td-key">신뢰 평균 (TRU)</span><span class="td-val">${avg(sec4Items.slice(6,9),data)} / 7</span></div>
+    <div class="td-row"><span class="td-key">신뢰 평균 (TRU)</span><span class="td-val">${avg(sec4Items.slice(8,11),data)} / 7</span></div>
     <div class="td-row"><span class="td-key">사용 의도 평균 (ITU)</span><span class="td-val">${avg(sec5Items,data)} / 7</span></div>
     <div class="td-row"><span class="td-key">응답 시각</span><span class="td-val">${data.timestamp}</span></div>`;
   document.getElementById('thank-wrap').style.display='block';
   window.scrollTo({top:0,behavior:'smooth'});
 }
 
-function navigate(dir) {
-  if (dir===1 && !validate()) {
-    if (cur!==1) alert('모든 항목에 응답해 주세요.');
-    return;
-  }
-  if (dir===1 && cur===TOTAL_SECTIONS-1) { submitData(collectData()); return; }
-  cur = Math.max(0,Math.min(TOTAL_SECTIONS-1,cur+dir));
-  showSection(cur);
-}
-
-initAll();
-showSection(0);
-</script>
-</body>
-</html>
