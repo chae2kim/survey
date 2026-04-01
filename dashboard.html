@@ -129,10 +129,13 @@ body{font-family:'Noto Sans KR',sans-serif;background:#f0f2f7;color:#222;min-hei
     <div class="tabs">
       <div class="tab active" onclick="switchTab('overview')">📈 전체 현황</div>
       <div class="tab" onclick="switchTab('demo')">👥 인구통계</div>
-      <div class="tab" onclick="switchTab('reliability')">🔬 신뢰도</div>
+      <div class="tab" onclick="switchTab('reliability')">🔬 신뢰도·타당도</div>
       <div class="tab" onclick="switchTab('desc')">📊 기술통계</div>
       <div class="tab" onclick="switchTab('ttest')">⚖️ 집단 비교</div>
       <div class="tab" onclick="switchTab('corr')">🌡️ 상관관계</div>
+      <div class="tab" onclick="switchTab('mediation')">🔗 매개효과</div>
+      <div class="tab" onclick="switchTab('moderation')">🎛️ 조절효과</div>
+      <div class="tab" onclick="switchTab('normality')">📐 정규성·편향</div>
     </div>
 
     <!-- 전체 현황 -->
@@ -193,9 +196,17 @@ body{font-family:'Noto Sans KR',sans-serif;background:#f0f2f7;color:#222;min-hei
         </div>
         <div id="reliability-table" style="margin-top:16px;"></div>
       </div>
+      <div class="card" style="margin-bottom:20px;">
+        <h3><span class="ico">✓</span>타당도 검증 (AVE · CR)</h3>
+        <div class="interp">
+          <strong>AVE (평균분산추출)</strong>: 구성개념이 문항들의 분산을 얼마나 설명하는지. <strong>AVE ≥ 0.5</strong> 이면 ✅ 수렴타당도 확보<br>
+          <strong>CR (합성신뢰도)</strong>: Cronbach's α보다 정교한 신뢰도. <strong>CR ≥ 0.7</strong> 이면 ✅ 양호
+        </div>
+        <div id="validity-table" style="margin-top:16px;"></div>
+      </div>
       <div class="card">
-        <h3><span class="ico">AI</span>AI 신뢰도 해석</h3>
-        <button class="btn-ai" onclick="getAIInterpretation('reliability')">🤖 신뢰도 결과 해석 요청</button>
+        <h3><span class="ico">AI</span>AI 신뢰도·타당도 해석</h3>
+        <button class="btn-ai" onclick="getAIInterpretation('reliability')">🤖 신뢰도·타당도 결과 해석 요청</button>
         <div id="ai-reliability" class="ai-interp" style="display:none;"></div>
       </div>
     </div>
@@ -255,6 +266,75 @@ body{font-family:'Noto Sans KR',sans-serif;background:#f0f2f7;color:#222;min-hei
         <h3><span class="ico">AI</span>AI 상관관계 해석</h3>
         <button class="btn-ai" onclick="getAIInterpretation('corr')">🤖 상관관계 해석 요청</button>
         <div id="ai-corr" class="ai-interp" style="display:none;"></div>
+      </div>
+    </div>
+
+    <!-- 매개효과 탭 -->
+    <div class="tab-content" id="tab-mediation">
+      <div class="card" style="margin-bottom:20px;">
+        <h3><span class="ico">🔗</span>매개효과 분석 (TRU가 매개변수)</h3>
+        <div class="interp">
+          <strong>매개효과란?</strong> EXP·PU·EPR·AA → <strong>TRU(신뢰)</strong> → ITU(사용의도) 경로가 유효한지 검증해요. (H6 가설)<br>
+          <strong>Sobel Test</strong> z값 |z| > 1.96 이면 ✅ 매개효과 유의 (p &lt; .05)<br>
+          <strong>완전매개</strong>: 직접효과 없고 간접효과만 있음 &nbsp;|&nbsp; <strong>부분매개</strong>: 직접·간접효과 둘 다 있음
+        </div>
+        <div id="mediation-table" style="margin-top:16px;"></div>
+      </div>
+      <div class="card" style="margin-bottom:20px;">
+        <h3><span class="ico">↗</span>매개효과 경로 시각화</h3>
+        <canvas id="mediationChart" height="180"></canvas>
+      </div>
+      <div class="card">
+        <h3><span class="ico">AI</span>AI 매개효과 해석</h3>
+        <button class="btn-ai" onclick="getAIInterpretation('mediation')">🤖 매개효과 해석 요청</button>
+        <div id="ai-mediation" class="ai-interp" style="display:none;"></div>
+      </div>
+    </div>
+
+    <!-- 조절효과 탭 -->
+    <div class="tab-content" id="tab-moderation">
+      <div class="card" style="margin-bottom:20px;">
+        <h3><span class="ico">🎛</span>조절효과 분석 (업무 책임 수준 조절)</h3>
+        <div class="interp">
+          <strong>조절효과란?</strong> 그룹 A(고책임) vs 그룹 B(저책임)에 따라 <strong>신뢰→사용의도</strong> 관계의 강도가 달라지는지 확인해요. (H7·H8 가설)<br>
+          각 그룹의 상관계수를 비교하고, <strong>Fisher's Z 변환</strong>으로 두 상관의 차이가 유의한지 검증해요.
+        </div>
+        <div id="moderation-table" style="margin-top:16px;"></div>
+      </div>
+      <div class="card" style="margin-bottom:20px;">
+        <h3><span class="ico">📉</span>조절효과 인터랙션 플롯</h3>
+        <canvas id="moderationChart" height="200"></canvas>
+      </div>
+      <div class="card">
+        <h3><span class="ico">AI</span>AI 조절효과 해석</h3>
+        <button class="btn-ai" onclick="getAIInterpretation('moderation')">🤖 조절효과 해석 요청</button>
+        <div id="ai-moderation" class="ai-interp" style="display:none;"></div>
+      </div>
+    </div>
+
+    <!-- 정규성·편향 탭 -->
+    <div class="tab-content" id="tab-normality">
+      <div class="card" style="margin-bottom:20px;">
+        <h3><span class="ico">📐</span>정규성 검정 (왜도·첨도)</h3>
+        <div class="interp">
+          <strong>왜도(Skewness)</strong>: |왜도| &lt; 2 이면 ✅ 정규성 문제 없음<br>
+          <strong>첨도(Kurtosis)</strong>: |첨도| &lt; 7 이면 ✅ 수용 가능<br>
+          PLS-SEM은 정규분포를 가정하지 않지만, 논문 방법론 섹션에 이 결과를 한 줄 기재하면 돼요.
+        </div>
+        <div id="normality-table" style="margin-top:16px;"></div>
+      </div>
+      <div class="card" style="margin-bottom:20px;">
+        <h3><span class="ico">⏱</span>응답 편향 체크 (초반 vs 후반 응답자)</h3>
+        <div class="interp">
+          <strong>무응답 편향(Non-response bias) 검증</strong>: 앞 25% 응답자와 뒤 25% 응답자의 평균을 비교해요.<br>
+          두 그룹 간 유의한 차이가 없으면 ✅ 편향 없음으로 판단해요.
+        </div>
+        <div id="bias-table" style="margin-top:16px;"></div>
+      </div>
+      <div class="card">
+        <h3><span class="ico">AI</span>AI 정규성·편향 해석</h3>
+        <button class="btn-ai" onclick="getAIInterpretation('normality')">🤖 정규성·편향 해석 요청</button>
+        <div id="ai-normality" class="ai-interp" style="display:none;"></div>
       </div>
     </div>
   </div>
@@ -503,6 +583,7 @@ function renderReliability(){
   });
   html+='</table>';
   document.getElementById('reliability-table').innerHTML=html;
+  renderValidity();
 }
 
 // ── 기술통계 ──────────────────────────────
@@ -588,12 +669,168 @@ function renderCorr(){
   document.getElementById('heatmap-table').innerHTML=html;
 }
 
-// ── 탭 전환 ──────────────────────────────
+// ── 타당도 (AVE·CR) ──────────────────────────────
+function renderValidity(){
+  var html='<table class="tbl"><tr><th>구성개념</th><th>문항 수</th><th>AVE</th><th>AVE 판정</th><th>CR</th><th>CR 판정</th></tr>';
+  Object.keys(constructs).forEach(function(k){
+    var items=constructs[k].items;
+    var matrix=parsedData.map(function(row){
+      return items.map(function(it){return parseFloat(row[it])||0;});
+    }).filter(function(r){return r.some(function(v){return v>0;});});
+    // 표준화 요인부하량 근사 (각 문항과 총점의 상관)
+    var totals=matrix.map(function(r){return mean(r);});
+    var loadings=items.map(function(it,j){
+      var col=matrix.map(function(r){return r[j];});
+      return Math.abs(pearson(col,totals));
+    });
+    var avgLoad=mean(loadings);
+    var ave=loadings.reduce(function(s,l){return s+l*l;},0)/loadings.length;
+    var cr=Math.pow(loadings.reduce(function(s,l){return s+l;},0),2)/(Math.pow(loadings.reduce(function(s,l){return s+l;},0),2)+loadings.reduce(function(s,l){return s+(1-l*l);},0));
+    var aveBadge=ave>=0.5?'<span class="badge-ok">✅ 확보 ('+ave.toFixed(3)+')</span>':'<span class="badge-warn">⚠️ 검토 필요 ('+ave.toFixed(3)+')</span>';
+    var crBadge=cr>=0.8?'<span class="badge-ok">✅✅ 좋음 ('+cr.toFixed(3)+')</span>':cr>=0.7?'<span class="badge-ok">✅ 양호 ('+cr.toFixed(3)+')</span>':'<span class="badge-warn">⚠️ 검토 필요 ('+cr.toFixed(3)+')</span>';
+    html+='<tr><td><strong>'+constructs[k].label+'</strong></td><td>'+items.length+'개</td><td>'+ave.toFixed(3)+'</td><td>'+aveBadge+'</td><td>'+cr.toFixed(3)+'</td><td>'+crBadge+'</td></tr>';
+  });
+  html+='</table>';
+  var el=document.getElementById('validity-table');
+  if(el)el.innerHTML=html;
+}
+
+// ── 정규성 (왜도·첨도) ──────────────────────────────
+function skewness(arr){
+  var m=mean(arr),s=std(arr),n=arr.length;
+  if(!s)return 0;
+  return arr.reduce(function(a,v){return a+Math.pow((v-m)/s,3);},0)/n;
+}
+function kurtosis(arr){
+  var m=mean(arr),s=std(arr),n=arr.length;
+  if(!s)return 0;
+  return arr.reduce(function(a,v){return a+Math.pow((v-m)/s,4);},0)/n-3;
+}
+function renderNormality(){
+  var html='<table class="tbl"><tr><th>구성개념</th><th>N</th><th>평균</th><th>왜도</th><th>왜도 판정</th><th>첨도</th><th>첨도 판정</th><th>정규성</th></tr>';
+  Object.keys(constructs).forEach(function(k){
+    var scores=getConstructScores(parsedData,k);
+    var sk=skewness(scores),ku=kurtosis(scores);
+    var skBadge=Math.abs(sk)<2?'<span class="badge-ok">✅ 양호</span>':'<span class="badge-warn">⚠️ 검토</span>';
+    var kuBadge=Math.abs(ku)<7?'<span class="badge-ok">✅ 양호</span>':'<span class="badge-warn">⚠️ 검토</span>';
+    var overall=Math.abs(sk)<2&&Math.abs(ku)<7?'<span class="badge-ok">✅ 정규성 확보</span>':'<span class="badge-warn">⚠️ PLS-SEM 권장</span>';
+    html+='<tr><td><strong>'+constructs[k].label+'</strong></td><td>'+scores.length+'</td><td>'+mean(scores).toFixed(2)+'</td><td>'+sk.toFixed(3)+'</td><td>'+skBadge+'</td><td>'+ku.toFixed(3)+'</td><td>'+kuBadge+'</td><td>'+overall+'</td></tr>';
+  });
+  html+='</table>';
+  var el=document.getElementById('normality-table');
+  if(el)el.innerHTML=html;
+}
+
+// ── 응답 편향 체크 ──────────────────────────────
+function renderBiasCheck(){
+  var n=parsedData.length;
+  var q=Math.floor(n*0.25);
+  var early=parsedData.slice(0,q);
+  var late=parsedData.slice(n-q);
+  var html='<table class="tbl"><tr><th>구성개념</th><th>초반 응답자 평균</th><th>후반 응답자 평균</th><th>차이</th><th>t값</th><th>p값</th><th>편향 판정</th></tr>';
+  Object.keys(constructs).forEach(function(k){
+    var a=getConstructScores(early,k);
+    var b=getConstructScores(late,k);
+    if(!a.length||!b.length)return;
+    var res=tTest(a,b);
+    var bias=res.p>=0.05?'<span class="badge-ok">✅ 편향 없음</span>':'<span class="badge-warn">⚠️ 차이 있음</span>';
+    html+='<tr><td><strong>'+constructs[k].label+'</strong></td><td>'+res.ma.toFixed(2)+'</td><td>'+res.mb.toFixed(2)+'</td><td>'+((res.ma-res.mb).toFixed(2))+'</td><td>'+res.t.toFixed(3)+'</td><td>'+res.p.toFixed(3)+'</td><td>'+bias+'</td></tr>';
+  });
+  html+='</table><div class="interp" style="margin-top:12px;">초반 <strong>'+q+'명</strong> vs 후반 <strong>'+q+'명</strong> 비교 (전체 '+n+'명 기준)</div>';
+  var el=document.getElementById('bias-table');
+  if(el)el.innerHTML=html;
+}
+
+// ── 매개효과 (Sobel Test) ──────────────────────────────
+function sobelTest(X, M, Y){
+  var a=pearson(X,M), b=pearson(M,Y);
+  var n=X.length;
+  var sa=Math.sqrt((1-a*a)/(n-2));
+  var sb=Math.sqrt((1-b*b)/(n-2));
+  var z=(a*b)/Math.sqrt(b*b*sa*sa+a*a*sb*sb);
+  var p=2*(1-tCDF(Math.abs(z),n-2));
+  return{a:a,b:b,indirect:a*b,z:z,p:p};
+}
+function renderMediation(){
+  var truScores=getConstructScores(parsedData,'TRU');
+  var ituScores=getConstructScores(parsedData,'ITU');
+  var n=Math.min(truScores.length,ituScores.length);
+  var tru=truScores.slice(0,n), itu=ituScores.slice(0,n);
+  var html='<table class="tbl"><tr><th>독립변수(X)</th><th>a경로 (X→TRU)</th><th>b경로 (TRU→ITU)</th><th>간접효과 (a×b)</th><th>Sobel Z</th><th>p값</th><th>매개 판정</th></tr>';
+  var medRows=[];
+  ['EXP','PU','EPR','AA'].forEach(function(k){
+    var xScores=getConstructScores(parsedData,k);
+    var nn=Math.min(xScores.length,n);
+    var x=xScores.slice(0,nn),m=tru.slice(0,nn),y=itu.slice(0,nn);
+    var res=sobelTest(x,m,y);
+    var sig=res.p<0.05?'<span class="badge-ok">✅ 매개효과 유의 '+pStar(res.p)+'</span>':'<span class="badge-warn">❌ 유의하지 않음</span>';
+    html+='<tr><td><strong>'+constructs[k].label+'</strong></td><td>'+res.a.toFixed(3)+'</td><td>'+res.b.toFixed(3)+'</td><td>'+res.indirect.toFixed(3)+'</td><td>'+res.z.toFixed(3)+'</td><td>'+res.p.toFixed(3)+'</td><td>'+sig+'</td></tr>';
+    medRows.push({label:constructs[k].label,indirect:res.indirect,sig:res.p<0.05});
+  });
+  html+='</table>';
+  var el=document.getElementById('mediation-table');
+  if(el)el.innerHTML=html;
+  // 매개효과 차트
+  destroyChart('mediationChart');
+  var ctx=document.getElementById('mediationChart');
+  if(ctx){
+    charts['mediationChart']=new Chart(ctx.getContext('2d'),{type:'bar',data:{labels:medRows.map(function(r){return r.label;}),datasets:[{label:'간접효과 크기',data:medRows.map(function(r){return parseFloat(r.indirect.toFixed(3));}),backgroundColor:medRows.map(function(r){return r.sig?'#1a2744':'#c7d7f8';}),borderRadius:6}]},options:{plugins:{legend:{display:false},tooltip:{callbacks:{label:function(c){return'간접효과: '+c.raw+(medRows[c.dataIndex].sig?' (유의*)':' (비유의)');}}}},scales:{y:{ticks:{font:{family:'Noto Sans KR'}}}},responsive:true}});
+  }
+}
+
+// ── 조절효과 ──────────────────────────────
+function fisherZ(r){return 0.5*Math.log((1+r)/(1-r));}
+function renderModeration(){
+  var grpA=parsedData.filter(function(r){return r.group==='A';});
+  var grpB=parsedData.filter(function(r){return r.group==='B';});
+  var truA=getConstructScores(grpA,'TRU'), ituA=getConstructScores(grpA,'ITU');
+  var truB=getConstructScores(grpB,'TRU'), ituB=getConstructScores(grpB,'ITU');
+  var rA=pearson(truA,ituA), rB=pearson(truB,ituB);
+  var nA=truA.length, nB=truB.length;
+  var zA=fisherZ(rA), zB=fisherZ(rB);
+  var se=Math.sqrt(1/(nA-3)+1/(nB-3));
+  var z=(zA-zB)/se;
+  var p=2*(1-tCDF(Math.abs(z),nA+nB-4));
+  var html='<table class="tbl"><tr><th>경로</th><th>그룹 A (고책임)</th><th>그룹 B (저책임)</th><th>차이 (Z)</th><th>p값</th><th>조절효과</th></tr>';
+  html+='<tr><td><strong>TRU → ITU</strong></td><td>r = '+rA.toFixed(3)+' (n='+nA+')</td><td>r = '+rB.toFixed(3)+' (n='+nB+')</td><td>'+z.toFixed(3)+'</td><td>'+p.toFixed(3)+'</td><td>'+(p<0.05?'<span class="badge-ok">✅ 조절효과 유의 '+pStar(p)+'</span>':'<span class="badge-warn">❌ 유의하지 않음</span>')+'</td></tr>';
+  // 구성개념별 그룹 비교
+  Object.keys(constructs).forEach(function(k){
+    var xA=getConstructScores(grpA,k), xB=getConstructScores(grpB,k);
+    var truAk=truA.slice(0,Math.min(xA.length,truA.length));
+    var truBk=truB.slice(0,Math.min(xB.length,truB.length));
+    var rAk=pearson(xA.slice(0,truAk.length),truAk);
+    var rBk=pearson(xB.slice(0,truBk.length),truBk);
+    var nAk=truAk.length,nBk=truBk.length;
+    if(nAk<4||nBk<4)return;
+    var zAk=fisherZ(rAk),zBk=fisherZ(rBk);
+    var sek=Math.sqrt(1/(nAk-3)+1/(nBk-3));
+    var zk=(zAk-zBk)/sek;
+    var pk=2*(1-tCDF(Math.abs(zk),nAk+nBk-4));
+    html+='<tr><td>'+constructs[k].label+' → TRU</td><td>r = '+rAk.toFixed(3)+'</td><td>r = '+rBk.toFixed(3)+'</td><td>'+zk.toFixed(3)+'</td><td>'+pk.toFixed(3)+'</td><td>'+(pk<0.05?'<span class="badge-ok">✅ 유의 '+pStar(pk)+'</span>':'<span class="ns">비유의</span>')+'</td></tr>';
+  });
+  html+='</table>';
+  var el=document.getElementById('moderation-table');
+  if(el)el.innerHTML=html;
+  // 인터랙션 플롯
+  destroyChart('moderationChart');
+  var ctx=document.getElementById('moderationChart');
+  if(ctx){
+    var constructLabels=Object.keys(constructs).map(function(k){return constructs[k].label;});
+    var aVals=Object.keys(constructs).map(function(k){return parseFloat(mean(getConstructScores(grpA,k)).toFixed(2));});
+    var bVals=Object.keys(constructs).map(function(k){return parseFloat(mean(getConstructScores(grpB,k)).toFixed(2));});
+    charts['moderationChart']=new Chart(ctx.getContext('2d'),{type:'line',data:{labels:constructLabels,datasets:[{label:'그룹 A (고책임)',data:aVals,borderColor:'#1a2744',backgroundColor:'rgba(26,39,68,0.1)',pointRadius:6,tension:0.3},{label:'그룹 B (저책임)',data:bVals,borderColor:'#5a9cf5',backgroundColor:'rgba(90,156,245,0.1)',pointRadius:6,tension:0.3}]},options:{plugins:{legend:{position:'bottom',labels:{font:{family:'Noto Sans KR',size:12}}}},scales:{y:{min:1,max:7,ticks:{font:{family:'Noto Sans KR'}}}},responsive:true}});
+  }
+}
+
+// ── 탭 전환 + 새 분석 렌더 ──────────────────────────────
 function switchTab(id){
   document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('active');});
   document.querySelectorAll('.tab-content').forEach(function(t){t.classList.remove('active');});
   event.target.classList.add('active');
   document.getElementById('tab-'+id).classList.add('active');
+  if(id==='mediation')renderMediation();
+  if(id==='moderation')renderModeration();
+  if(id==='normality'){renderNormality();renderBiasCheck();}
 }
 
 // ── AI 해석 ──────────────────────────────
@@ -615,6 +852,9 @@ async function getAIInterpretation(section){
     reliability:'다음 구성개념들의 기술통계 데이터를 바탕으로 신뢰도 분석 결과를 해석해주세요:\n'+JSON.stringify(summaries,null,2)+'\n\n각 구성개념의 Cronbach\'s alpha 결과가 논문에서 의미하는 바를 쉽게 3~4문장으로 설명해주세요. 연구자 채채에게 말하는 것처럼 친근하게요.',
     desc:'다음 기술통계 결과를 해석해주세요:\n'+JSON.stringify(summaries,null,2)+'\n\n평균과 표준편차를 바탕으로 응답자들의 전반적인 인식 수준을 쉽게 3~4문장으로 설명해주세요.',
     ttest:'그룹 A(고책임)와 그룹 B(저책임) 비교 결과입니다:\n'+JSON.stringify(summaries,null,2)+'\n\n두 그룹 간 차이가 연구 가설(고책임 조건에서 AI 신뢰가 낮을 것)과 어떻게 연결되는지 3~4문장으로 쉽게 설명해주세요.',
+    mediation:'다음은 TRU(AI 신뢰)의 매개효과 분석 결과입니다. EXP·PU·EPR·AA → TRU → ITU 경로에서 Sobel Test 결과를 H6 가설과 연결해서 쉽게 3~4문장으로 설명해주세요. 채채 논문 연구자에게 말하는 것처럼 친근하게요.',
+    moderation:'다음은 업무 책임 수준(그룹A 고책임 vs 그룹B 저책임)의 조절효과 분석 결과입니다. Fisher Z 변환 결과를 H7·H8 가설과 연결해서 쉽게 3~4문장으로 설명해주세요.',
+    normality:'다음은 왜도·첨도 정규성 검정과 응답편향 체크 결과입니다. PLS-SEM 사용의 정당성과 편향 없음을 논문 방법론 섹션에 어떻게 한 줄로 기재하면 좋은지 알려주세요.',
     corr:'구성개념 간 상관관계 분석에 대해 설명해주세요. 변수들:\n'+Object.keys(constructs).map(function(k){return k+': '+constructs[k].label;}).join(', ')+'\n\n상관관계 히트맵에서 연구자가 주목해야 할 핵심 관계(EXP→TRU, TRU→ITU 등)를 쉽게 3~4문장으로 설명해주세요.'
   };
 
