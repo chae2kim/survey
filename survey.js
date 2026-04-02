@@ -17,7 +17,7 @@
   }
 })();
 
-
+document.addEventListener('DOMContentLoaded', function() {
 
 var SHEET_URL='https://script.google.com/macros/s/AKfycbxewOPqzNbp9Ni_CvRnn-qjtMhFQY-khf7kFzP9NqIKO8nVi_X3zJ_NisAqwtORMRjr/exec';
 var TOTAL=12;
@@ -412,3 +412,5 @@ document.getElementById('bnext').addEventListener('click',function(){navigate(1)
 
 initAll();
 showSec(0);
+
+});
