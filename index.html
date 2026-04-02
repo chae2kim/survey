@@ -7,7 +7,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-body{font-family:'Noto Sans KR',sans-serif;background:#f0f2f7;min-height:100vh;display:flex;justify-content:center;align-items:flex-start;padding:0 0 60px;}
+body{font-family:'Noto Sans KR',sans-serif;background:#f0f2f7;min-height:100vh;display:flex;justify-content:center;align-items:flex-start;padding:0 0 60px;word-break:keep-all;}
 .wrap{width:100%;max-width:520px;background:#fff;min-height:100vh;}
 .hband{background:#1a2744;padding:32px 24px 28px;}
 .hband .tag{font-size:11px;letter-spacing:.13em;text-transform:uppercase;color:#7a9bcc;margin-bottom:12px;}
@@ -47,10 +47,10 @@ body{font-family:'Noto Sans KR',sans-serif;background:#f0f2f7;min-height:100vh;d
 .ccheck input:checked+.chk{background:#1a2744;border-color:#1a2744;}
 .ccheck input:checked+.chk::after{content:'';width:11px;height:7px;border-left:2.5px solid #fff;border-bottom:2.5px solid #fff;transform:rotate(-45deg) translateY(-1px);display:block;}
 .ctxt{font-size:13.5px;color:#333;line-height:1.6;padding-top:2px;}
-.ecard{background:#f0f4ff;border:1px solid #c7d7f8;border-radius:14px;padding:20px;margin-bottom:20px;}
-.ecard .ect{font-size:14px;font-weight:700;color:#1a2744;margin-bottom:12px;line-height:1.5;}
+.ecard{background:#f0f4ff;border:1px solid #c7d7f8;border-radius:14px;padding:22px 20px;margin-bottom:20px;}
+.ecard .ect{font-size:14px;font-weight:700;color:#1a2744;margin-bottom:12px;line-height:1.6;word-break:keep-all;}
 .clist{display:flex;flex-direction:column;gap:10px;margin-bottom:16px;}
-.ci{display:flex;align-items:flex-start;gap:10px;font-size:13.5px;color:#333;line-height:1.6;}
+.ci{display:flex;align-items:flex-start;gap:10px;font-size:13.5px;color:#333;line-height:1.6;word-break:keep-all;}
 .ci::before{content:'✓';color:#3b6de8;font-weight:700;margin-top:1px;flex-shrink:0;}
 .yn{display:flex;gap:10px;}
 .yn label{flex:1;cursor:pointer;}
@@ -58,56 +58,82 @@ body{font-family:'Noto Sans KR',sans-serif;background:#f0f2f7;min-height:100vh;d
 .ynb{display:flex;align-items:center;justify-content:center;padding:14px;border-radius:10px;border:1.5px solid #e5e7eb;font-size:15px;font-weight:700;background:#f9fafb;color:#666;transition:all .15s;}
 .yn input:checked+.ynb.yes{background:#1a2744;color:#fff;border-color:#1a2744;}
 .yn input:checked+.ynb.no{background:#fee2e2;color:#991b1b;border-color:#fca5a5;}
-.scard{background:#f0f4ff;border:1.5px solid #c7d7f8;border-radius:14px;padding:22px;margin-bottom:20px;}
-.scard .sctag{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#3b6de8;margin-bottom:10px;font-weight:700;}
-.scard .sctext{font-size:13.5px;line-height:1.85;color:#2c3e6b;}
-.scard .sctext strong{color:#1a2744;}
-.cintro{background:#fffbeb;border:1px solid #fde68a;border-radius:10px;padding:14px 16px;font-size:13px;color:#78350f;line-height:1.7;margin-bottom:20px;}
-.aibox{background:#f3f4f8;border-radius:16px;overflow:hidden;margin-bottom:24px;border:1px solid #e0e2ea;}
+
+/* 공통 도입 카드 */
+.intro-card{background:#f0f4ff;border:1.5px solid #c7d7f8;border-radius:14px;padding:22px;margin-bottom:20px;}
+.intro-card .ic-tag{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#3b6de8;margin-bottom:10px;}
+.intro-card .ic-text{font-size:13.5px;line-height:1.85;color:#2c3e6b;}
+.intro-card .ic-text strong{color:#1a2744;}
+
+/* 시나리오 배너 */
+.scenario-notice{background:linear-gradient(135deg,#fff8e1,#fff3cd);border:2px solid #f59e0b;border-radius:14px;padding:18px;margin-bottom:20px;display:flex;align-items:flex-start;gap:14px;}
+.sn-icon{font-size:28px;flex-shrink:0;margin-top:2px;}
+.sn-text{font-size:13.5px;color:#78350f;line-height:1.7;word-break:keep-all;}
+.sn-text strong{color:#92400e;font-weight:700;}
+
+/* 책임 조작 카드 */
+.resp-card{border-radius:14px;padding:22px;margin-bottom:20px;}
+.resp-high{background:#fff5f5;border:2px solid #fca5a5;}
+.resp-low{background:#f0fdf4;border:2px solid #86efac;}
+.resp-card .rc-tag{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px;}
+.resp-high .rc-tag{color:#dc2626;}
+.resp-low .rc-tag{color:#16a34a;}
+.resp-card .rc-text{font-size:13.5px;line-height:1.85;}
+.resp-high .rc-text{color:#7f1d1d;}
+.resp-low .rc-text{color:#14532d;}
+.resp-card .rc-text strong{font-weight:700;}
+.status-badge{display:inline-block;font-size:11px;font-weight:700;padding:4px 12px;border-radius:20px;margin-bottom:12px;}
+.badge-high{background:#fee2e2;color:#991b1b;}
+.badge-low{background:#dcfce7;color:#166534;}
+
+/* AI 채팅 UI */
+.aibox{background:#f3f4f8;border-radius:16px;overflow:hidden;margin-bottom:20px;border:1px solid #e0e2ea;}
 .aitop{background:#1a2744;padding:12px 16px;display:flex;align-items:center;gap:8px;}
 .dot{width:9px;height:9px;border-radius:50%;}
 .dr{background:#ff5f57;}.dy{background:#febc2e;}.dg{background:#28c840;}
 .aname{font-size:12px;color:#8fa8d8;margin-left:4px;}
 .sdot{width:7px;height:7px;border-radius:50%;background:#28c840;margin-left:auto;}
-.stxt{font-size:11px;color:#5a9cf5;}
-.msgs{padding:16px;min-height:180px;display:flex;flex-direction:column;gap:10px;}
+.stxt2{font-size:11px;color:#5a9cf5;}
+.msgs{padding:16px;min-height:160px;display:flex;flex-direction:column;gap:10px;}
 .crow{display:flex;align-items:flex-end;gap:8px;opacity:0;transform:translateY(8px);transition:all .35s ease;}
 .crow.show{opacity:1;transform:translateY(0);}
 .crow.urow{flex-direction:row-reverse;}
 .av{width:30px;height:30px;min-width:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;}
 .av-ai{background:#1a2744;color:#fff;}
 .av-u{background:#e0e7ff;color:#3730a3;}
-.bub{max-width:78%;padding:10px 14px;border-radius:14px;font-size:13px;line-height:1.65;}
+.bub{max-width:80%;padding:10px 14px;border-radius:14px;font-size:13px;line-height:1.65;word-break:keep-all;}
 .bai{background:#fff;color:#1a2744;border:1px solid #e0e2ea;border-bottom-left-radius:4px;}
 .bu{background:#1a2744;color:#fff;border-bottom-right-radius:4px;}
-.brep{background:#fff;border:1px solid #e0e2ea;border-bottom-left-radius:4px;padding:0;overflow:hidden;max-width:90%;}
-.rph{background:#1a2744;padding:10px 14px;display:flex;align-items:center;gap:8px;}
-.rpi{width:20px;height:20px;background:#5a9cf5;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:10px;color:#fff;}
-.rpt{font-size:11px;color:#fff;font-weight:700;}
-.rps{font-size:10px;color:#7a9bcc;}
-.rpb{padding:12px 14px;}
-.rbdg{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:700;margin-bottom:10px;}
-.rbd{background:#fee2e2;color:#991b1b;}
-.rbi{background:#dbeafe;color:#1e40af;}
-.rps2{margin-bottom:10px;}
-.rpl{font-size:10px;color:#888;font-weight:700;letter-spacing:.05em;margin-bottom:4px;text-transform:uppercase;}
-.rpc{font-size:12px;color:#333;line-height:1.6;background:#f7f8fc;border-radius:6px;padding:8px 10px;}
-.rdiv{height:1px;background:#eee;margin:8px 0;}
-.ract{display:flex;gap:8px;padding:0 14px 12px;}
-.rabtn{flex:1;padding:8px;border-radius:7px;font-size:12px;font-weight:700;text-align:center;cursor:pointer;border:none;font-family:'Noto Sans KR',sans-serif;}
-.rap{background:#1a2744;color:#fff;}
-.ras{background:#f3f4f8;color:#555;border:1px solid #e0e2ea;}
+.bwarn{background:#fff7ed;border:1px solid #fed7aa;color:#7c2d12;border-bottom-left-radius:4px;}
+.bok{background:#f0fdf4;border:1px solid #bbf7d0;color:#14532d;border-bottom-left-radius:4px;}
 .tdots{display:flex;gap:4px;align-items:center;padding:4px 2px;}
 .tdots span{width:7px;height:7px;border-radius:50%;background:#bbb;animation:blink 1.2s infinite ease-in-out;}
 .tdots span:nth-child(2){animation-delay:.2s;}.tdots span:nth-child(3){animation-delay:.4s;}
+.chat-btn-wrap{padding:0 16px 14px;display:flex;gap:8px;flex-wrap:wrap;}
+.chat-btn{padding:10px 16px;border:1.5px solid #1a2744;border-radius:20px;background:#fff;color:#1a2744;font-size:13px;font-weight:700;font-family:'Noto Sans KR',sans-serif;cursor:pointer;transition:all .2s;}
+.chat-btn:hover{background:#1a2744;color:#fff;}
+.chat-btn:disabled{opacity:.35;cursor:not-allowed;border-color:#ccc;color:#ccc;}
+.chat-btn.done{background:#f0fdf4;border-color:#86efac;color:#166534;cursor:default;}
 @keyframes blink{0%,80%,100%{opacity:.25;transform:scale(.9);}40%{opacity:1;transform:scale(1);}}
-.sprog{background:#f7f8fc;border:1px solid #e0e2ea;border-radius:10px;padding:12px 14px;font-size:12.5px;color:#555;line-height:1.7;margin-bottom:20px;}
-.sprog strong{color:#1a2744;}
-.pvbox{background:#f7f8fc;border:1px solid #e5e7eb;border-radius:12px;padding:16px;font-size:13px;color:#555;line-height:1.8;margin-bottom:20px;}
+
+/* 리마인드 박스 */
+.remind{background:#fffbeb;border-left:3px solid #f59e0b;border-radius:0 8px 8px 0;padding:12px 14px;font-size:12.5px;color:#78350f;line-height:1.7;margin-bottom:20px;word-break:keep-all;}
+
+/* 행동 선택 */
+.action-group{display:flex;flex-direction:column;gap:10px;margin-bottom:8px;}
+.action-label{cursor:pointer;}
+.action-label input[type=radio]{display:none;}
+.action-box{display:block;border:1.5px solid #e5e7eb;border-radius:10px;padding:14px 16px;font-size:14px;color:#333;line-height:1.5;background:#f9fafb;transition:all .15s;font-family:'Noto Sans KR',sans-serif;}
+.action-label input:checked~.action-box{border-color:#1a2744;background:#eef2fb;color:#1a2744;font-weight:500;}
+
+/* 개인정보 */
+.pvbox{background:#f7f8fc;border:1px solid #e5e7eb;border-radius:12px;padding:16px;font-size:13px;color:#555;line-height:1.8;margin-bottom:20px;word-break:keep-all;}
 .pvbox strong{color:#1a2744;font-weight:700;}
 .otag{display:inline-block;font-size:11px;background:#e0e7ff;color:#3730a3;padding:2px 8px;border-radius:20px;margin-left:6px;font-weight:700;vertical-align:middle;}
 .tinput{width:100%;padding:13px 14px;border:1px solid #e5e7eb;border-radius:10px;font-size:14px;font-family:'Noto Sans KR',sans-serif;background:#f9fafb;color:#333;outline:none;margin-top:8px;transition:border .15s;}
 .tinput:focus{border-color:#1a2744;}
+
+/* 네비게이션 */
 .nav{display:flex;gap:10px;padding:20px 24px 32px;}
 .bprev{flex:1;padding:15px;border:1px solid #ddd;border-radius:10px;background:#fff;color:#666;font-size:14px;font-family:'Noto Sans KR',sans-serif;cursor:pointer;}
 .bnext{flex:2;padding:15px;border:none;border-radius:10px;background:#1a2744;color:#fff;font-size:14px;font-weight:700;font-family:'Noto Sans KR',sans-serif;cursor:pointer;transition:opacity .2s;}
@@ -134,46 +160,47 @@ body{font-family:'Noto Sans KR',sans-serif;background:#f0f2f7;min-height:100vh;d
 </head>
 <body>
 <div class="lov" id="lov"><div class="spin"></div><div class="ltxt">응답을 저장하는 중...</div></div>
-
 <div class="wrap">
   <div class="hband">
     <div class="tag">경희대학교 경영대학원 석사학위 논문 연구</div>
     <h1>AI 문서 지원 도구에 대한<br>인식 및 수용 연구</h1>
-    <div class="sub">연구자: 경희대학교 경영대학원 AI비즈니스 전공 김채이<br>연락처: <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="25464a41497a141714654e4d500b44460b4e57">[email&#160;protected]</a><br>지도교수: 경희대학교 경영대학원 김상균 교수</div>
+    <div class="sub">연구자: 경희대학교 경영대학원 AI비즈니스 전공 김채이<br>연락처: <span id="em"></span><br>지도교수: 경희대학교 경영대학원 김상균 교수</div>
   </div>
   <div class="pbar-wrap">
     <div class="ptrack"><div class="pfill" id="pfill" style="width:0%"></div></div>
     <div class="pmeta"><span id="ptxt">시작하기</span><span id="ppct">0%</span></div>
   </div>
 
-  <!-- S0: 동의 -->
+  <!-- S0: 연구 동의 -->
   <div class="sec active" id="s0">
     <div class="stitle">연구 참여 동의</div>
     <div class="cbox-wrap">
       <strong>연구 배경 및 목적</strong><br>
       최근 품질·인증 업무 현장에서 AI 기반 문서 지원 도구의 도입 가능성은 확대되고 있으나, 고책임·고위험 업무 맥락에서 AI에 대한 신뢰가 충분히 형성되지 않아 실제 활용은 제한적인 경우가 많습니다.<br><br>
-      본 연구는 <strong>설명 가능성(XAI), 지각된 유용성, 오류 가능성 인식, 책임 불안</strong>이 AI 신뢰 형성에 미치는 영향을 분석하고, <strong>업무 책임 수준(고책임 vs 일반 업무)</strong>이 이 관계를 어떻게 조절하는지 검증합니다.<br><br>
+      본 연구는 <strong>설명 가능성(XAI), 지각된 유용성, 오류 가능성 인식, 책임 불안</strong>이 AI 신뢰 형성에 미치는 영향을 분석하고, <strong>업무 책임 수준</strong>이 이 관계를 어떻게 조절하는지 검증합니다.<br><br>
       <strong>참여 안내</strong><br>
       • 소요 시간: 약 10~15분<br>
       • 응답은 익명으로 처리되며 연구 목적 외에는 사용되지 않습니다.<br>
       • 참여 도중 언제든지 중단하실 수 있습니다.<br><br>
       <strong>연구자</strong>: 경희대학교 경영대학원 AI비즈니스 전공 김채이<br>
       <strong>지도교수</strong>: 경희대학교 경영대학원 김상균 교수<br>
-      <strong>연락처</strong>: <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="54373b30380b656665143f3c217a35377a3f26">[email&#160;protected]</a>
+      <strong>연락처</strong>: <span id="em"></span>
     </div>
     <label class="ccheck"><input type="checkbox" id="consent"><div class="chk"></div><span class="ctxt">위 내용을 읽고 이해하였으며, 본 연구 참여에 동의합니다.</span></label>
   </div>
 
-  <!-- S1: 자격확인 -->
+  <!-- S1: 자격 확인 -->
   <div class="sec" id="s1">
     <div class="stitle">참여 자격 확인</div>
     <div class="ecard">
       <div class="ect">최근 1년간 아래 항목 중 하나라도 해당되는 업무를 수행하신 적이 있으십니까?</div>
       <div class="clist">
-        <div class="ci">품질경영시스템(ISO 9001 등) 관련 문서 작성·검토·관리</div>
-        <div class="ci">인증 심사 준비, 대응 또는 심사원으로서의 활동</div>
+        <div class="ci">ISO, KC, IATF, GMP, HACCP 등 각종 인증 기준 관련 문서 작성·검토·관리</div>
+        <div class="ci">인증 심사 준비, 대응 또는 심사원(내부심사원 포함)으로서의 활동</div>
         <div class="ci">내부심사, 공정관리, 품질 개선 업무 수행</div>
         <div class="ci">규제·컴플라이언스 문서 검토 및 준수 업무</div>
+        <div class="ci">품질보증(QA) 또는 품질관리(QC) 업무 수행</div>
+        <div class="ci">고객 불만 처리, 부적합 관리, 시정조치(CAPA) 업무 수행</div>
       </div>
       <div class="yn">
         <label><input type="radio" name="elig" value="yes"><div class="ynb yes">예, 해당됩니다</div></label>
@@ -182,60 +209,96 @@ body{font-family:'Noto Sans KR',sans-serif;background:#f0f2f7;min-height:100vh;d
     </div>
   </div>
 
-  <!-- S2: 상황 + 조작점검 -->
+  <!-- S2: 공통 도입 -->
   <div class="sec" id="s2">
-    <div class="stitle">업무 상황 제시</div>
-    <div id="sitbox"></div>
-    <div class="cintro">📋 <strong>아래 문항은 방금 읽으신 상황에 대한 질문입니다.</strong><br>읽으신 내용을 떠올리며 솔직하게 응답해 주세요.</div>
-    <div class="qb">
-      <div class="ql"><span class="qn">1</span>이 업무 상황은 실수가 발생했을 때 나에게 돌아올 책임과 불이익이 크다고 느껴진다.</div>
-      <div class="lanc"><span>전혀 아니다</span><span>매우 그렇다</span></div>
-      <div class="lrow" id="mc1r"></div>
+    <div class="stitle">🎭 시나리오 실험 — 가상의 상황 제시</div>
+    <div class="scenario-notice">
+      <div class="sn-icon">🎭</div>
+      <div class="sn-text"><strong>지금부터는 가상의 실험 시나리오입니다</strong><br>아래 상황은 연구를 위해 설정된 <strong>가상의 상황</strong>으로, 실제 상황이 아닙니다.<br>마치 <strong>본인이 그 상황에 있다고 상상하며</strong> 읽어주세요.</div>
     </div>
-    <div class="qb">
-      <div class="ql"><span class="qn">2</span>이 업무는 결과가 조직 또는 외부 평가(심사, 감사 등)에 영향을 줄 가능성이 크다고 느껴진다.</div>
-      <div class="lanc"><span>전혀 아니다</span><span>매우 그렇다</span></div>
-      <div class="lrow" id="mc2r"></div>
-    </div>
-    <div class="qb">
-      <div class="ql"><span class="qn">3</span>이 업무는 의사결정에 신중함이 특히 요구되는 상황이라고 느껴진다.</div>
-      <div class="lanc"><span>전혀 아니다</span><span>매우 그렇다</span></div>
-      <div class="lrow" id="mc3r"></div>
+    <div class="intro-card">
+      <div class="ic-tag">📋 공통 상황 — 모든 참여자 동일</div>
+      <div class="ic-text">
+        당신은 <strong>제조기업의 품질·인증 실무자</strong>입니다.<br><br>
+        현재 사내에 도입된 <strong>AI 문서 지원 도구</strong>를 활용하여 절차서와 기록서를 검토하고 있습니다.<br><br>
+        아래는 업무 중 확인한 한 사례입니다.<br>
+        <strong>실제 본인의 업무 상황이라고 생각하고</strong> 응답해 주세요.
+      </div>
     </div>
   </div>
 
-  <!-- S3: AI UI + EXP -->
+  <!-- S3: 책임 수준 조작 -->
   <div class="sec" id="s3">
+    <div class="stitle">업무 상황 제시</div>
+    <div id="resp-box"></div>
+    <div class="remind">💡 위 상황을 충분히 읽으신 후 다음으로 넘어가 주세요. 이후 문항은 이 상황을 기준으로 응답해 주세요.</div>
+  </div>
+
+  <!-- S4: AI 채팅 (설명 수준 조작) -->
+  <div class="sec" id="s4">
     <div class="stitle">AI 도구 분석 결과</div>
-    <div class="sprog" id="sprogtxt"></div>
+    <div class="remind" id="chat-remind"></div>
     <div class="aibox">
       <div class="aitop">
         <div class="dot dr"></div><div class="dot dy"></div><div class="dot dg"></div>
         <span class="aname">AI Document Assistant</span>
-        <div class="sdot"></div><span class="stxt">연결됨</span>
+        <div class="sdot"></div><span class="stxt2">연결됨</span>
       </div>
       <div class="msgs" id="chatbox"></div>
     </div>
-    <div style="font-size:12px;color:#888;margin-bottom:20px;line-height:1.6;">(1점: 전혀 아니다 ~ 7점: 매우 그렇다)</div>
-    <div id="expbox"></div>
   </div>
 
-  <!-- S4: PU + EPR + AA + TRU -->
-  <div class="sec" id="s4">
-    <div class="stitle">AI 시스템에 대한 인식</div>
-    <div style="font-size:12px;color:#888;margin-bottom:20px;line-height:1.6;">(1점: 전혀 아니다 ~ 7점: 매우 그렇다)</div>
-    <div id="s4box"></div>
-  </div>
-
-  <!-- S5: ITU -->
+  <!-- S5: 행동 선택 (몰입 유지) -->
   <div class="sec" id="s5">
-    <div class="stitle">사용 의도</div>
-    <div style="font-size:12px;color:#888;margin-bottom:20px;line-height:1.6;">(1점: 전혀 아니다 ~ 7점: 매우 그렇다)</div>
-    <div id="s5box"></div>
+    <div class="stitle">상황 판단</div>
+    <div class="remind">방금 확인한 AI의 응답을 떠올리며 응답해 주세요.</div>
+    <div class="qb">
+      <div class="ql">방금 AI가 제시한 결과를 바탕으로, 현재 상황에서 귀하가 취할 가장 적절한 다음 행동은 무엇입니까?</div>
+      <div class="action-group">
+        <label class="action-label"><input type="radio" name="action" value="참고"><div class="action-box">AI 결과를 우선 참고하여 업무를 진행한다</div></label>
+        <label class="action-label"><input type="radio" name="action" value="추가확인"><div class="action-box">추가로 직접 확인한 후 판단한다</div></label>
+        <label class="action-label"><input type="radio" name="action" value="신뢰어려움"><div class="action-box">AI 결과를 바로 신뢰하기 어렵다</div></label>
+      </div>
+    </div>
   </div>
 
-  <!-- S6: 인구통계 -->
+  <!-- S6: 조작 점검 -->
   <div class="sec" id="s6">
+    <div class="stitle">상황 인식 확인</div>
+    <div class="remind">위 상황이 실제 본인의 업무라고 가정하고 답해 주세요.</div>
+    <div style="font-size:12px;color:#888;margin-bottom:20px;line-height:1.6;">(1점: 전혀 아니다 ~ 7점: 매우 그렇다)</div>
+    <div style="font-size:13px;font-weight:700;color:#1a2744;margin-bottom:14px;">A. 업무 책임 수준</div>
+    <div id="mc-resp-box"></div>
+    <div style="font-size:13px;font-weight:700;color:#1a2744;margin-bottom:14px;margin-top:8px;">B. AI 설명 수준</div>
+    <div id="mc-exp-box"></div>
+  </div>
+
+  <!-- S7: EXP + TRU -->
+  <div class="sec" id="s7">
+    <div class="stitle">AI 시스템에 대한 인식 (1/2)</div>
+    <div class="remind">방금 확인한 AI의 응답을 떠올리며 응답해 주세요.</div>
+    <div style="font-size:12px;color:#888;margin-bottom:20px;line-height:1.6;">(1점: 전혀 아니다 ~ 7점: 매우 그렇다)</div>
+    <div id="s7box"></div>
+  </div>
+
+  <!-- S8: PU + EPR + AA + ITU -->
+  <div class="sec" id="s8">
+    <div class="stitle">AI 시스템에 대한 인식 (2/2)</div>
+    <div class="remind">이 상황에서 본인이 판단해야 한다고 생각하며 응답해 주세요.</div>
+    <div style="font-size:12px;color:#888;margin-bottom:20px;line-height:1.6;">(1점: 전혀 아니다 ~ 7점: 매우 그렇다)</div>
+    <div id="s8box"></div>
+  </div>
+
+  <!-- S9: ITU -->
+  <div class="sec" id="s9">
+    <div class="stitle">사용 의도</div>
+    <div class="remind">위 상황을 경험한 후, 아래 문항에 응답해 주세요.</div>
+    <div style="font-size:12px;color:#888;margin-bottom:20px;line-height:1.6;">(1점: 전혀 아니다 ~ 7점: 매우 그렇다)</div>
+    <div id="s9box"></div>
+  </div>
+
+  <!-- S10: 인구통계 -->
+  <div class="sec" id="s10">
     <div class="stitle">기본 정보</div>
     <div class="qb">
       <div class="ql"><span class="qn">1</span>귀하의 성별은 무엇입니까?</div>
@@ -337,8 +400,8 @@ body{font-family:'Noto Sans KR',sans-serif;background:#f0f2f7;min-height:100vh;d
     </div>
   </div>
 
-  <!-- S7: 개인정보 -->
-  <div class="sec" id="s7">
+  <!-- S11: 개인정보 (선택) -->
+  <div class="sec" id="s11">
     <div class="stitle">개인정보 수집 동의 <span class="otag">선택</span></div>
     <div class="pvbox">
       <strong>수집 목적</strong>: 연구 결과 회신 및 감사 연락<br>
@@ -349,8 +412,8 @@ body{font-family:'Noto Sans KR',sans-serif;background:#f0f2f7;min-height:100vh;d
       위 내용에 동의하고 개인정보를 제공하시겠습니까?
     </div>
     <div class="yn" style="margin-bottom:20px;">
-      <label><input type="radio" name="pvagree" value="yes" id="pv-yes"><div class="ynb yes">동의합니다</div></label>
-      <label><input type="radio" name="pvagree" value="no" id="pv-no"><div class="ynb no">동의하지 않습니다</div></label>
+      <label><input type="radio" name="pvagree" value="yes"><div class="ynb yes">동의합니다</div></label>
+      <label><input type="radio" name="pvagree" value="no"><div class="ynb no">동의하지 않습니다</div></label>
     </div>
     <div id="pvfields" style="display:none;">
       <div class="qb">
@@ -369,11 +432,10 @@ body{font-family:'Noto Sans KR',sans-serif;background:#f0f2f7;min-height:100vh;d
     <button class="bprev" id="bprev" style="display:none">이전</button>
     <button class="bnext" id="bnext">다음 →</button>
   </div>
-
   <div class="endw" id="endw">
     <div class="endico">🙏</div>
     <h2>설문이 종료되었습니다</h2>
-    <p>본 연구는 품질·인증·심사 관련 업무 경험자를<br>대상으로 진행됩니다.</p>
+    <p>본 연구는 품질·인증·심사 관련 업무 경험자를 대상으로 진행됩니다.</p>
     <p style="margin-top:12px;">참여해 주셔서 진심으로 감사드립니다.</p>
   </div>
   <div class="thkw" id="thkw">
@@ -386,258 +448,6 @@ body{font-family:'Noto Sans KR',sans-serif;background:#f0f2f7;min-height:100vh;d
   </div>
 </div>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
-var SHEET_URL='https://script.google.com/macros/s/AKfycbxewOPqzNbp9Ni_CvRnn-qjtMhFQY-khf7kFzP9NqIKO8nVi_X3zJ_NisAqwtORMRjr/exec';
-var TOTAL=8;
-var cur=0;
-var grp=Math.random()<0.5?'A':'B';
-var chatDone=false;
-
-var sits={
-  A:'<div class="scard"><div class="sctag">📋 업무 상황</div><div class="sctext">귀하는 내일 오전 10시, 외부 인증기관에서 실시하는 <strong>ISO 9001 정기 사후심사</strong>를 앞두고 있는 품질·인증 실무 담당자입니다.<br><br>귀하는 지금 심사원에게 최종 제출할 <strong>\'품질경영계획서 및 내부심사 보고서\'</strong>의 마지막 검토를 진행하고 있습니다.<br><br>이 문서는 <strong>귀하의 이름으로 제출</strong>되며, 만약 중대한 부적합이 발견될 경우 인증 갱신(사후심사 통과)에 심각한 문제가 발생하고 <strong>그 책임은 실무자인 귀하에게 돌아옵니다.</strong><br><br>현재 시간은 퇴근을 불과 <strong>1시간 앞둔 오후 5시</strong>로, 시간이 매우 촉박한 상황입니다.</div></div>',
-  B:'<div class="scard"><div class="sctag">📋 업무 상황</div><div class="sctext">귀하는 ISO 9001 인증 업무를 지원하는 <strong>품질·인증 실무자</strong>입니다.<br><br>오늘 귀하는 <strong>내부 검토용 심사 보조 자료</strong>를 정리하고 있습니다.<br><br>이 자료는 <strong>참고용으로만 활용</strong>되며, 최종 심사 보고서는 별도의 책임자가 작성합니다. 귀하에게는 해당 내용에 대한 <strong>공식적인 책임이 없습니다.</strong><br><br>귀하의 회사는 최근 AI 기반 문서 지원 도구를 도입하였습니다. 귀하는 아래 AI 도구의 분석 결과를 <strong>참고하여 보조 자료를 정리</strong>하면 됩니다.</div></div>'
-};
-
-var sprogs={
-  A:'⏰ <strong>시간이 촉박한 귀하</strong>는 최근 도입된 "AI 기반 품질 문서 검토 도구"에 품질경영계획서 파일을 업로드하여 빠른 검토를 지시했습니다. 잠시 후, AI의 분석 결과가 아래와 같이 나타났습니다.',
-  B:'ℹ️ 귀하는 참고용 보조 자료 정리를 위해 AI 도구에 문서를 업로드했습니다. 잠시 후, 아래와 같은 분석 결과가 나타났습니다.'
-};
-
-var expItems=[
-  {id:'EXP1',lb:'화면에 제시된 AI의 분석 결과는 오류의 위치와 그 이유를 내가 이해하기 쉽게 설명해 준다.'},
-  {id:'EXP2',lb:'나는 이 AI 도구가 어떤 근거(규정, 데이터)를 바탕으로 수정 초안을 제안했는지 명확하게 알 수 있다.'},
-  {id:'EXP3',lb:'AI가 제공하는 부가적인 설명(오류 위험도 등)은 내가 상황을 파악하기에 충분히 구체적이다.'},
-  {id:'EXP4',lb:'나는 이 AI 도구가 치명적 오류라는 결론을 도출해 낸 논리적 과정을 추적하고 파악할 수 있다.'}
-];
-var s4Items=[
-  {id:'PU1',lb:'이 AI 도구는 업무 효율을 높여줄 것이다.'},
-  {id:'PU2',lb:'이 AI 도구를 사용하면 업무 성과가 향상될 것이다.'},
-  {id:'PU3',lb:'이 AI 도구는 전반적으로 유용하다.'},
-  {id:'EPR1',lb:'이 AI 도구는 잘못된 분석 결과를 출력할 가능성이 있다.'},
-  {id:'EPR2',lb:'이 AI 도구의 결과를 그대로 신뢰하기 어렵다고 느낀다.'},
-  {id:'EPR3',lb:'이 AI 도구가 제시하는 결론에는 오류가 포함될 수 있다.'},
-  {id:'AA1',lb:'이 AI 도구의 판단이 틀렸을 때 책임이 나에게 돌아올 것 같아 불안하다.'},
-  {id:'AA2',lb:'AI 결과를 활용했다가 문제가 생기면 내가 책임을 져야 할 것 같다.'},
-  {id:'AA3',lb:'AI 추천을 따랐을 때 발생하는 결과에 대한 책임 소재가 불명확하다.'},
-  {id:'TRU1',lb:'이 AI 시스템은 신뢰할 수 있다.'},
-  {id:'TRU2',lb:'이 AI 시스템은 일관되고 믿을 수 있는 결과를 제공한다.'},
-  {id:'TRU3',lb:'이 AI 시스템의 추천을 믿고 따를 수 있다.'}
-];
-var s5Items=[
-  {id:'ITU1',lb:'나는 이 AI 도구를 실제 업무에 사용할 의향이 있다.'},
-  {id:'ITU2',lb:'나는 이 AI 도구를 지속적으로 활용할 것이다.'},
-  {id:'ITU3',lb:'나는 동료에게 이 AI 도구를 추천할 것이다.'}
-];
-
-function makeLrow(name,cid){
-  var el=document.getElementById(cid);
-  if(!el)return;
-  el.innerHTML=[1,2,3,4,5,6,7].map(function(v){return'<label style="flex:1"><input type="radio" name="'+name+'" value="'+v+'"><div class="lbtn">'+v+'</div></label>';}).join('');
-}
-
-function makeLikert(items,tid){
-  var el=document.getElementById(tid);
-  if(!el)return;
-  el.innerHTML=items.map(function(item,i){
-    return'<div class="qb"><div class="ql"><span class="qn">'+(i+1)+'</span>'+item.lb+'</div><div class="lanc"><span>전혀 아니다</span><span>매우 그렇다</span></div><div class="lrow">'+[1,2,3,4,5,6,7].map(function(v){return'<label><input type="radio" name="'+item.id+'" value="'+v+'"><div class="lbtn">'+v+'</div></label>';}).join('')+'</div></div>';
-  }).join('');
-}
-
-function initAll(){
-  var sb=document.getElementById('sitbox');
-  if(sb)sb.innerHTML=sits[grp];
-  var sp=document.getElementById('sprogtxt');
-  if(sp)sp.innerHTML=sprogs[grp];
-  makeLrow('MC1','mc1r');
-  makeLrow('MC2','mc2r');
-  makeLrow('MC3','mc3r');
-  makeLikert(expItems,'expbox');
-  makeLikert(s4Items,'s4box');
-  makeLikert(s5Items,'s5box');
-}
-
-function updateProg(){
-  var pct=Math.round((cur/(TOTAL-1))*100);
-  document.getElementById('pfill').style.width=pct+'%';
-  document.getElementById('ppct').textContent=pct+'%';
-  var labs=['연구 동의','참여 자격','상황 제시','AI 분석·EXP','인식 측정','사용 의도','기본 정보','개인정보'];
-  document.getElementById('ptxt').textContent=labs[cur]||'';
-}
-
-function showSec(n){
-  document.querySelectorAll('.sec').forEach(function(s){s.classList.remove('active');});
-  var sec=document.getElementById('s'+n);
-  if(sec)sec.classList.add('active');
-  document.getElementById('bprev').style.display=n===0?'none':'';
-  document.getElementById('bnext').textContent=n===TOTAL-1?'제출하기 ✓':'다음 →';
-  document.getElementById('errmsg').classList.remove('show');
-  updateProg();
-  window.scrollTo({top:0,behavior:'smooth'});
-  if(n===3)setTimeout(runChat,400);
-}
-
-function runChat(){
-  if(chatDone)return;
-  chatDone=true;
-  var wrap=document.getElementById('chatbox');
-  if(!wrap)return;
-  wrap.innerHTML='';
-  var scripts={
-    A:[
-      {t:'user',tx:'품질경영계획서 최종 검토 부탁해. 내일 사후심사 제출용이야.'},
-      {t:'typing'},
-      {t:'repA'},
-      {t:'user',tx:'수정 초안 작성해줘. 내가 최종 확인하고 제출할게.'},
-      {t:'ai',tx:'수정 초안을 생성합니다. 해당 문서는 귀하의 이름으로 제출되며, 사후심사 결과에 대한 최종 확인 권한은 귀하께 있습니다.'}
-    ],
-    B:[
-      {t:'user',tx:'내부 검토용 보조 자료 정리하려고. 문서 분석해줘.'},
-      {t:'typing'},
-      {t:'repB'},
-      {t:'user',tx:'알겠어, 참고할게.'},
-      {t:'ai',tx:'보조 자료 정리에 참고하시면 됩니다. 최종 판단과 보고서 작성은 책임자께서 진행하십니다.'}
-    ]
-  };
-  var msgs=scripts[grp];
-  var delay=300;
-  msgs.forEach(function(msg){
-    if(msg.t==='typing'){
-      setTimeout(function(){
-        var r=document.createElement('div');r.className='crow';r.id='typr';
-        r.innerHTML='<div class="av av-ai">AI</div><div class="bub bai"><div class="tdots"><span></span><span></span><span></span></div></div>';
-        wrap.appendChild(r);setTimeout(function(){r.classList.add('show');},30);
-        setTimeout(function(){var x=document.getElementById('typr');if(x)x.remove();},1600);
-      },delay);delay+=1900;
-    } else if(msg.t==='repA'){
-      setTimeout(function(){
-        var r=document.createElement('div');r.className='crow';
-        r.innerHTML='<div class="av av-ai">AI</div><div class="bub brep"><div class="rph"><div class="rpi">📄</div><div><div class="rpt">AI Analysis Report</div><div class="rps">ISO 9001:2015 · 문서 자동 검토</div></div></div><div class="rpb"><div class="rbdg rbd">⚠ 치명적 오류 1건 발견</div><div class="rps2"><div class="rpl">오류 위치</div><div class="rpc">6.2.2항 — 품질목표 달성 기획 (위험도: 높음)</div></div><div class="rdiv"></div><div class="rps2"><div class="rpl">AI 분석 근거</div><div class="rpc">해당 항목에서 요구하는 <strong>\'분기별 세부 달성 계획\'이 누락</strong>되었으며, 목표를 실행할 <strong>\'담당자(책임자)\'가 명확히 지정되지 않았습니다.</strong> ISO 9001:2015 6.2.2(b)(c)(d) 요구사항 미충족.</div></div><div class="rdiv"></div><div class="rps2"><div class="rpl">AI 수정 초안 제안</div><div class="rpc">과거 유사 부서 데이터를 바탕으로 1~4분기별 달성 계획 및 담당자를 추가한 수정 초안을 생성하시겠습니까?</div></div></div><div class="ract"><div class="rabtn rap">수정 초안 자동 작성</div><div class="rabtn ras">무시하고 원본 유지</div></div></div>';
-        wrap.appendChild(r);setTimeout(function(){r.classList.add('show');},30);wrap.scrollTop=wrap.scrollHeight;
-      },delay);delay+=1100;
-    } else if(msg.t==='repB'){
-      setTimeout(function(){
-        var r=document.createElement('div');r.className='crow';
-        r.innerHTML='<div class="av av-ai">AI</div><div class="bub brep"><div class="rph"><div class="rpi">📄</div><div><div class="rpt">AI Analysis Report</div><div class="rps">ISO 9001:2015 · 문서 자동 검토</div></div></div><div class="rpb"><div class="rbdg rbi">⚠ 부적합 우려 항목 감지</div><div class="rps2"><div class="rpl">판정</div><div class="rpc">ISO 9001:2015 6.2.2항 위배 가능성</div></div><div class="rdiv"></div><div class="rps2"><div class="rpl">권고 사항</div><div class="rpc">6.2.2항을 참조하여 품질 목표 달성 계획의 구체적 일정 및 담당자를 추가하십시오.</div></div><div class="rdiv"></div><div class="rps2"><div class="rpl">AI 수정 초안 제안</div><div class="rpc" style="font-family:monospace;font-size:11px;">6.2.2 품질 목표 달성 계획 [수정안]<br>본 조직은 품질 목표 달성을 위해 분기별 검토 일정(3월·6월·9월·12월) 및 담당 부서장 책임을 명시하여 관리한다.</div></div></div><div class="ract"><div class="rabtn rap">수정안 적용</div><div class="rabtn ras">직접 수정</div></div></div>';
-        wrap.appendChild(r);setTimeout(function(){r.classList.add('show');},30);wrap.scrollTop=wrap.scrollHeight;
-      },delay);delay+=1100;
-    } else if(msg.t==='user'){
-      setTimeout(function(){
-        var r=document.createElement('div');r.className='crow urow';
-        r.innerHTML='<div class="bub bu">'+msg.tx+'</div><div class="av av-u">나</div>';
-        wrap.appendChild(r);setTimeout(function(){r.classList.add('show');},30);wrap.scrollTop=wrap.scrollHeight;
-      },delay);delay+=1000;
-    } else if(msg.t==='ai'){
-      setTimeout(function(){
-        var r=document.createElement('div');r.className='crow';
-        r.innerHTML='<div class="av av-ai">AI</div><div class="bub bai">'+msg.tx+'</div>';
-        wrap.appendChild(r);setTimeout(function(){r.classList.add('show');},30);wrap.scrollTop=wrap.scrollHeight;
-      },delay);delay+=1000;
-    }
-  });
-}
-
-function validate(){
-  if(cur===0)return document.getElementById('consent').checked;
-  if(cur===1){
-    var v=(document.querySelector('input[name="elig"]:checked')||{}).value;
-    if(v==='no'){showEnd();return false;}
-    return v==='yes';
-  }
-  if(cur===2)return['MC1','MC2','MC3'].every(function(n){return document.querySelector('input[name="'+n+'"]:checked');});
-  if(cur===3)return expItems.every(function(i){return document.querySelector('input[name="'+i.id+'"]:checked');});
-  if(cur===4)return s4Items.every(function(i){return document.querySelector('input[name="'+i.id+'"]:checked');});
-  if(cur===5)return s5Items.every(function(i){return document.querySelector('input[name="'+i.id+'"]:checked');});
-  if(cur===6)return['qgender','qage','qfield','qindustry','qcompsize','qrank','qexp','qedu','qai'].every(function(n){return document.querySelector('input[name="'+n+'"]:checked');});
-  return true;
-}
-
-function gv(name){
-  var el=document.querySelector('input[name="'+name+'"]:checked');
-  if(!el)return'';
-  if(el.value==='기타'){
-    var m={'qfield':'field-etc','qrank':'rank-etc','qindustry':'industry-etc'};
-    if(m[name]){var t=document.getElementById(m[name]).value.trim();return t?'기타: '+t:'기타';}
-  }
-  return el.value;
-}
-
-function collectData(){
-  var data={
-    timestamp:new Date().toLocaleString('ko-KR'),
-    group:grp,
-    MC1:(document.querySelector('input[name="MC1"]:checked')||{}).value||'',
-    MC2:(document.querySelector('input[name="MC2"]:checked')||{}).value||'',
-    MC3:(document.querySelector('input[name="MC3"]:checked')||{}).value||'',
-    gender:(document.querySelector('input[name="qgender"]:checked')||{}).value||'',
-    age:(document.querySelector('input[name="qage"]:checked')||{}).value||'',
-    field:gv('qfield'),industry:gv('qindustry'),compsize:(document.querySelector('input[name="qcompsize"]:checked')||{}).value||'',rank:gv('qrank'),
-    education:(document.querySelector('input[name="qedu"]:checked')||{}).value||'',
-    experience:(document.querySelector('input[name="qexp"]:checked')||{}).value||'',
-    ai_usage:(document.querySelector('input[name="qai"]:checked')||{}).value||'',
-    privacy_agree:(document.querySelector('input[name="pvagree"]:checked')||{}).value||'미응답',
-    name:(document.getElementById('iname')||{}).value||'',
-    contact:(document.getElementById('icontact')||{}).value||''
-  };
-  expItems.concat(s4Items).concat(s5Items).forEach(function(item){
-    var el=document.querySelector('input[name="'+item.id+'"]:checked');
-    data[item.id]=el?parseInt(el.value):'';
-  });
-  return data;
-}
-
-function avg(items,data){
-  var vals=items.map(function(i){return data[i.id];}).filter(function(v){return v!=='';});
-  return vals.length?(vals.reduce(function(a,b){return a+b;},0)/vals.length).toFixed(2):'-';
-}
-
-function showEnd(){
-  document.querySelectorAll('.sec').forEach(function(s){s.classList.remove('active');});
-  document.getElementById('navrow').style.display='none';
-  document.getElementById('pfill').style.width='100%';
-  document.getElementById('ppct').textContent='';
-  document.getElementById('ptxt').textContent='설문 종료';
-  document.getElementById('endw').style.display='block';
-  window.scrollTo({top:0,behavior:'smooth'});
-}
-
-function showThank(data){
-  document.getElementById('navrow').style.display='none';
-  document.querySelectorAll('.sec').forEach(function(s){s.classList.remove('active');});
-  document.getElementById('pfill').style.width='100%';
-  document.getElementById('ppct').textContent='완료';
-  document.getElementById('ptxt').textContent='제출 완료';
-  document.getElementById('thkd').innerHTML=
-    '<div class="tdr"><span class="tdk">응답 시각</span><span class="tdv">'+data.timestamp+'</span></div>';
-  document.getElementById('thkw').style.display='block';
-  window.scrollTo({top:0,behavior:'smooth'});
-}
-
-async function submitData(data){
-  document.getElementById('lov').classList.add('show');
-  document.getElementById('bnext').disabled=true;
-  try{
-    await fetch(SHEET_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
-    showThank(data);
-  }catch(e){
-    document.getElementById('errmsg').classList.add('show');
-    document.getElementById('bnext').disabled=false;
-  }finally{
-    document.getElementById('lov').classList.remove('show');
-  }
-}
-
-function navigate(dir){
-  if(dir===1&&!validate()){
-    if(cur!==1)alert('모든 항목에 응답해 주세요.');
-    return;
-  }
-  if(dir===1&&cur===TOTAL-1){submitData(collectData());return;}
-  cur=Math.max(0,Math.min(TOTAL-1,cur+dir));
-  showSec(cur);
-}
-
-// 기타 선택시 입력창
-document.addEventListener('change',function(e){
-  if(e.target.name==='qfield')document.getElementById('field-etc').style.display=e.target.value==='기타'?'block':'none';
-  if(e.target.name==='qrank')document.getElementById('rank-etc').style.display=e.target.value==='기타'?'block':'none';
-  if(e.target.name==='qindustry')document.getElementById('industry-etc').style.display=e.target.value==='기타'?'block':'no
+<script src="survey.js"></script>
+</body>
+</html>
