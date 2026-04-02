@@ -1,14 +1,23 @@
-// 이메일 동적 주입 (Cloudflare 우회)
+// 이메일 동적 주입
 (function(){
-  var u='codl_121';
-  var d='khu.ac.kr';
-  var full=u+'@'+d;
-  var els=document.querySelectorAll('#em');
-  if(els.length){els.forEach(function(e){e.textContent=full;});}
-  else{document.addEventListener('DOMContentLoaded',function(){
-    document.querySelectorAll('#em').forEach(function(e){e.textContent=full;});
-  });}
+  var p1='codl';
+  var p2='_121';
+  var p3='khu';
+  var p4='.ac.kr';
+  var sep=String.fromCharCode(64);
+  var full=p1+p2+sep+p3+p4;
+  function inject(){
+    var els=document.querySelectorAll('.em-placeholder');
+    els.forEach(function(e){e.textContent=full;});
+  }
+  if(document.readyState==='loading'){
+    document.addEventListener('DOMContentLoaded',inject);
+  } else {
+    inject();
+  }
 })();
+
+
 
 var SHEET_URL='https://script.google.com/macros/s/AKfycbxewOPqzNbp9Ni_CvRnn-qjtMhFQY-khf7kFzP9NqIKO8nVi_X3zJ_NisAqwtORMRjr/exec';
 var TOTAL=12;
