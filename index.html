@@ -66,9 +66,8 @@ body{font-family:'Noto Sans KR',sans-serif;background:#f0f2f7;min-height:100vh;d
 .intro-card .ic-text strong{color:#1a2744;}
 
 /* 시나리오 배너 */
-.scenario-notice{background:linear-gradient(135deg,#fff8e1,#fff3cd);border:2px solid #f59e0b;border-radius:14px;padding:18px;margin-bottom:20px;display:flex;align-items:flex-start;gap:14px;}
-.sn-icon{font-size:28px;flex-shrink:0;margin-top:2px;}
-.sn-text{font-size:13.5px;color:#78350f;line-height:1.7;word-break:keep-all;}
+.scenario-notice{background:#fffbeb;border:1.5px solid #f59e0b;border-radius:12px;padding:16px 18px;margin-bottom:20px;}
+.sn-text{font-size:13px;color:#78350f;line-height:1.7;word-break:keep-all;}
 .sn-text strong{color:#92400e;font-weight:700;}
 
 /* 책임 조작 카드 */
@@ -156,6 +155,23 @@ body{font-family:'Noto Sans KR',sans-serif;background:#f0f2f7;min-height:100vh;d
 .tdr:last-child{border-bottom:none;}.tdk{color:#888;}.tdv{color:#1a2744;font-weight:700;}
 .errmsg{display:none;background:#fff3f3;border:1px solid #ffcdd2;border-radius:8px;padding:12px 16px;font-size:13px;color:#c0392b;margin:0 24px 16px;line-height:1.5;}
 .errmsg.show{display:block;}
+.resp-card{background:#f7f8fc;border:1.5px solid #e0e2ea;border-radius:14px;padding:22px;margin-bottom:20px;}
+.rc-text{font-size:13.5px;line-height:1.9;color:#2c3e6b;}
+.rc-text strong{color:#1a2744;font-weight:700;}
+.remind-ai{background:#f0f4ff;border-left:3px solid #3b6de8;border-radius:0 8px 8px 0;padding:12px 14px;font-size:12.5px;color:#1a2744;line-height:1.7;margin-bottom:16px;word-break:keep-all;}
+.remind-ai strong{font-weight:700;}
+.ai-scale{padding:8px 0;}
+.ai-scale-labels{display:none;}
+.ai-scale-track{display:flex;align-items:center;justify-content:space-between;position:relative;padding:16px 0;}
+.ai-scale-track::before{content:'';position:absolute;top:50%;left:12px;right:12px;height:3px;background:#e5e7eb;transform:translateY(-50%);z-index:0;}
+.ai-opt{flex:1;display:flex;justify-content:center;cursor:pointer;position:relative;z-index:1;}
+.ai-opt input[type=radio]{display:none;}
+.ai-dot{width:26px;height:26px;border-radius:50%;border:2.5px solid #d1d5db;background:#fff;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-direction:column;}
+.ai-dot .ai-pct{font-size:9px;color:#aaa;margin-top:32px;position:absolute;white-space:nowrap;}
+.ai-opt input:checked+.ai-dot{background:#1a2744;border-color:#1a2744;}
+.ai-opt input:checked+.ai-dot .ai-pct{color:#1a2744;font-weight:700;}
+.ai-scale-desc{display:flex;justify-content:space-between;font-size:11px;color:#888;margin-top:4px;}
+
 </style>
 </head>
 <body>
@@ -195,7 +211,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:#f0f2f7;min-height:100vh;d
     <div class="ecard">
       <div class="ect">최근 1년간 아래 항목 중 하나라도 해당되는 업무를 수행하신 적이 있으십니까?</div>
       <div class="clist">
-        <div class="ci">ISO, KC, IATF, GMP, HACCP 등 각종 인증 기준 관련 문서 작성·검토·관리</div>
+        <div class="ci">ISO, KC, IATF, GMP, HACCP, CE, UL 등 각종 인증 기준 관련 문서 작성·검토·관리</div>
         <div class="ci">인증 심사 준비, 대응 또는 심사원(내부심사원 포함)으로서의 활동</div>
         <div class="ci">내부심사, 공정관리, 품질 개선 업무 수행</div>
         <div class="ci">규제·컴플라이언스 문서 검토 및 준수 업무</div>
@@ -211,18 +227,16 @@ body{font-family:'Noto Sans KR',sans-serif;background:#f0f2f7;min-height:100vh;d
 
   <!-- S2: 공통 도입 -->
   <div class="sec" id="s2">
-    <div class="stitle">🎭 시나리오 실험 — 가상의 상황 제시</div>
+    <div class="stitle">가상 시나리오</div>
     <div class="scenario-notice">
-      <div class="sn-icon">🎭</div>
-      <div class="sn-text"><strong>지금부터는 가상의 실험 시나리오입니다</strong><br>아래 상황은 연구를 위해 설정된 <strong>가상의 상황</strong>으로, 실제 상황이 아닙니다.<br>마치 <strong>본인이 그 상황에 있다고 상상하며</strong> 읽어주세요.</div>
+      <div class="sn-text"><strong>지금부터는 가상의 실험 시나리오입니다.</strong> 아래 상황은 연구를 위해 설정된 가상의 상황으로, 실제 상황이 아닙니다. 마치 <strong>본인이 그 상황에 있다고 상상하며</strong> 읽어주세요.</div>
     </div>
     <div class="intro-card">
-      <div class="ic-tag">📋 공통 상황 — 모든 참여자 동일</div>
       <div class="ic-text">
-        당신은 <strong>제조기업의 품질·인증 실무자</strong>입니다.<br><br>
-        현재 사내에 도입된 <strong>AI 문서 지원 도구</strong>를 활용하여 절차서와 기록서를 검토하고 있습니다.<br><br>
-        아래는 업무 중 확인한 한 사례입니다.<br>
-        <strong>실제 본인의 업무 상황이라고 생각하고</strong> 응답해 주세요.
+        귀하는 <strong>기업의 품질·인증 실무자</strong>입니다.<br><br>
+        사내에 도입된 <strong>AI 문서 지원 도구</strong>를 활용하여 관련 문서를 검토하는 업무를 맡고 있습니다.<br><br>
+        다음 화면에서 구체적인 업무 상황이 제시됩니다.<br>
+        <strong>실제 본인의 업무 상황이라고 생각하며</strong> 읽어주세요.
       </div>
     </div>
   </div>
@@ -234,10 +248,9 @@ body{font-family:'Noto Sans KR',sans-serif;background:#f0f2f7;min-height:100vh;d
     <div class="remind">💡 위 상황을 충분히 읽으신 후 다음으로 넘어가 주세요. 이후 문항은 이 상황을 기준으로 응답해 주세요.</div>
   </div>
 
-  <!-- S4: AI 채팅 (설명 수준 조작) -->
+  <!-- S4: AI 채팅 + 행동 선택 -->
   <div class="sec" id="s4">
     <div class="stitle">AI 도구 분석 결과</div>
-    <div class="remind" id="chat-remind"></div>
     <div class="aibox">
       <div class="aitop">
         <div class="dot dr"></div><div class="dot dy"></div><div class="dot dg"></div>
@@ -246,20 +259,18 @@ body{font-family:'Noto Sans KR',sans-serif;background:#f0f2f7;min-height:100vh;d
       </div>
       <div class="msgs" id="chatbox"></div>
     </div>
-  </div>
-
-  <!-- S5: 행동 선택 (몰입 유지) -->
-  <div class="sec" id="s5">
-    <div class="stitle">상황 판단</div>
-    <div class="remind">방금 확인한 AI의 응답을 떠올리며 응답해 주세요.</div>
-    <div class="qb">
-      <div class="ql">방금 AI가 제시한 결과를 바탕으로, 현재 상황에서 귀하가 취할 가장 적절한 다음 행동은 무엇입니까?</div>
+    <div class="qb" style="margin-top:8px;">
+      <div class="ql" style="font-size:13.5px;">방금 AI가 제시한 결과를 바탕으로, 현재 상황에서 귀하가 취할 가장 적절한 다음 행동은 무엇입니까?</div>
       <div class="action-group">
         <label class="action-label"><input type="radio" name="action" value="참고"><div class="action-box">AI 결과를 우선 참고하여 업무를 진행한다</div></label>
         <label class="action-label"><input type="radio" name="action" value="추가확인"><div class="action-box">추가로 직접 확인한 후 판단한다</div></label>
         <label class="action-label"><input type="radio" name="action" value="신뢰어려움"><div class="action-box">AI 결과를 바로 신뢰하기 어렵다</div></label>
       </div>
     </div>
+  </div>
+
+  <!-- S5: (행동 선택 이동됨 — 조작점검으로 바로) -->
+  <div class="sec" id="s5" style="display:none!important;">
   </div>
 
   <!-- S6: 조작 점검 -->
@@ -276,14 +287,16 @@ body{font-family:'Noto Sans KR',sans-serif;background:#f0f2f7;min-height:100vh;d
   <!-- S7: EXP + TRU -->
   <div class="sec" id="s7">
     <div class="stitle">AI 시스템에 대한 인식 (1/2)</div>
+    <div id="remind-s7"></div>
     <div class="remind">방금 확인한 AI의 응답을 떠올리며 응답해 주세요.</div>
     <div style="font-size:12px;color:#888;margin-bottom:20px;line-height:1.6;">(1점: 전혀 아니다 ~ 7점: 매우 그렇다)</div>
     <div id="s7box"></div>
   </div>
 
-  <!-- S8: PU + EPR + AA + ITU -->
+  <!-- S8: PU + EPR + AA -->
   <div class="sec" id="s8">
     <div class="stitle">AI 시스템에 대한 인식 (2/2)</div>
+    <div id="remind-s8"></div>
     <div class="remind">이 상황에서 본인이 판단해야 한다고 생각하며 응답해 주세요.</div>
     <div style="font-size:12px;color:#888;margin-bottom:20px;line-height:1.6;">(1점: 전혀 아니다 ~ 7점: 매우 그렇다)</div>
     <div id="s8box"></div>
@@ -292,6 +305,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:#f0f2f7;min-height:100vh;d
   <!-- S9: ITU -->
   <div class="sec" id="s9">
     <div class="stitle">사용 의도</div>
+    <div id="remind-s9"></div>
     <div class="remind">위 상황을 경험한 후, 아래 문항에 응답해 주세요.</div>
     <div style="font-size:12px;color:#888;margin-bottom:20px;line-height:1.6;">(1점: 전혀 아니다 ~ 7점: 매우 그렇다)</div>
     <div id="s9box"></div>
@@ -305,7 +319,6 @@ body{font-family:'Noto Sans KR',sans-serif;background:#f0f2f7;min-height:100vh;d
       <div class="sg">
         <label><input type="radio" name="qgender" value="남성"><div class="sb">남성</div></label>
         <label><input type="radio" name="qgender" value="여성"><div class="sb">여성</div></label>
-        <label><input type="radio" name="qgender" value="응답하지 않음"><div class="sb">응답하지 않음</div></label>
       </div>
     </div>
     <div class="qb">
@@ -390,12 +403,23 @@ body{font-family:'Noto Sans KR',sans-serif;background:#f0f2f7;min-height:100vh;d
       </div>
     </div>
     <div class="qb">
-      <div class="ql"><span class="qn">9</span>AI 도구 사용 경험이 있으십니까? <span style="font-size:12px;color:#888;font-weight:400;">(예: ChatGPT, Gemini, Claude 등)</span></div>
-      <div class="sg">
-        <label><input type="radio" name="qai" value="없음"><div class="sb">없음</div></label>
-        <label><input type="radio" name="qai" value="가끔 사용"><div class="sb">가끔 사용 (월 1~3회 수준)</div></label>
-        <label><input type="radio" name="qai" value="자주 사용"><div class="sb">자주 사용 (주 1회 이상)</div></label>
-        <label><input type="radio" name="qai" value="업무에 통합"><div class="sb">업무에 통합하여 거의 매일 사용</div></label>
+      <div class="ql"><span class="qn">9</span>AI 도구 사용 경험은 어느 정도입니까? <span style="font-size:12px;color:#888;font-weight:400;">(예: ChatGPT, Gemini, Claude 등)</span></div>
+      <div class="ai-scale">
+        <div class="ai-scale-labels">
+          <span>전혀 없음</span><span>가끔</span><span>자주</span><span>매일</span>
+        </div>
+        <div class="ai-scale-track">
+          <label class="ai-opt"><input type="radio" name="qai" value="없음"><div class="ai-dot"><span class="ai-pct">0%</span></div></label>
+          <label class="ai-opt"><input type="radio" name="qai" value="가끔 사용"><div class="ai-dot"><span class="ai-pct">33%</span></div></label>
+          <label class="ai-opt"><input type="radio" name="qai" value="자주 사용"><div class="ai-dot"><span class="ai-pct">66%</span></div></label>
+          <label class="ai-opt"><input type="radio" name="qai" value="업무에 통합"><div class="ai-dot"><span class="ai-pct">100%</span></div></label>
+        </div>
+        <div class="ai-scale-desc">
+          <span>전혀 없음</span>
+          <span>월 1~3회</span>
+          <span>주 1회 이상</span>
+          <span>거의 매일</span>
+        </div>
       </div>
     </div>
   </div>
@@ -449,384 +473,6 @@ body{font-family:'Noto Sans KR',sans-serif;background:#f0f2f7;min-height:100vh;d
 </div>
 
 
-<script>
-// 이메일 동적 주입
-(function(){
-  var p1='codl';
-  var p2='_121';
-  var p3='khu';
-  var p4='.ac.kr';
-  var sep=String.fromCharCode(64);
-  var full=p1+p2+sep+p3+p4;
-  function inject(){
-    var els=document.querySelectorAll('.em-placeholder');
-    els.forEach(function(e){e.textContent=full;});
-  }
-  if(document.readyState==='loading'){
-    document.addEventListener('DOMContentLoaded',inject);
-  } else {
-    inject();
-  }
-})();
-
-document.addEventListener('DOMContentLoaded', function() {
-var SHEET_URL='https://script.google.com/macros/s/AKfycbxewOPqzNbp9Ni_CvRnn-qjtMhFQY-khf7kFzP9NqIKO8nVi_X3zJ_NisAqwtORMRjr/exec';
-var TOTAL=12;
-var cur=0;
-var chatDone=false;
-
-// 질문 정의
-var mcRespItems=[
-  {id:'mc_resp_1', lb:'이 상황에서 나의 판단은 실제 업무 결과에 영향을 줄 수 있다고 느꼈다.'},
-  {id:'mc_resp_2', lb:'이 상황은 실수에 대한 책임 부담이 큰 업무처럼 느껴졌다.'},
-  {id:'mc_resp_3', lb:'이 상황은 신중한 판단이 요구되는 업무라고 느꼈다.'}
-];
-var mcExpItems=[
-  {id:'mc_exp_1', lb:'AI는 왜 이런 판단을 했는지 이유를 충분히 설명해 주었다.'},
-  {id:'mc_exp_2', lb:'AI의 응답에는 판단 근거가 구체적으로 제시되어 있었다.'},
-  {id:'mc_exp_3', lb:'AI의 분석 결과를 이해하기 쉬웠다.'}
-];
-var s7Items=[
-  {id:'exp_1', lb:'AI는 결과를 도출한 이유를 명확하게 설명했다.'},
-  {id:'exp_2', lb:'AI의 판단 근거는 이해하기 쉬웠다.'},
-  {id:'exp_3', lb:'AI의 응답에는 충분한 설명 정보가 포함되어 있었다.'},
-  {id:'tru_1', lb:'나는 이 AI의 판단을 신뢰할 수 있다고 느꼈다.'},
-  {id:'tru_2', lb:'이 AI는 업무 상황에서 믿고 참고할 만하다고 생각한다.'},
-  {id:'tru_3', lb:'이 AI는 전반적으로 신뢰할 수 있는 도구라고 느껴졌다.'}
-];
-var s8Items=[
-  {id:'pu_1', lb:'이 AI는 문서 검토 업무를 더 효율적으로 수행하는 데 도움이 될 것 같다.'},
-  {id:'pu_2', lb:'이 AI를 사용하면 업무 속도를 높일 수 있을 것 같다.'},
-  {id:'pu_3', lb:'이 AI는 실제 업무에 유용할 것 같다.'},
-  {id:'epr_1', lb:'이 AI는 중요한 오류를 놓칠 가능성이 있다고 느꼈다.'},
-  {id:'epr_2', lb:'이 AI의 판단 결과에는 오류 위험이 존재한다고 생각한다.'},
-  {id:'aa_1', lb:'이 상황에서 잘못 판단하면 내가 책임을 져야 한다는 부담이 느껴졌다.'},
-  {id:'aa_2', lb:'이 AI를 참고하더라도 최종 책임은 나에게 있다고 느꼈다.'}
-];
-var s9Items=[
-  {id:'itu_1', lb:'유사한 업무 상황에서 이 AI를 다시 사용할 의향이 있다.'},
-  {id:'itu_2', lb:'앞으로 이런 AI 도구를 업무에 활용해 보고 싶다.'},
-  {id:'itu_3', lb:'이 AI를 실제 문서 검토 업무에 도입하는 것에 긍정적이다.'}
-];
-
-function makeLikert(items, targetId){
-  var target=document.getElementById(targetId);
-  if(!target) return;
-  target.innerHTML=items.map(function(item, i){
-    return '<div class="qb"><div class="ql"><span class="qn">'+(i+1)+'</span>'+item.lb+'</div>'+
-      '<div class="lanc"><span>전혀 아니다</span><span>매우 그렇다</span></div>'+
-      '<div class="lrow">'+[1,2,3,4,5,6,7].map(function(v){
-        return '<label><input type="radio" name="'+item.id+'" value="'+v+'"><div class="lbtn">'+v+'</div></label>';
-      }).join('')+'</div></div>';
-  }).join('');
-}
-
-// ── 2×2 랜덤 배정 ──────────────────────────
-var grp=Math.floor(Math.random()*4)+1;
-var isHighResp=(grp===1||grp===2);
-var isHighExp=(grp===1||grp===3);
-
-var respHTML={
-  high:'<div class="resp-card resp-high"><div class="status-badge badge-high">고책임 상황</div><div class="rc-text">이번 검토 결과는 <strong>외부 인증 심사 대응 자료에 반영될 수 있습니다.</strong> 만약 판단이 부정확하면 심사 지적, 인증 일정 지연 또는 고객 대응 문제가 발생할 수 있습니다.<br><br>또한 당신은 검토 결과와 판단 근거를 <strong>회의에서 직접 설명해야 하며</strong>, 해당 이력은 <strong>공식 기록으로 남습니다.</strong></div></div>',
-  low:'<div class="resp-card resp-low"><div class="status-badge badge-low">저책임 상황</div><div class="rc-text">이번 검토 결과는 <strong>내부 참고용 검토 초안에 활용됩니다.</strong> 이후 별도의 확인과 수정 절차가 예정되어 있으며, 이 단계의 결과는 <strong>외부 제출 자료가 아닙니다.</strong><br><br>최종 판단은 <strong>후속 검토 단계에서 다시 이루어집니다.</strong></div></div>'
-};
-var chatRemind={
-  high:'⏰ 외부 심사 대응 자료 검토 중 AI 도구를 실행했습니다. AI의 분석 결과가 아래와 같이 나타났습니다.',
-  low:'ℹ️ 내부 참고용 초안 검토를 위해 AI 도구를 실행했습니다. AI의 분석 결과가 아래와 같이 나타났습니다.'
-};
-
-function runChat(){
-  if(chatDone)return;
-  chatDone=true;
-  var wrap=document.getElementById('chatbox');
-  if(!wrap)return;
-  wrap.innerHTML='';
-
-  var steps={
-    1:[
-      {msgs:[{bub:'bai',tx:'기록 검토 중 이상 항목이 감지되었습니다.'}],btn:'내용 확인하기'},
-      {msgs:[
-        {bub:'bwarn',tx:'절차서 4.2와 기록서 A-12 사이에 불일치 가능성이 있습니다.'},
-        {bub:'bai',tx:'기록서의 승인일과 변경 이력 항목이 내부 문서관리 기준과 일치하지 않습니다. 특히 승인일 누락과 변경 이력 미기재가 문제일 수 있으며, 관련 기준과 비교했을 때 재검토가 필요합니다.'},
-        {bub:'bai',tx:'검토가 필요한 항목은 2개입니다. 관련 기준과 비교 결과를 확인하시겠습니까?'}
-      ],btn:'수정 후 재검토 요청'},
-      {msgs:[{bub:'bok',tx:'재검토 완료 — 절차서 4.2 및 기록서 A-12 기준 검토 결과, 수정된 문서에 승인일과 변경 이력이 정상 기재되어 내부 문서관리 기준을 충족합니다. 부적합 사항 없음으로 판단됩니다.'}],btn:null}
-    ],
-    2:[
-      {msgs:[{bub:'bai',tx:'기록 검토 중 이상 항목이 감지되었습니다.'}],btn:'내용 확인하기'},
-      {msgs:[
-        {bub:'bwarn',tx:'절차서 4.2와 기록서 A-12 사이에 불일치 가능성이 있습니다.'},
-        {bub:'bai',tx:'문제 가능성이 감지되었습니다.'},
-        {bub:'bai',tx:'재검토를 권장합니다.'}
-      ],btn:'수정 후 재검토 요청'},
-      {msgs:[{bub:'bok',tx:'재검토 완료 — 이상 없음으로 판단됩니다.'}],btn:null}
-    ],
-    3:[
-      {msgs:[{bub:'bai',tx:'기록 검토 중 이상 항목이 감지되었습니다.'}],btn:'내용 확인하기'},
-      {msgs:[
-        {bub:'bwarn',tx:'절차서 4.2와 기록서 A-12 사이에 불일치 가능성이 있습니다.'},
-        {bub:'bai',tx:'기록서의 승인일과 변경 이력 항목이 내부 문서관리 기준과 일치하지 않습니다. 특히 승인일 누락과 변경 이력 미기재가 문제일 수 있으며, 관련 기준과 비교했을 때 재검토가 필요합니다.'},
-        {bub:'bai',tx:'검토가 필요한 항목은 2개입니다. 관련 기준과 비교 결과를 확인하시겠습니까?'}
-      ],btn:'수정 후 재검토 요청'},
-      {msgs:[{bub:'bok',tx:'재검토 완료 — 수정된 내용이 내부 기준을 충족합니다. 보조 자료로 활용하시기에 적합한 수준입니다.'}],btn:null}
-    ],
-    4:[
-      {msgs:[{bub:'bai',tx:'기록 검토 중 이상 항목이 감지되었습니다.'}],btn:'내용 확인하기'},
-      {msgs:[
-        {bub:'bwarn',tx:'절차서 4.2와 기록서 A-12 사이에 불일치 가능성이 있습니다.'},
-        {bub:'bai',tx:'문제 가능성이 감지되었습니다.'},
-        {bub:'bai',tx:'재검토를 권장합니다.'}
-      ],btn:'수정 후 재검토 요청'},
-      {msgs:[{bub:'bok',tx:'재검토 완료 — 이상 없음으로 판단됩니다.'}],btn:null}
-    ]
-  };
-
-  var currentStep=0;
-  var allSteps=steps[grp];
-  document.getElementById('bnext').disabled=true;
-
-  function showStep(stepIdx){
-    var step=allSteps[stepIdx];
-    var delay=300;
-    setTimeout(function(){
-      var r=document.createElement('div');r.className='crow';r.id='typr';
-      r.innerHTML='<div class="av av-ai">AI</div><div class="bub bai"><div class="tdots"><span></span><span></span><span></span></div></div>';
-      wrap.appendChild(r);setTimeout(function(){r.classList.add('show');},30);
-      setTimeout(function(){var x=document.getElementById('typr');if(x)x.remove();},1400);
-    },delay);
-    delay+=1600;
-
-    step.msgs.forEach(function(msg){
-      setTimeout(function(){
-        var r=document.createElement('div');r.className='crow';
-        r.innerHTML='<div class="av av-ai">AI</div><div class="bub '+msg.bub+'">'+msg.tx+'</div>';
-        wrap.appendChild(r);setTimeout(function(){r.classList.add('show');},30);wrap.scrollTop=wrap.scrollHeight;
-      },delay);
-      delay+=900;
-    });
-
-    setTimeout(function(){
-      var old=document.getElementById('user-btn-row');
-      if(old && old.parentNode) old.parentNode.removeChild(old);
-      if(step.btn){
-        var userRow=document.createElement('div');
-        userRow.className='crow urow';
-        userRow.id='user-btn-row';
-        var btn=document.createElement('button');
-        btn.type='button';
-        btn.className='chat-btn';
-        btn.textContent=step.btn;
-        btn.onclick=function(){
-          userRow.innerHTML='<div class="bub bu">'+step.btn+'</div><div class="av av-u">나</div>';
-          currentStep++;
-          if(currentStep<allSteps.length) showStep(currentStep);
-        };
-        userRow.appendChild(btn);
-        wrap.appendChild(userRow);
-        setTimeout(function(){userRow.classList.add('show');},30);
-      } else {
-        document.getElementById('bnext').disabled=false;
-        var doneMsg=document.createElement('div');
-        doneMsg.style.cssText='font-size:12px;color:#888;text-align:center;padding:10px 0;';
-        doneMsg.textContent='✅ AI 검토 완료 — 아래 다음 버튼을 눌러 계속하세요';
-        wrap.appendChild(doneMsg);
-        wrap.scrollTop=wrap.scrollHeight;
-      }
-    },delay);
-  }
-  showStep(0);
-}
-
-function initAll(){
-  var rb=document.getElementById('resp-box');
-  if(rb)rb.innerHTML=isHighResp?respHTML.high:respHTML.low;
-  var cr=document.getElementById('chat-remind');
-  if(cr)cr.innerHTML=isHighResp?chatRemind.high:chatRemind.low;
-  var mcr=document.getElementById('mc-resp-box');
-  if(mcr){
-    mcr.innerHTML=mcRespItems.map(function(item,i){
-      return '<div class="qb"><div class="ql"><span class="qn">'+(i+1)+'</span>'+item.lb+'</div>'+
-        '<div class="lanc"><span>전혀 아니다</span><span>매우 그렇다</span></div>'+
-        '<div class="lrow">'+[1,2,3,4,5,6,7].map(function(v){
-          return '<label><input type="radio" name="'+item.id+'" value="'+v+'"><div class="lbtn">'+v+'</div></label>';
-        }).join('')+'</div></div>';
-    }).join('');
-  }
-  var mce=document.getElementById('mc-exp-box');
-  if(mce){
-    mce.innerHTML=mcExpItems.map(function(item,i){
-      return '<div class="qb"><div class="ql"><span class="qn">'+(i+1)+'</span>'+item.lb+'</div>'+
-        '<div class="lanc"><span>전혀 아니다</span><span>매우 그렇다</span></div>'+
-        '<div class="lrow">'+[1,2,3,4,5,6,7].map(function(v){
-          return '<label><input type="radio" name="'+item.id+'" value="'+v+'"><div class="lbtn">'+v+'</div></label>';
-        }).join('')+'</div></div>';
-    }).join('');
-  }
-  makeLikert(s7Items,'s7box');
-  makeLikert(s8Items,'s8box');
-  makeLikert(s9Items,'s9box');
-}
-
-function updateProg(){
-  var pct=Math.round((cur/(TOTAL-1))*100);
-  document.getElementById('pfill').style.width=pct+'%';
-  document.getElementById('ppct').textContent=pct+'%';
-  var labs=['연구 동의','자격 확인','상황 도입','책임 조건','AI 분석','상황 판단','조작 점검','인식 1/2','인식 2/2','사용 의도','기본 정보','개인정보'];
-  document.getElementById('ptxt').textContent=labs[cur]||'';
-}
-
-function showSec(n){
-  document.querySelectorAll('.sec').forEach(function(s){s.classList.remove('active');});
-  var sec=document.getElementById('s'+n);
-  if(sec)sec.classList.add('active');
-  document.getElementById('bprev').style.display=n===0?'none':'';
-  document.getElementById('bnext').textContent=n===TOTAL-1?'제출하기 ✓':'다음 →';
-  document.getElementById('errmsg').classList.remove('show');
-  updateProg();
-  window.scrollTo({top:0,behavior:'smooth'});
-  if(n===4)setTimeout(runChat,400);
-}
-
-function validate(){
-  if(cur===0)return document.getElementById('consent').checked;
-  if(cur===1){
-    var v=(document.querySelector('input[name="elig"]:checked')||{}).value;
-    if(v==='no'){showEnd();return false;}
-    return v==='yes';
-  }
-  if(cur===5)return !!document.querySelector('input[name="action"]:checked');
-  if(cur===6){
-    var allMC=[].concat(mcRespItems,mcExpItems);
-    return allMC.every(function(i){return document.querySelector('input[name="'+i.id+'"]:checked');});
-  }
-  if(cur===7)return s7Items.every(function(i){return document.querySelector('input[name="'+i.id+'"]:checked');});
-  if(cur===8)return s8Items.every(function(i){return document.querySelector('input[name="'+i.id+'"]:checked');});
-  if(cur===9)return s9Items.every(function(i){return document.querySelector('input[name="'+i.id+'"]:checked');});
-  if(cur===10){
-    var baseOk=['qgender','qage','qfield','qindustry','qcompsize','qrank','qexp','qedu','qai'].every(function(n){
-      return document.querySelector('input[name="'+n+'"]:checked');
-    });
-    if(!baseOk) return false;
-    if(gv('qfield')==='기타' && !document.getElementById('field-etc').value.trim()) return false;
-    if(gv('qindustry')==='기타' && !document.getElementById('industry-etc').value.trim()) return false;
-    if(gv('qrank')==='기타' && !document.getElementById('rank-etc').value.trim()) return false;
-    return true;
-  }
-  if(cur===11){
-    var pv=(document.querySelector('input[name="pvagree"]:checked')||{}).value;
-    if(!pv) return false;
-    if(pv==='yes'){
-      return !!document.getElementById('iname').value.trim() && !!document.getElementById('icontact').value.trim();
-    }
-  }
-  return true;
-}
-
-function gv(name){
-  var el=document.querySelector('input[name="'+name+'"]:checked');
-  if(!el)return '';
-  if(el.value==='기타'){
-    var m={qfield:'field-etc',qrank:'rank-etc',qindustry:'industry-etc'};
-    if(m[name]){
-      var t=document.getElementById(m[name]).value.trim();
-      return t ? '기타: '+t : '기타';
-    }
-  }
-  return el.value;
-}
-
-function collectData(){
-  var data={
-    timestamp:new Date().toLocaleString('ko-KR'),
-    group:grp,
-    resp_cond:isHighResp?'고책임':'저책임',
-    exp_cond:isHighExp?'설명높음':'설명낮음',
-    action:(document.querySelector('input[name="action"]:checked')||{}).value||''
-  };
-  [].concat(mcRespItems,mcExpItems,s7Items,s8Items,s9Items).forEach(function(item){
-    var el=document.querySelector('input[name="'+item.id+'"]:checked');
-    data[item.id]=el?parseInt(el.value,10):'';
-  });
-  data.gender=(document.querySelector('input[name="qgender"]:checked')||{}).value||'';
-  data.age=(document.querySelector('input[name="qage"]:checked')||{}).value||'';
-  data.field=gv('qfield');
-  data.industry=gv('qindustry');
-  data.compsize=(document.querySelector('input[name="qcompsize"]:checked')||{}).value||'';
-  data.rank=gv('qrank');
-  data.experience=(document.querySelector('input[name="qexp"]:checked')||{}).value||'';
-  data.education=(document.querySelector('input[name="qedu"]:checked')||{}).value||'';
-  data.ai_usage=(document.querySelector('input[name="qai"]:checked')||{}).value||'';
-  data.privacy_agree=(document.querySelector('input[name="pvagree"]:checked')||{}).value||'미응답';
-  data.name=(document.getElementById('iname')||{}).value||'';
-  data.contact=(document.getElementById('icontact')||{}).value||'';
-  return data;
-}
-
-function showEnd(){
-  document.querySelectorAll('.sec').forEach(function(s){s.classList.remove('active');});
-  document.getElementById('navrow').style.display='none';
-  document.getElementById('pfill').style.width='100%';
-  document.getElementById('ppct').textContent='';
-  document.getElementById('ptxt').textContent='설문 종료';
-  document.getElementById('endw').style.display='block';
-  window.scrollTo({top:0,behavior:'smooth'});
-}
-
-function showThank(data){
-  document.getElementById('navrow').style.display='none';
-  document.querySelectorAll('.sec').forEach(function(s){s.classList.remove('active');});
-  document.getElementById('pfill').style.width='100%';
-  document.getElementById('ppct').textContent='완료';
-  document.getElementById('ptxt').textContent='제출 완료';
-  document.getElementById('thkd').innerHTML='<div class="tdr"><span class="tdk">응답 시각</span><span class="tdv">'+data.timestamp+'</span></div>';
-  document.getElementById('thkw').style.display='block';
-  window.scrollTo({top:0,behavior:'smooth'});
-}
-
-async function submitData(data){
-  document.getElementById('lov').classList.add('show');
-  document.getElementById('bnext').disabled=true;
-  try{
-    await fetch(SHEET_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
-    showThank(data);
-  }catch(e){
-    document.getElementById('errmsg').classList.add('show');
-    document.getElementById('bnext').disabled=false;
-  }finally{
-    document.getElementById('lov').classList.remove('show');
-  }
-}
-
-function navigate(dir){
-  if(dir===1 && cur===4 && document.getElementById('bnext').disabled){
-    alert('AI 검토 대화를 끝까지 진행해 주세요.');
-    return;
-  }
-  if(dir===1 && !validate()){
-    if(cur!==1) alert('모든 항목에 응답해 주세요.');
-    return;
-  }
-  if(dir===1 && cur===TOTAL-1){ submitData(collectData()); return; }
-  cur=Math.max(0,Math.min(TOTAL-1,cur+dir));
-  showSec(cur);
-}
-
-document.addEventListener('change',function(e){
-  if(e.target.name==='qfield') document.getElementById('field-etc').style.display=e.target.value==='기타'?'block':'none';
-  if(e.target.name==='qrank') document.getElementById('rank-etc').style.display=e.target.value==='기타'?'block':'none';
-  if(e.target.name==='qindustry') document.getElementById('industry-etc').style.display=e.target.value==='기타'?'block':'none';
-  if(e.target.name==='pvagree') {
-    document.getElementById('pvfields').style.display=e.target.value==='yes'?'block':'none';
-    setTimeout(function(){ if(e.target.value==='yes') document.getElementById('iname').focus(); }, 0);
-  }
-});
-
-document.getElementById('bprev').addEventListener('click',function(){navigate(-1);});
-document.getElementById('bnext').addEventListener('click',function(){navigate(1);});
-
-initAll();
-showSec(0);
-});
-</script>
+<script src="survey.js"></script>
 </body>
 </html>
