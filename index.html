@@ -155,6 +155,30 @@ body{font-family:'Noto Sans KR',sans-serif;background:#f0f2f7;min-height:100vh;d
 .tdr:last-child{border-bottom:none;}.tdk{color:#888;}.tdv{color:#1a2744;font-weight:700;}
 .errmsg{display:none;background:#fff3f3;border:1px solid #ffcdd2;border-radius:8px;padding:12px 16px;font-size:13px;color:#c0392b;margin:0 24px 16px;line-height:1.5;}
 .errmsg.show{display:block;}
+.remind-box{border-radius:10px;padding:14px 16px;font-size:13px;line-height:1.75;margin-bottom:16px;word-break:keep-all;}
+.remind-resp{background:#f0f4ff;border:1px solid #c7d7f8;color:#1a2744;}
+.remind-exp{background:#f0fdf4;border:1px solid #bbf7d0;color:#14532d;}
+.remind-box strong{font-weight:700;}
+.upload-bub{padding:0!important;overflow:hidden;min-width:210px;max-width:270px;}
+.upl-row{display:flex;align-items:center;gap:10px;padding:12px;}
+.upl-icon{width:34px;height:42px;background:rgba(255,255,255,.18);border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#fff;flex-shrink:0;}
+.upl-info{flex:1;min-width:0;}
+.upl-name{font-size:11px;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.upl-size{font-size:10px;color:rgba(255,255,255,.7);margin-top:1px;}
+.upl-track{margin-top:6px;height:3px;background:rgba(255,255,255,.25);border-radius:2px;overflow:hidden;}
+.upl-fill{height:100%;background:#fff;border-radius:2px;width:0%;transition:width .08s;}
+.upl-foot{font-size:10px;color:rgba(255,255,255,.8);margin-top:3px;display:flex;justify-content:space-between;}
+.chat-done-msg{font-size:12px;color:#888;text-align:center;padding:10px 0;}
+.pv-section{background:#f7f8fc;border:1px solid #e5e7eb;border-radius:12px;padding:16px;}
+.pv-header{margin-bottom:6px;}
+.pv-check-label{display:flex;align-items:center;gap:10px;cursor:pointer;}
+.pv-check-label input[type=checkbox]{display:none;}
+.pv-chk{width:20px;height:20px;min-width:20px;border:1.5px solid #ccc;border-radius:5px;display:flex;align-items:center;justify-content:center;background:#fff;transition:all .15s;}
+.pv-check-label input:checked+.pv-chk{background:#1a2744;border-color:#1a2744;}
+.pv-check-label input:checked+.pv-chk::after{content:'';width:10px;height:6px;border-left:2px solid #fff;border-bottom:2px solid #fff;transform:rotate(-45deg) translateY(-1px);display:block;}
+.pv-title{font-size:14px;font-weight:700;color:#1a2744;}
+.pv-desc{font-size:12px;color:#888;line-height:1.6;padding-left:30px;}
+
 .resp-card{background:#f7f8fc;border:1.5px solid #e0e2ea;border-radius:14px;padding:22px;margin-bottom:20px;}
 .rc-text{font-size:13.5px;line-height:1.9;color:#2c3e6b;}
 .rc-text strong{color:#1a2744;font-weight:700;}
@@ -259,60 +283,49 @@ body{font-family:'Noto Sans KR',sans-serif;background:#f0f2f7;min-height:100vh;d
       </div>
       <div class="msgs" id="chatbox"></div>
     </div>
-    <div class="qb" style="margin-top:8px;">
-      <div class="ql" style="font-size:13.5px;">방금 AI가 제시한 결과를 바탕으로, 현재 상황에서 귀하가 취할 가장 적절한 다음 행동은 무엇입니까?</div>
-      <div class="action-group">
-        <label class="action-label"><input type="radio" name="action" value="참고"><div class="action-box">AI 결과를 우선 참고하여 업무를 진행한다</div></label>
-        <label class="action-label"><input type="radio" name="action" value="추가확인"><div class="action-box">추가로 직접 확인한 후 판단한다</div></label>
-        <label class="action-label"><input type="radio" name="action" value="신뢰어려움"><div class="action-box">AI 결과를 바로 신뢰하기 어렵다</div></label>
-      </div>
-    </div>
   </div>
 
-  <!-- S5: (행동 선택 이동됨 — 조작점검으로 바로) -->
-  <div class="sec" id="s5" style="display:none!important;">
-  </div>
-
-  <!-- S6: 조작 점검 -->
-  <div class="sec" id="s6">
+  <!-- S5: 조작 점검 -->
+  <div class="sec" id="s5">
     <div class="stitle">상황 인식 확인</div>
-    <div class="remind">위 상황이 실제 본인의 업무라고 가정하고 답해 주세요.</div>
-    <div style="font-size:12px;color:#888;margin-bottom:20px;line-height:1.6;">(1점: 전혀 아니다 ~ 7점: 매우 그렇다)</div>
+    <div style="font-size:12px;color:#888;margin-bottom:16px;line-height:1.6;">(1점: 전혀 아니다 ~ 7점: 매우 그렇다)</div>
+    <div id="remind-mcr"></div>
     <div style="font-size:13px;font-weight:700;color:#1a2744;margin-bottom:14px;">A. 업무 책임 수준</div>
     <div id="mc-resp-box"></div>
-    <div style="font-size:13px;font-weight:700;color:#1a2744;margin-bottom:14px;margin-top:8px;">B. AI 설명 수준</div>
+    <div id="remind-mce" style="margin-top:24px;"></div>
+    <div style="font-size:13px;font-weight:700;color:#1a2744;margin-bottom:14px;">B. AI 설명 수준</div>
     <div id="mc-exp-box"></div>
   </div>
 
-  <!-- S7: EXP + TRU -->
-  <div class="sec" id="s7">
+  <!-- S6: EXP + TRU -->
+  <div class="sec" id="s6">
     <div class="stitle">AI 시스템에 대한 인식 (1/2)</div>
-    <div id="remind-s7"></div>
+    <div id="remind-s6"></div>
     <div class="remind">방금 확인한 AI의 응답을 떠올리며 응답해 주세요.</div>
+    <div style="font-size:12px;color:#888;margin-bottom:20px;line-height:1.6;">(1점: 전혀 아니다 ~ 7점: 매우 그렇다)</div>
+    <div id="s6box"></div>
+  </div>
+
+  <!-- S7: PU + EPR + AA -->
+  <div class="sec" id="s7">
+    <div class="stitle">AI 시스템에 대한 인식 (2/2)</div>
+    <div id="remind-s7"></div>
+    <div class="remind">이 상황에서 본인이 판단해야 한다고 생각하며 응답해 주세요.</div>
     <div style="font-size:12px;color:#888;margin-bottom:20px;line-height:1.6;">(1점: 전혀 아니다 ~ 7점: 매우 그렇다)</div>
     <div id="s7box"></div>
   </div>
 
-  <!-- S8: PU + EPR + AA -->
+  <!-- S8: ITU -->
   <div class="sec" id="s8">
-    <div class="stitle">AI 시스템에 대한 인식 (2/2)</div>
+    <div class="stitle">사용 의도</div>
     <div id="remind-s8"></div>
-    <div class="remind">이 상황에서 본인이 판단해야 한다고 생각하며 응답해 주세요.</div>
+    <div class="remind">위 상황을 경험한 후, 아래 문항에 응답해 주세요.</div>
     <div style="font-size:12px;color:#888;margin-bottom:20px;line-height:1.6;">(1점: 전혀 아니다 ~ 7점: 매우 그렇다)</div>
     <div id="s8box"></div>
   </div>
 
-  <!-- S9: ITU -->
+  <!-- S9: 인구통계 -->
   <div class="sec" id="s9">
-    <div class="stitle">사용 의도</div>
-    <div id="remind-s9"></div>
-    <div class="remind">위 상황을 경험한 후, 아래 문항에 응답해 주세요.</div>
-    <div style="font-size:12px;color:#888;margin-bottom:20px;line-height:1.6;">(1점: 전혀 아니다 ~ 7점: 매우 그렇다)</div>
-    <div id="s9box"></div>
-  </div>
-
-  <!-- S10: 인구통계 -->
-  <div class="sec" id="s10">
     <div class="stitle">기본 정보</div>
     <div class="qb">
       <div class="ql"><span class="qn">1</span>귀하의 성별은 무엇입니까?</div>
@@ -424,29 +437,36 @@ body{font-family:'Noto Sans KR',sans-serif;background:#f0f2f7;min-height:100vh;d
     </div>
   </div>
 
-  <!-- S11: 개인정보 (선택) -->
-  <div class="sec" id="s11">
-    <div class="stitle">개인정보 수집 동의 <span class="otag">선택</span></div>
-    <div class="pvbox">
-      <strong>수집 목적</strong>: 연구 결과 회신 및 감사 연락<br>
-      <strong>수집 항목</strong>: 이름, 연락처 (이메일 또는 전화번호)<br>
-      <strong>보유 기간</strong>: 연구 종료 후 즉시 파기<br>
-      <strong>제공 거부 권리</strong>: 동의하지 않으셔도 설문 제출이 가능합니다.<br><br>
-      🎁 <strong>개인정보 동의를 해주신 분께는 추첨을 통하여 스타벅스 기프트카드를 보내드립니다!</strong><br><br>
-      위 내용에 동의하고 개인정보를 제공하시겠습니까?
-    </div>
-    <div class="yn" style="margin-bottom:20px;">
-      <label><input type="radio" name="pvagree" value="yes"><div class="ynb yes">동의합니다</div></label>
-      <label><input type="radio" name="pvagree" value="no"><div class="ynb no">동의하지 않습니다</div></label>
-    </div>
-    <div id="pvfields" style="display:none;">
-      <div class="qb">
-        <div class="ql">이름</div>
-        <input type="text" class="tinput" id="iname" placeholder="성함을 입력해 주세요">
+  <!-- S10: 개인정보 (선택) -->
+  <div class="sec" id="s10">
+    <div class="stitle">추가 정보 <span class="otag">선택</span></div>
+    <p style="font-size:13px;color:#666;line-height:1.7;margin-bottom:20px;">아래 두 항목은 모두 선택사항입니다. 동의하지 않으셔도 설문 제출에 영향이 없습니다.</p>
+
+    <div class="pv-section">
+      <div class="pv-header">
+        <label class="pv-check-label">
+          <input type="checkbox" id="chk-starbucks">
+          <div class="pv-chk"></div>
+          <span class="pv-title">🎁 스타벅스 기프트카드 추첨 참여</span>
+        </label>
       </div>
-      <div class="qb">
-        <div class="ql">연락처 (이메일 또는 전화번호)</div>
-        <input type="text" class="tinput" id="icontact" placeholder="이메일 또는 전화번호를 입력해 주세요">
+      <div class="pv-desc">수집 항목: 연락처 (이메일 또는 전화번호) · 보유 기간: 추첨 완료 후 즉시 파기</div>
+      <div id="starbucks-fields" style="display:none;margin-top:12px;">
+        <input type="text" class="tinput" id="i-starbucks" placeholder="이메일 또는 전화번호를 입력해 주세요">
+      </div>
+    </div>
+
+    <div class="pv-section" style="margin-top:16px;">
+      <div class="pv-header">
+        <label class="pv-check-label">
+          <input type="checkbox" id="chk-research">
+          <div class="pv-chk"></div>
+          <span class="pv-title">📄 연구 결과 알림 신청</span>
+        </label>
+      </div>
+      <div class="pv-desc">완성된 논문 및 연구 결과를 이메일로 보내드립니다. · 보유 기간: 발송 완료 후 즉시 파기</div>
+      <div id="research-fields" style="display:none;margin-top:12px;">
+        <input type="text" class="tinput" id="i-research" placeholder="이메일 주소를 입력해 주세요">
       </div>
     </div>
   </div>
