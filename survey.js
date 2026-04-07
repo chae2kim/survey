@@ -317,10 +317,11 @@ function validate(){
     if(v==='no'){showEnd();return false;}
     return v==='yes';
   }
+  // cur===4: AI 채팅 — bnext는 채팅 완료 후 활성화되므로 항상 통과
   if(cur===5)return[].concat(mcRespItems,mcExpItems).every(function(i){return document.querySelector('input[name="'+i.id+'"]:checked');});
   if(cur===6)return s7Items.every(function(i){return document.querySelector('input[name="'+i.id+'"]:checked');});
-  if(cur===7)return s7Items.every(function(i){return document.querySelector('input[name="'+i.id+'"]:checked');});
-  if(cur===8)return s8Items.every(function(i){return document.querySelector('input[name="'+i.id+'"]:checked');});
+  if(cur===7)return s8Items.every(function(i){return document.querySelector('input[name="'+i.id+'"]:checked');});
+  if(cur===8)return s9Items.every(function(i){return document.querySelector('input[name="'+i.id+'"]:checked');});
   if(cur===9)return['qgender','qage','qfield','qindustry','qcompsize','qrank','qexp','qedu','qai'].every(function(n){return document.querySelector('input[name="'+n+'"]:checked');});
   return true;
 }
