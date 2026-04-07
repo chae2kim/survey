@@ -14,8 +14,27 @@ var TOTAL=11;
 var cur=0;
 var chatDone=false;
 
-// 2x2 랜덤 배정
-var grp=Math.floor(Math.random()*4)+1;
+// 2x2 균형 랜덤 배정 (4개 순환)
+function assignGroup(){
+  var key='survey_grp_queue';
+  var queue=[];
+  try{
+    var stored=localStorage.getItem(key);
+    if(stored)queue=JSON.parse(stored);
+  }catch(e){}
+  // 큐가 비었으면 1~4 섞어서 채우기
+  if(!queue||queue.length===0){
+    queue=[1,2,3,4];
+    for(var i=queue.length-1;i>0;i--){
+      var j=Math.floor(Math.random()*(i+1));
+      var tmp=queue[i];queue[i]=queue[j];queue[j]=tmp;
+    }
+  }
+  var g=queue.shift();
+  try{localStorage.setItem(key,JSON.stringify(queue));}catch(e){}
+  return g;
+}
+var grp=assignGroup();
 var isHighResp=(grp===1||grp===2);
 var isHighExp=(grp===1||grp===3);
 
@@ -355,7 +374,8 @@ function collectData(){
   var starbucks=document.getElementById('chk-starbucks');
   var research=document.getElementById('chk-research');
   data.starbucks_agree=(starbucks&&starbucks.checked)?'동의':'미동의';
-  data.starbucks_contact=(document.getElementById('i-starbucks')||{}).value||'';
+  data.starbucks_name=(document.getElementById('i-starbucks-name')||{}).value||'';
+  data.starbucks_contact=(document.getElementById('i-starbucks-tel')||{}).value||'';
   data.research_agree=(research&&research.checked)?'동의':'미동의';
   data.research_email=(document.getElementById('i-research')||{}).value||'';
   return data;
@@ -403,6 +423,12 @@ function navigate(dir){
   showSec(cur);
 }
 
+document.addEventListener('input',function(e){
+  // 연락처 숫자만 허용
+  if(e.target.id==='i-starbucks-tel'){
+    e.target.value=e.target.value.replace(/[^0-9]/g,'');
+  }
+});
 document.addEventListener('change',function(e){
   if(e.target.name==='qfield'){document.getElementById('field-etc').style.display=e.target.value==='기타'?'block':'none';}
   if(e.target.name==='qrank'){document.getElementById('rank-etc').style.display=e.target.value==='기타'?'block':'none';}
