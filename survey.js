@@ -342,6 +342,21 @@ function validate(){
   if(cur===7)return s8Items.every(function(i){return document.querySelector('input[name="'+i.id+'"]:checked');});
   if(cur===8)return s9Items.every(function(i){return document.querySelector('input[name="'+i.id+'"]:checked');});
   if(cur===9)return['qgender','qage','qfield','qindustry','qcompsize','qrank','qexp','qedu','qai'].every(function(n){return document.querySelector('input[name="'+n+'"]:checked');});
+  if(cur===10){
+    var sc=document.getElementById('chk-starbucks');
+    var rc=document.getElementById('chk-research');
+    if(sc&&sc.checked){
+      var nm=(document.getElementById('i-starbucks-name')||{}).value||'';
+      var tel=(document.getElementById('i-starbucks-tel')||{}).value||'';
+      if(!nm.trim()){alert('스타벅스 추첨 참여를 위해 이름을 입력해 주세요.');return false;}
+      if(!tel.trim()){alert('스타벅스 추첨 참여를 위해 연락처를 입력해 주세요.');return false;}
+    }
+    if(rc&&rc.checked){
+      var em=(document.getElementById('i-research')||{}).value||'';
+      if(!em.trim()){alert('연구 결과 알림을 위해 이메일을 입력해 주세요.');return false;}
+    }
+    return true;
+  }
   return true;
 }
 
