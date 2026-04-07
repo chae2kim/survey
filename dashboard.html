@@ -3,879 +3,800 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>논문 데이터 분석 대시보드</title>
+<title>논문 통계분석 대시보드</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-body{font-family:'Noto Sans KR',sans-serif;background:#f0f2f7;color:#222;min-height:100vh;}
-.topbar{background:#1a2744;padding:20px 28px;display:flex;align-items:center;gap:16px;}
-.topbar h1{font-size:16px;font-weight:700;color:#fff;}
-.topbar .sub{font-size:12px;color:#7a9bcc;}
-.topbar .badge{margin-left:auto;background:#5a9cf5;color:#fff;font-size:11px;font-weight:700;padding:4px 12px;border-radius:20px;}
-.main{max-width:1100px;margin:0 auto;padding:28px 20px;}
-
-/* 업로드 섹션 */
-.upload-card{background:#fff;border-radius:16px;padding:28px;margin-bottom:24px;border:2px dashed #c7d7f8;}
-.upload-card h2{font-size:15px;font-weight:700;color:#1a2744;margin-bottom:8px;}
-.upload-card p{font-size:13px;color:#666;line-height:1.7;margin-bottom:16px;}
-.paste-area{width:100%;height:120px;border:1px solid #e5e7eb;border-radius:10px;padding:12px;font-size:12px;font-family:'Noto Sans KR',sans-serif;resize:vertical;background:#f9fafb;color:#333;outline:none;}
-.paste-area:focus{border-color:#1a2744;}
-.btn-analyze{margin-top:12px;padding:14px 28px;background:#1a2744;color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:700;font-family:'Noto Sans KR',sans-serif;cursor:pointer;transition:opacity .2s;}
-.btn-analyze:hover{opacity:.85;}
-.btn-sample{padding:14px 20px;background:#f0f4ff;color:#1a2744;border:1px solid #c7d7f8;border-radius:10px;font-size:14px;font-weight:700;font-family:'Noto Sans KR',sans-serif;cursor:pointer;}
-.drop-zone{border:2px dashed #c7d7f8;border-radius:12px;padding:40px 20px;text-align:center;cursor:pointer;transition:all .2s;background:#f7f9ff;}
-.drop-zone:hover,.drop-zone.drag-over{border-color:#1a2744;background:#eef2fb;}
-.drop-icon{font-size:40px;margin-bottom:12px;}
-.drop-title{font-size:14px;font-weight:700;color:#1a2744;margin-bottom:6px;}
+body{font-family:'Noto Sans KR',sans-serif;background:#f0f2f7;min-height:100vh;padding:20px;word-break:keep-all;}
+.wrap{max-width:960px;margin:0 auto;}
+.hband{background:#1a2744;border-radius:16px;padding:28px 32px;margin-bottom:20px;color:#fff;}
+.hband h1{font-size:20px;font-weight:700;margin-bottom:6px;}
+.hband p{font-size:13px;color:#8fa8d8;}
+.upload-card{background:#fff;border-radius:14px;padding:24px;margin-bottom:20px;border:2px dashed #c7d7f8;}
+.upload-card h2{font-size:14px;font-weight:700;color:#1a2744;margin-bottom:6px;}
+.upload-card p{font-size:12.5px;color:#666;line-height:1.7;margin-bottom:14px;}
+.drop-zone{border:2px dashed #c7d7f8;border-radius:10px;padding:28px;text-align:center;cursor:pointer;transition:all .2s;background:#f7f9ff;}
+.drop-zone:hover,.drop-zone.drag{border-color:#1a2744;background:#eef2fb;}
+.drop-icon{font-size:28px;margin-bottom:8px;}
+.drop-main{font-size:14px;font-weight:700;color:#1a2744;margin-bottom:4px;}
 .drop-sub{font-size:12px;color:#888;}
-.file-info{background:#eef2fb;border:1px solid #c7d7f8;border-radius:10px;padding:12px 16px;display:flex;align-items:center;gap:12px;margin-top:12px;}
-.fi-name{font-size:14px;font-weight:700;color:#1a2744;flex:1;}
-.fi-size{font-size:12px;color:#888;}
-.btn-analyze:disabled{opacity:.4;cursor:not-allowed;}
-.how{background:#f0f4ff;border-radius:10px;padding:14px 16px;font-size:12.5px;color:#3b6de8;line-height:1.8;margin-bottom:16px;}
-.how strong{color:#1a2744;}
-
-/* 결과 영역 */
-#results{display:none;}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:24px;}
-.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px;margin-bottom:24px;}
-@media(max-width:700px){.grid2,.grid3{grid-template-columns:1fr;}}
-.card{background:#fff;border-radius:14px;padding:22px;}
-.card h3{font-size:13px;font-weight:700;color:#1a2744;margin-bottom:16px;padding-bottom:10px;border-bottom:1px solid #eee;display:flex;align-items:center;gap:8px;}
-.card h3 .ico{width:22px;height:22px;border-radius:6px;background:#1a2744;color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;}
-
-/* 지표 카드 */
-.metric-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:12px;}
-.metric{background:#f7f8fc;border-radius:10px;padding:14px;text-align:center;}
-.metric .mv{font-size:26px;font-weight:700;color:#1a2744;}
-.metric .ml{font-size:11px;color:#888;margin-top:4px;}
-.metric .msub{font-size:11px;color:#5a9cf5;margin-top:2px;}
-
-/* 테이블 */
-.tbl{width:100%;border-collapse:collapse;font-size:12.5px;}
-.tbl th{background:#f0f4ff;color:#1a2744;font-weight:700;padding:9px 12px;text-align:left;font-size:11px;}
-.tbl td{padding:8px 12px;border-bottom:1px solid #f0f0f0;color:#333;}
-.tbl tr:last-child td{border-bottom:none;}
-.tbl tr:hover td{background:#fafbff;}
-.badge-ok{display:inline-block;background:#dcfce7;color:#166534;font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;}
-.badge-warn{display:inline-block;background:#fef3c7;color:#92400e;font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;}
-.badge-bad{display:inline-block;background:#fee2e2;color:#991b1b;font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;}
-
-/* 해석 박스 */
-.interp{background:#f0f4ff;border-left:3px solid #3b6de8;border-radius:0 8px 8px 0;padding:12px 14px;font-size:12.5px;color:#2c3e6b;line-height:1.7;margin-top:14px;}
-.interp strong{color:#1a2744;}
-
-/* AI 해석 */
-.ai-interp{background:#f7f8fc;border:1px solid #e0e2ea;border-radius:10px;padding:14px;font-size:13px;color:#333;line-height:1.8;margin-top:12px;white-space:pre-wrap;}
-.ai-loading{color:#888;font-size:13px;display:flex;align-items:center;gap:8px;}
-.spin-sm{width:16px;height:16px;border:2px solid #ddd;border-top-color:#1a2744;border-radius:50%;animation:spin .7s linear infinite;}
-@keyframes spin{to{transform:rotate(360deg);}}
-.btn-ai{margin-top:10px;padding:10px 18px;background:#f0f4ff;color:#1a2744;border:1px solid #c7d7f8;border-radius:8px;font-size:13px;font-weight:700;font-family:'Noto Sans KR',sans-serif;cursor:pointer;transition:all .15s;}
-.btn-ai:hover{background:#e0e9ff;}
-
-/* 히트맵 */
-.heatmap-wrap{overflow-x:auto;}
-.heatmap{border-collapse:collapse;font-size:11px;}
-.heatmap th{padding:6px 8px;text-align:center;font-weight:700;color:#888;font-size:10px;}
-.heatmap td{width:44px;height:44px;text-align:center;font-size:11px;font-weight:700;border:2px solid #fff;border-radius:4px;cursor:default;}
-
-/* sig 표시 */
-.sig-star{color:#c0392b;font-weight:700;}
-.ns{color:#aaa;font-size:10px;}
-
-/* 탭 */
 .tabs{display:flex;gap:4px;margin-bottom:20px;flex-wrap:wrap;}
-.tab{padding:9px 18px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;border:1px solid #e5e7eb;background:#fff;color:#666;transition:all .15s;}
+.tab{padding:9px 16px;border-radius:8px;font-size:12.5px;font-weight:700;cursor:pointer;border:1px solid #e5e7eb;background:#fff;color:#666;transition:all .15s;}
 .tab.active{background:#1a2744;color:#fff;border-color:#1a2744;}
 .tab-content{display:none;}
 .tab-content.active{display:block;}
+.card{background:#fff;border-radius:14px;padding:22px;margin-bottom:16px;}
+.card h3{font-size:14px;font-weight:700;color:#1a2744;margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+.ico{width:24px;height:24px;border-radius:6px;background:#eef2fb;color:#1a2744;display:inline-flex;align-items:center;justify-content:center;font-size:13px;}
+.interp{background:#f7f8fc;border-radius:8px;padding:12px 14px;font-size:12.5px;color:#555;line-height:1.75;margin-bottom:14px;}
+.interp strong{color:#1a2744;font-weight:700;}
+.tbl{width:100%;border-collapse:collapse;font-size:12.5px;}
+.tbl th{background:#f0f2f7;padding:9px 12px;text-align:left;font-weight:700;color:#1a2744;border-bottom:2px solid #e5e7eb;}
+.tbl td{padding:9px 12px;border-bottom:1px solid #f0f0f0;color:#333;}
+.tbl tr:last-child td{border-bottom:none;}
+.badge-ok{display:inline-block;background:#dcfce7;color:#166534;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:700;}
+.badge-warn{display:inline-block;background:#fef9c3;color:#854d0e;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:700;}
+.badge-fail{display:inline-block;background:#fee2e2;color:#991b1b;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:700;}
+.ns{color:#aaa;font-size:11px;}
+.metric-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-bottom:16px;}
+.metric{background:#f7f9ff;border-radius:10px;padding:14px 16px;}
+.metric .mv{font-size:22px;font-weight:700;color:#1a2744;}
+.metric .ml{font-size:11px;color:#888;margin-top:3px;}
+.metric .ms{font-size:11px;color:#5a9cf5;margin-top:1px;}
+.btn-ai{padding:10px 18px;background:#1a2744;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;font-family:'Noto Sans KR',sans-serif;cursor:pointer;margin-top:8px;}
+.btn-ai:hover{opacity:.88;}
+.ai-interp{background:#f0f4ff;border-radius:10px;padding:14px;font-size:13px;color:#1a2744;line-height:1.75;margin-top:12px;white-space:pre-wrap;}
+.group-badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;}
+.g1{background:#dbeafe;color:#1e40af;}
+.g2{background:#fce7f3;color:#9d174d;}
+.g3{background:#dcfce7;color:#166534;}
+.g4{background:#fef9c3;color:#854d0e;}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+@media(max-width:600px){.two-col{grid-template-columns:1fr;}}
 </style>
 </head>
 <body>
-
-<div class="topbar">
-  <div>
-    <h1>📊 논문 데이터 분석 대시보드</h1>
-    <div class="sub">AI 문서 지원 도구 인식 연구 · 경희대학교 경영대학원</div>
+<div class="wrap">
+  <div class="hband">
+    <h1>📊 논문 통계분석 대시보드</h1>
+    <p>AI 문서 지원 도구 인식 연구 · 2×2 요인설계 · PLS-SEM</p>
   </div>
-  <div class="badge">자동 분석</div>
-</div>
 
-<div class="main">
   <div class="upload-card" id="upload-card">
-    <h2>📂 데이터 파일 업로드</h2>
-    <div class="how">
-      <strong>사용법:</strong> Google Sheets에서 <strong>파일 → 다운로드 → CSV(.csv)</strong> 로 저장 후 아래에 업로드하세요.<br>
-      또는 <strong>샘플 데이터 체험</strong>으로 먼저 기능을 확인해보세요!
-    </div>
+    <h2>데이터 업로드</h2>
+    <p><strong>사용법:</strong> Google Sheets에서 <strong>파일 → 다운로드 → CSV(.csv)</strong>로 저장 후 업로드하세요.</p>
     <div class="drop-zone" id="dropZone">
-      <div class="drop-icon">📄</div>
-      <div class="drop-title">파일을 여기에 드래그하거나 클릭해서 업로드</div>
+      <div class="drop-icon">📂</div>
+      <div class="drop-main">CSV 파일을 여기에 드래그하거나 클릭하여 업로드</div>
       <div class="drop-sub">지원 형식: CSV (.csv) · 최대 10MB</div>
-      <input type="file" id="fileInput" accept=".csv,.tsv,.txt" style="display:none">
     </div>
-    <div class="file-info" id="fileInfo" style="display:none;">
-      <div class="fi-name" id="fiName"></div>
-      <div class="fi-size" id="fiSize"></div>
-    </div>
-    <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap;">
-      <button class="btn-analyze" id="btn-analyze" disabled>🔍 분석 시작</button>
-      <button class="btn-sample" onclick="loadSample()">📂 샘플 데이터 체험</button>
-    </div>
+    <input type="file" id="fileInput" accept=".csv" style="display:none">
   </div>
 
-  <div id="results">
+  <div id="dashboard" style="display:none">
     <div class="tabs">
       <div class="tab active" onclick="switchTab('overview')">📈 전체 현황</div>
-      <div class="tab" onclick="switchTab('demo')">👥 인구통계</div>
+      <div class="tab" onclick="switchTab('mancheck')">✅ 조작점검</div>
       <div class="tab" onclick="switchTab('reliability')">🔬 신뢰도·타당도</div>
       <div class="tab" onclick="switchTab('desc')">📊 기술통계</div>
-      <div class="tab" onclick="switchTab('ttest')">⚖️ 집단 비교</div>
+      <div class="tab" onclick="switchTab('anova')">🧪 2×2 분석</div>
       <div class="tab" onclick="switchTab('corr')">🌡️ 상관관계</div>
       <div class="tab" onclick="switchTab('mediation')">🔗 매개효과</div>
       <div class="tab" onclick="switchTab('moderation')">🎛️ 조절효과</div>
       <div class="tab" onclick="switchTab('normality')">📐 정규성·편향</div>
+      <div class="tab" onclick="switchTab('demo')">👥 인구통계</div>
     </div>
 
     <!-- 전체 현황 -->
     <div class="tab-content active" id="tab-overview">
-      <div class="metric-grid" style="margin-bottom:24px;" id="overview-metrics"></div>
-      <div class="grid2">
-        <div class="card">
-          <h3><span class="ico">A</span>그룹별 응답 분포</h3>
+      <div class="card">
+        <h3><span class="ico">📈</span>응답 현황</h3>
+        <div class="metric-grid" id="overview-metrics"></div>
+        <div class="two-col">
           <canvas id="groupChart" height="200"></canvas>
-        </div>
-        <div class="card">
-          <h3><span class="ico">★</span>구성개념별 평균 점수</h3>
-          <canvas id="constructChart" height="200"></canvas>
-        </div>
-      </div>
-      <div class="card" style="margin-bottom:24px;">
-        <h3><span class="ico">AI</span>AI 종합 해석</h3>
-        <button class="btn-ai" onclick="getAIInterpretation('overview')">🤖 AI에게 전체 분석 요청</button>
-        <div id="ai-overview" class="ai-interp" style="display:none;"></div>
-      </div>
-    </div>
-
-    <!-- 인구통계 -->
-    <div class="tab-content" id="tab-demo">
-      <div class="grid2">
-        <div class="card">
-          <h3><span class="ico">직</span>직급 분포</h3>
-          <canvas id="rankChart" height="220"></canvas>
-        </div>
-        <div class="card">
-          <h3><span class="ico">학</span>학력 분포</h3>
-          <canvas id="eduChart" height="220"></canvas>
-        </div>
-      </div>
-      <div class="grid2">
-        <div class="card">
-          <h3><span class="ico">경</span>업무 경력</h3>
-          <canvas id="expChart" height="220"></canvas>
-        </div>
-        <div class="card">
-          <h3><span class="ico">AI</span>AI 사용 경험</h3>
-          <canvas id="aiChart" height="220"></canvas>
+          <canvas id="condChart" height="200"></canvas>
         </div>
       </div>
       <div class="card">
-        <h3><span class="ico">표</span>인구통계 요약표</h3>
-        <div id="demo-table"></div>
+        <h3><span class="ico">AI</span>AI 전체 현황 해석</h3>
+        <button class="btn-ai" onclick="getAI('overview')">🤖 해석 요청</button>
+        <div id="ai-overview" class="ai-interp" style="display:none"></div>
       </div>
     </div>
 
-    <!-- 신뢰도 -->
-    <div class="tab-content" id="tab-reliability">
-      <div class="card" style="margin-bottom:20px;">
-        <h3><span class="ico">α</span>Cronbach's Alpha (내적 일관성 신뢰도)</h3>
+    <!-- 조작점검 -->
+    <div class="tab-content" id="tab-mancheck">
+      <div class="card">
+        <h3><span class="ico">✅</span>조작점검 — 책임 수준 (MCR)</h3>
         <div class="interp">
-          <strong>신뢰도란?</strong> 같은 개념을 측정하는 문항들이 서로 얼마나 일관되게 응답되었는지를 나타내요.<br>
-          α ≥ 0.7 이면 ✅ 양호 / α ≥ 0.8 이면 ✅✅ 좋음 / α ≥ 0.9 이면 ✅✅✅ 매우 좋음
+          <strong>확인 내용:</strong> 고책임 그룹(그룹1·2)이 저책임 그룹(그룹3·4)보다 MCR 점수가 유의하게 높은지 검증합니다.<br>
+          <strong>판정 기준:</strong> t-검정 p &lt; .05, 고책임 평균 &gt; 저책임 평균 → ✅ 조작 성공
         </div>
-        <div id="reliability-table" style="margin-top:16px;"></div>
+        <div id="mancheck-resp-table"></div>
       </div>
-      <div class="card" style="margin-bottom:20px;">
-        <h3><span class="ico">✓</span>타당도 검증 (AVE · CR)</h3>
+      <div class="card">
+        <h3><span class="ico">✅</span>조작점검 — 설명 수준 (MCE)</h3>
         <div class="interp">
-          <strong>AVE (평균분산추출)</strong>: 구성개념이 문항들의 분산을 얼마나 설명하는지. <strong>AVE ≥ 0.5</strong> 이면 ✅ 수렴타당도 확보<br>
-          <strong>CR (합성신뢰도)</strong>: Cronbach's α보다 정교한 신뢰도. <strong>CR ≥ 0.7</strong> 이면 ✅ 양호
+          <strong>확인 내용:</strong> 설명높음 그룹(그룹1·3)이 설명낮음 그룹(그룹2·4)보다 MCE 점수가 유의하게 높은지 검증합니다.<br>
+          <strong>판정 기준:</strong> t-검정 p &lt; .05, 설명높음 평균 &gt; 설명낮음 평균 → ✅ 조작 성공
         </div>
-        <div id="validity-table" style="margin-top:16px;"></div>
+        <div id="mancheck-exp-table"></div>
+      </div>
+      <div class="card">
+        <h3><span class="ico">👁</span>IMC (주의력 확인)</h3>
+        <div class="interp">
+          <strong>기준:</strong> IMC=1 선택 → ✅ 통과 / 그 외 → ❌ 불성실 응답자<br>
+          불성실 응답자 비율이 높으면 데이터 정제 후 재분석을 권장합니다.
+        </div>
+        <div id="imc-table"></div>
+      </div>
+      <div class="card">
+        <h3><span class="ico">AI</span>AI 조작점검 해석</h3>
+        <button class="btn-ai" onclick="getAI('mancheck')">🤖 해석 요청</button>
+        <div id="ai-mancheck" class="ai-interp" style="display:none"></div>
+      </div>
+    </div>
+
+    <!-- 신뢰도·타당도 -->
+    <div class="tab-content" id="tab-reliability">
+      <div class="card">
+        <h3><span class="ico">α</span>신뢰도 (Cronbach's α)</h3>
+        <div class="interp"><strong>기준:</strong> α ≥ 0.8 ✅✅ 우수 · α ≥ 0.7 ✅ 양호 · α &lt; 0.7 ⚠️ 검토 필요</div>
+        <div id="reliability-table"></div>
+      </div>
+      <div class="card">
+        <h3><span class="ico">✓</span>타당도 (AVE · CR)</h3>
+        <div class="interp"><strong>AVE ≥ 0.5</strong> → 수렴타당도 확보 · <strong>CR ≥ 0.7</strong> → 합성신뢰도 양호</div>
+        <div id="validity-table"></div>
       </div>
       <div class="card">
         <h3><span class="ico">AI</span>AI 신뢰도·타당도 해석</h3>
-        <button class="btn-ai" onclick="getAIInterpretation('reliability')">🤖 신뢰도·타당도 결과 해석 요청</button>
-        <div id="ai-reliability" class="ai-interp" style="display:none;"></div>
+        <button class="btn-ai" onclick="getAI('reliability')">🤖 해석 요청</button>
+        <div id="ai-reliability" class="ai-interp" style="display:none"></div>
       </div>
     </div>
 
     <!-- 기술통계 -->
     <div class="tab-content" id="tab-desc">
-      <div class="card" style="margin-bottom:20px;">
-        <h3><span class="ico">μ</span>구성개념별 기술통계 (평균 ± 표준편차)</h3>
-        <div class="interp">
-          <strong>평균</strong>: 응답자들의 평균 점수 (7점 만점) &nbsp;|&nbsp;
-          <strong>표준편차(SD)</strong>: 응답이 얼마나 퍼져있는지 (낮을수록 비슷하게 응답)
-        </div>
-        <div id="desc-table" style="margin-top:16px;"></div>
+      <div class="card">
+        <h3><span class="ico">📊</span>기술통계량 (전체 + 그룹별)</h3>
+        <div class="interp">평균, 표준편차, 최솟값, 최댓값 · 7점 리커트 척도 기준</div>
+        <div id="desc-table"></div>
       </div>
       <div class="card">
         <h3><span class="ico">AI</span>AI 기술통계 해석</h3>
-        <button class="btn-ai" onclick="getAIInterpretation('desc')">🤖 기술통계 해석 요청</button>
-        <div id="ai-desc" class="ai-interp" style="display:none;"></div>
+        <button class="btn-ai" onclick="getAI('desc')">🤖 해석 요청</button>
+        <div id="ai-desc" class="ai-interp" style="display:none"></div>
       </div>
     </div>
 
-    <!-- t-검정 / ANOVA -->
-    <div class="tab-content" id="tab-ttest">
-      <div class="card" style="margin-bottom:20px;">
-        <h3><span class="ico">t</span>독립표본 t-검정: 그룹 A(고책임) vs 그룹 B(저책임)</h3>
+    <!-- 2×2 분석 -->
+    <div class="tab-content" id="tab-anova">
+      <div class="card">
+        <h3><span class="ico">🧪</span>2×2 이원분산분석 (Two-way ANOVA)</h3>
         <div class="interp">
-          <strong>t-검정이란?</strong> 두 그룹의 평균이 통계적으로 유의미하게 다른지 확인해요.<br>
-          <strong>p &lt; 0.05</strong> 이면 ✅ 두 그룹 간 유의한 차이 있음 &nbsp;|&nbsp; <strong>p ≥ 0.05</strong> 이면 차이 없음
+          <strong>주효과 A</strong>: 책임 수준(고/저)이 종속변수에 미치는 영향<br>
+          <strong>주효과 B</strong>: 설명 수준(높음/낮음)이 종속변수에 미치는 영향<br>
+          <strong>상호작용 A×B</strong>: 책임 수준에 따라 설명 수준 효과가 달라지는지 ← 핵심!
         </div>
-        <div id="ttest-table" style="margin-top:16px;"></div>
-      </div>
-      <div class="card" style="margin-bottom:20px;">
-        <h3><span class="ico">↕</span>그룹별 평균 비교 차트</h3>
-        <canvas id="groupCompChart" height="200"></canvas>
+        <div id="anova-table"></div>
       </div>
       <div class="card">
-        <h3><span class="ico">AI</span>AI 집단 비교 해석</h3>
-        <button class="btn-ai" onclick="getAIInterpretation('ttest')">🤖 집단 비교 결과 해석 요청</button>
-        <div id="ai-ttest" class="ai-interp" style="display:none;"></div>
+        <h3><span class="ico">📉</span>상호작용 플롯</h3>
+        <canvas id="interactionChart" height="220"></canvas>
+      </div>
+      <div class="card">
+        <h3><span class="ico">📊</span>4개 그룹 평균 비교</h3>
+        <canvas id="groupMeanChart" height="220"></canvas>
+      </div>
+      <div class="card">
+        <h3><span class="ico">AI</span>AI 2×2 분석 해석</h3>
+        <button class="btn-ai" onclick="getAI('anova')">🤖 해석 요청</button>
+        <div id="ai-anova" class="ai-interp" style="display:none"></div>
       </div>
     </div>
 
-    <!-- 상관관계 히트맵 -->
+    <!-- 상관관계 -->
     <div class="tab-content" id="tab-corr">
-      <div class="card" style="margin-bottom:20px;">
-        <h3><span class="ico">r</span>Pearson 상관계수 히트맵</h3>
-        <div class="interp">
-          <strong>상관계수란?</strong> 두 변수가 얼마나 함께 움직이는지 (-1 ~ +1).<br>
-          <strong>|r| ≥ 0.7</strong> 강한 상관 &nbsp;|&nbsp; <strong>|r| ≥ 0.4</strong> 중간 상관 &nbsp;|&nbsp; <strong>|r| &lt; 0.4</strong> 약한 상관<br>
-          * p&lt;.05 &nbsp;** p&lt;.01 &nbsp;*** p&lt;.001
-        </div>
-        <div class="heatmap-wrap" style="margin-top:16px;">
-          <table class="heatmap" id="heatmap-table"></table>
-        </div>
+      <div class="card">
+        <h3><span class="ico">🌡️</span>구성개념 간 상관관계</h3>
+        <div class="interp">r &gt; 0.7 이면 다중공선성 주의 · 대각선: AVE 제곱근 (판별타당도)</div>
+        <div style="overflow-x:auto"><table class="tbl" id="corr-table"></table></div>
       </div>
       <div class="card">
         <h3><span class="ico">AI</span>AI 상관관계 해석</h3>
-        <button class="btn-ai" onclick="getAIInterpretation('corr')">🤖 상관관계 해석 요청</button>
-        <div id="ai-corr" class="ai-interp" style="display:none;"></div>
+        <button class="btn-ai" onclick="getAI('corr')">🤖 해석 요청</button>
+        <div id="ai-corr" class="ai-interp" style="display:none"></div>
       </div>
     </div>
 
-    <!-- 매개효과 탭 -->
+    <!-- 매개효과 -->
     <div class="tab-content" id="tab-mediation">
-      <div class="card" style="margin-bottom:20px;">
-        <h3><span class="ico">🔗</span>매개효과 분석 (TRU가 매개변수)</h3>
+      <div class="card">
+        <h3><span class="ico">🔗</span>매개효과 분석 (Sobel Test)</h3>
         <div class="interp">
-          <strong>매개효과란?</strong> EXP·PU·EPR·AA → <strong>TRU(신뢰)</strong> → ITU(사용의도) 경로가 유효한지 검증해요. (H6 가설)<br>
-          <strong>Sobel Test</strong> z값 |z| > 1.96 이면 ✅ 매개효과 유의 (p &lt; .05)<br>
-          <strong>완전매개</strong>: 직접효과 없고 간접효과만 있음 &nbsp;|&nbsp; <strong>부분매개</strong>: 직접·간접효과 둘 다 있음
+          <strong>경로:</strong> EXP·PU·EPR·AA → TRU → ITU (H6)<br>
+          <strong>기준:</strong> |z| &gt; 1.96 → ✅ 매개효과 유의 (p &lt; .05)
         </div>
-        <div id="mediation-table" style="margin-top:16px;"></div>
+        <div id="mediation-table"></div>
       </div>
-      <div class="card" style="margin-bottom:20px;">
-        <h3><span class="ico">↗</span>매개효과 경로 시각화</h3>
+      <div class="card">
+        <h3><span class="ico">↗</span>매개효과 크기 시각화</h3>
         <canvas id="mediationChart" height="180"></canvas>
       </div>
       <div class="card">
         <h3><span class="ico">AI</span>AI 매개효과 해석</h3>
-        <button class="btn-ai" onclick="getAIInterpretation('mediation')">🤖 매개효과 해석 요청</button>
-        <div id="ai-mediation" class="ai-interp" style="display:none;"></div>
+        <button class="btn-ai" onclick="getAI('mediation')">🤖 해석 요청</button>
+        <div id="ai-mediation" class="ai-interp" style="display:none"></div>
       </div>
     </div>
 
-    <!-- 조절효과 탭 -->
+    <!-- 조절효과 -->
     <div class="tab-content" id="tab-moderation">
-      <div class="card" style="margin-bottom:20px;">
-        <h3><span class="ico">🎛</span>조절효과 분석 (업무 책임 수준 조절)</h3>
+      <div class="card">
+        <h3><span class="ico">🎛</span>조절효과 분석 (Fisher's Z)</h3>
         <div class="interp">
-          <strong>조절효과란?</strong> 그룹 A(고책임) vs 그룹 B(저책임)에 따라 <strong>신뢰→사용의도</strong> 관계의 강도가 달라지는지 확인해요. (H7·H8 가설)<br>
-          각 그룹의 상관계수를 비교하고, <strong>Fisher's Z 변환</strong>으로 두 상관의 차이가 유의한지 검증해요.
+          <strong>경로:</strong> 책임 수준에 따라 TRU→ITU 관계 강도가 달라지는지 (H7·H8)<br>
+          <strong>기준:</strong> p &lt; .05 → ✅ 조절효과 유의
         </div>
-        <div id="moderation-table" style="margin-top:16px;"></div>
+        <div id="moderation-table"></div>
       </div>
-      <div class="card" style="margin-bottom:20px;">
+      <div class="card">
         <h3><span class="ico">📉</span>조절효과 인터랙션 플롯</h3>
         <canvas id="moderationChart" height="200"></canvas>
       </div>
       <div class="card">
         <h3><span class="ico">AI</span>AI 조절효과 해석</h3>
-        <button class="btn-ai" onclick="getAIInterpretation('moderation')">🤖 조절효과 해석 요청</button>
-        <div id="ai-moderation" class="ai-interp" style="display:none;"></div>
+        <button class="btn-ai" onclick="getAI('moderation')">🤖 해석 요청</button>
+        <div id="ai-moderation" class="ai-interp" style="display:none"></div>
       </div>
     </div>
 
-    <!-- 정규성·편향 탭 -->
+    <!-- 정규성·편향 -->
     <div class="tab-content" id="tab-normality">
-      <div class="card" style="margin-bottom:20px;">
+      <div class="card">
         <h3><span class="ico">📐</span>정규성 검정 (왜도·첨도)</h3>
-        <div class="interp">
-          <strong>왜도(Skewness)</strong>: |왜도| &lt; 2 이면 ✅ 정규성 문제 없음<br>
-          <strong>첨도(Kurtosis)</strong>: |첨도| &lt; 7 이면 ✅ 수용 가능<br>
-          PLS-SEM은 정규분포를 가정하지 않지만, 논문 방법론 섹션에 이 결과를 한 줄 기재하면 돼요.
-        </div>
-        <div id="normality-table" style="margin-top:16px;"></div>
+        <div class="interp">|왜도| &lt; 2 · |첨도| &lt; 7 → ✅ PLS-SEM 적용 가능</div>
+        <div id="normality-table"></div>
       </div>
-      <div class="card" style="margin-bottom:20px;">
-        <h3><span class="ico">⏱</span>응답 편향 체크 (초반 vs 후반 응답자)</h3>
-        <div class="interp">
-          <strong>무응답 편향(Non-response bias) 검증</strong>: 앞 25% 응답자와 뒤 25% 응답자의 평균을 비교해요.<br>
-          두 그룹 간 유의한 차이가 없으면 ✅ 편향 없음으로 판단해요.
-        </div>
-        <div id="bias-table" style="margin-top:16px;"></div>
+      <div class="card">
+        <h3><span class="ico">⏱</span>무응답 편향 (초반 vs 후반)</h3>
+        <div class="interp">초반 25% vs 후반 25% 응답자 평균 비교 · p ≥ .05 → ✅ 편향 없음</div>
+        <div id="bias-table"></div>
       </div>
       <div class="card">
         <h3><span class="ico">AI</span>AI 정규성·편향 해석</h3>
-        <button class="btn-ai" onclick="getAIInterpretation('normality')">🤖 정규성·편향 해석 요청</button>
-        <div id="ai-normality" class="ai-interp" style="display:none;"></div>
+        <button class="btn-ai" onclick="getAI('normality')">🤖 해석 요청</button>
+        <div id="ai-normality" class="ai-interp" style="display:none"></div>
+      </div>
+    </div>
+
+    <!-- 인구통계 -->
+    <div class="tab-content" id="tab-demo">
+      <div class="card">
+        <h3><span class="ico">👥</span>표본 특성</h3>
+        <div id="demo-table"></div>
+      </div>
+      <div class="card">
+        <h3><span class="ico">⚖️</span>4개 그룹 간 동질성 확인</h3>
+        <div class="interp">그룹별 인구통계 분포가 유사한지 확인합니다. 유의한 차이가 없으면 ✅ 무작위 배정 성공</div>
+        <div id="demo-group-table"></div>
+      </div>
+      <div class="card">
+        <h3><span class="ico">AI</span>AI 인구통계 해석</h3>
+        <button class="btn-ai" onclick="getAI('demo')">🤖 해석 요청</button>
+        <div id="ai-demo" class="ai-interp" style="display:none"></div>
       </div>
     </div>
   </div>
 </div>
 
 <script>
-var parsedData = [];
-var analysisResults = {};
+// ── 데이터 ──────────────────────────────────────
+var parsedData=[];
+var charts={};
 
-// ── 구성개념 정의 ──────────────────────────────
-var constructs = {
-  EXP: { label:'설명가능성', items:['EXP1','EXP2','EXP3','EXP4'], color:'#3b6de8' },
-  PU:  { label:'지각된 유용성', items:['PU1','PU2','PU3'], color:'#27ae60' },
-  EPR: { label:'오류 가능성 인식', items:['EPR1','EPR2','EPR3'], color:'#e67e22' },
-  AA:  { label:'책임 불안', items:['AA1','AA2','AA3'], color:'#c0392b' },
-  TRU: { label:'AI 신뢰', items:['TRU1','TRU2','TRU3'], color:'#8e44ad' },
-  ITU: { label:'사용 의도', items:['ITU1','ITU2','ITU3'], color:'#1a2744' }
+// 구성개념 정의 (최신 설문 기준)
+var constructs={
+  EXP:{label:'설명가능성',items:['EXP1','EXP2','EXP3','EXP4'],color:'#3b6de8'},
+  TRU:{label:'AI 신뢰',items:['TRU1','TRU2','TRU3','TRU4'],color:'#8e44ad'},
+  PU:{label:'지각된 유용성',items:['PU1','PU2','PU3'],color:'#16a34a'},
+  EPR:{label:'오류 가능성 인식',items:['EPR1','EPR2','EPR3'],color:'#dc2626'},
+  AA:{label:'책임 불안',items:['AA1','AA2','AA3'],color:'#d97706'},
+  ITU:{label:'사용 의도',items:['ITU1','ITU2','ITU3','ITU4'],color:'#1a2744'}
+};
+var mcItems={
+  MCR:{label:'책임 수준 조작점검',items:['MCR1','MCR2','MCR3','MCR4']},
+  MCE:{label:'설명 수준 조작점검',items:['MCE1','MCE2','MCE3','MCE4']}
 };
 
-// ── 샘플 데이터 생성 ──────────────────────────
-function loadSample() {
-  var headers = ['timestamp','group','MC1','MC2','MC3','EXP1','EXP2','EXP3','EXP4','PU1','PU2','PU3','EPR1','EPR2','EPR3','AA1','AA2','AA3','TRU1','TRU2','TRU3','ITU1','ITU2','ITU3','field','rank','education','experience','ai_usage'];
-  var rows = [headers.join('\t')];
-  var fields=['품질관리','인증심사','규제준수','공정관리'];
-  var ranks=['사원','대리','과장','차장','부장'];
-  var edus=['대졸','석사','초대졸'];
-  var exps=['1~3년','4~7년','8~15년'];
-  var ais=['가끔 사용','자주 사용','업무에 통합'];
-  for(var i=0;i<80;i++){
-    var g=i<40?'A':'B';
-    var base=g==='A'?0.5:-0.5;
-    function r(m,s){return Math.min(7,Math.max(1,Math.round(m+s*(Math.random()*2-1))));}
-    var row=[
-      '2025-05-'+String(Math.floor(Math.random()*30+1)).padStart(2,'0'), g,
-      r(g==='A'?5.5:3.5,1.2), r(g==='A'?5.8:3.2,1.1), r(g==='A'?5.6:3.4,1.0),
-      r(g==='A'?5.2:3.8,1.2), r(g==='A'?5.0:3.6,1.3), r(g==='A'?5.1:3.7,1.1), r(g==='A'?4.9:3.5,1.2),
-      r(4.8,1.2), r(4.9,1.1), r(4.7,1.3),
-      r(3.8,1.3), r(3.6,1.2), r(3.9,1.1),
-      r(g==='A'?4.5:2.8,1.3), r(g==='A'?4.3:2.6,1.2), r(g==='A'?4.4:2.7,1.1),
-      r(4.2,1.2), r(4.0,1.3), r(4.3,1.1),
-      r(4.1,1.3), r(3.9,1.2), r(4.0,1.1),
-      fields[Math.floor(Math.random()*fields.length)],
-      ranks[Math.floor(Math.random()*ranks.length)],
-      edus[Math.floor(Math.random()*edus.length)],
-      exps[Math.floor(Math.random()*exps.length)],
-      ais[Math.floor(Math.random()*ais.length)]
-    ];
-    rows.push(row.join('\t'));
-  }
-  parsedData = parseData(rows.join('\n'));
-  analyzeData();
+// ── CSV 파싱 ──────────────────────────────────
+function parseCSV(text){
+  var lines=text.trim().split('\n');
+  var headers=lines[0].split(',').map(function(h){return h.trim().replace(/^"|"$/g,'');});
+  return lines.slice(1).filter(function(l){return l.trim();}).map(function(line){
+    var vals=[];var cur='';var inQ=false;
+    for(var i=0;i<line.length;i++){
+      if(line[i]==='"'){inQ=!inQ;}
+      else if(line[i]===','&&!inQ){vals.push(cur.trim());cur='';}
+      else{cur+=line[i];}
+    }
+    vals.push(cur.trim());
+    var row={};
+    headers.forEach(function(h,i){row[h]=vals[i]||'';});
+    return row;
+  });
 }
 
-// ── 데이터 파싱 ──────────────────────────────
-function parseData(raw) {
-  var lines = raw.trim().split('\n').filter(function(l){return l.trim();});
-  if(lines.length < 2) return [];
-  var headers = lines[0].split('\t').map(function(h){return h.trim();});
-  var data = [];
-  for(var i=1;i<lines.length;i++){
-    var vals = lines[i].split('\t');
-    var obj = {};
-    headers.forEach(function(h,j){ obj[h] = vals[j]?vals[j].trim():''; });
-    data.push(obj);
-  }
-  return data;
+// ── 파일 업로드 ──────────────────────────────
+var dz=document.getElementById('dropZone');
+var fi=document.getElementById('fileInput');
+dz.onclick=function(){fi.click();};
+dz.ondragover=function(e){e.preventDefault();dz.classList.add('drag');};
+dz.ondragleave=function(){dz.classList.remove('drag');};
+dz.ondrop=function(e){
+  e.preventDefault();dz.classList.remove('drag');
+  var f=e.dataTransfer.files[0];if(f)loadFile(f);
+};
+fi.onchange=function(){if(fi.files[0])loadFile(fi.files[0]);};
+
+function loadFile(f){
+  var r=new FileReader();
+  r.onload=function(e){
+    parsedData=parseCSV(e.target.result);
+    document.getElementById('dashboard').style.display='block';
+    renderAll();
+  };
+  r.readAsText(f,'UTF-8');
 }
 
 // ── 통계 함수 ──────────────────────────────
-function mean(arr){ return arr.length?arr.reduce(function(a,b){return a+b;},0)/arr.length:0; }
-function std(arr){
-  var m=mean(arr);
-  return Math.sqrt(arr.reduce(function(a,b){return a+(b-m)*(b-m);},0)/Math.max(arr.length-1,1));
-}
-function cronbachAlpha(matrix){
-  var k=matrix[0].length;
-  if(k<2)return 0;
-  var itemVars=[];
-  for(var j=0;j<k;j++){
-    var col=matrix.map(function(r){return r[j];});
-    itemVars.push(std(col)*std(col));
-  }
-  var totals=matrix.map(function(r){return r.reduce(function(a,b){return a+b;},0);});
-  var totalVar=std(totals)*std(totals);
-  return (k/(k-1))*(1-itemVars.reduce(function(a,b){return a+b;},0)/totalVar);
-}
+function mean(arr){if(!arr.length)return 0;return arr.reduce(function(a,b){return a+b;},0)/arr.length;}
+function std(arr){if(arr.length<2)return 0;var m=mean(arr);return Math.sqrt(arr.reduce(function(a,b){return a+Math.pow(b-m,2);},0)/(arr.length-1));}
 function pearson(x,y){
-  var mx=mean(x),my=mean(y);
-  var num=x.reduce(function(s,v,i){return s+(v-mx)*(y[i]-my);},0);
-  var den=Math.sqrt(x.reduce(function(s,v){return s+(v-mx)*(v-mx);},0)*y.reduce(function(s,v){return s+(v-my)*(v-my);},0));
-  return den?num/den:0;
+  var n=Math.min(x.length,y.length);if(n<2)return 0;
+  var mx=mean(x),my=mean(y),sx=std(x),sy=std(y);
+  if(!sx||!sy)return 0;
+  var s=0;for(var i=0;i<n;i++)s+=(x[i]-mx)*(y[i]-my);
+  return s/((n-1)*sx*sy);
 }
 function tTest(a,b){
   var ma=mean(a),mb=mean(b),sa=std(a),sb=std(b),na=a.length,nb=b.length;
+  if(!na||!nb)return{t:0,p:1,ma:ma,mb:mb};
   var se=Math.sqrt(sa*sa/na+sb*sb/nb);
-  if(!se)return{t:0,p:1};
+  if(!se)return{t:0,p:1,ma:ma,mb:mb};
   var t=(ma-mb)/se;
-  var df=Math.min(na-1,nb-1);
-  // p값 근사 (t분포)
+  var df=Math.pow(sa*sa/na+sb*sb/nb,2)/(Math.pow(sa*sa/na,2)/(na-1)+Math.pow(sb*sb/nb,2)/(nb-1));
   var p=2*(1-tCDF(Math.abs(t),df));
-  return{t:t,p:p,ma:ma,mb:mb,sa:sa,sb:sb};
+  return{t:t,p:p,ma:ma,mb:mb,na:na,nb:nb};
 }
 function tCDF(t,df){
-  // 베타 불완전 함수 근사
   var x=df/(df+t*t);
-  return 1-0.5*betaInc(x,df/2,0.5);
+  var a=df/2,b=0.5;
+  var bt=Math.exp(logGamma(a+b)-logGamma(a)-logGamma(b)+a*Math.log(x)+b*Math.log(1-x));
+  var frac=bt*(a+(b-a-1)*x)/(a*(a+1));
+  return 1-0.5*Math.max(0,Math.min(1,frac+1/Math.sqrt(Math.PI*df)*Math.pow(1+t*t/df,-(df+1)/2)*df));
 }
-function betaInc(x,a,b){
-  if(x<=0)return 0; if(x>=1)return 1;
-  var lbeta=lgamma(a)+lgamma(b)-lgamma(a+b);
-  var front=Math.exp(Math.log(x)*a+Math.log(1-x)*b-lbeta)/a;
-  return front*betaCF(x,a,b);
-}
-function betaCF(x,a,b){
-  var MAXIT=200,EPS=3e-7;
-  var qab=a+b,qap=a+1,qam=a-1;
-  var c=1,d=1-qab*x/qap; if(Math.abs(d)<1e-30)d=1e-30; d=1/d;
-  var h=d;
-  for(var m=1;m<=MAXIT;m++){
-    var m2=2*m;
-    var aa=m*(b-m)*x/((qam+m2)*(a+m2));
-    d=1+aa*d; if(Math.abs(d)<1e-30)d=1e-30;
-    c=1+aa/c; if(Math.abs(c)<1e-30)c=1e-30;
-    d=1/d; h*=d*c;
-    aa=-(a+m)*(qab+m)*x/((a+m2)*(qap+m2));
-    d=1+aa*d; if(Math.abs(d)<1e-30)d=1e-30;
-    c=1+aa/c; if(Math.abs(c)<1e-30)c=1e-30;
-    d=1/d; var del=d*c; h*=del;
-    if(Math.abs(del-1)<EPS)break;
-  }
-  return h;
-}
-function lgamma(x){
-  var p=[0.99999999999980993,676.5203681218851,-1259.1392167224028,771.32342877765313,-176.61502916214059,12.507343278686905,-0.13857109526572012,9.9843695780195716e-6,1.5056327351493116e-7];
-  if(x<0.5)return Math.log(Math.PI/Math.sin(Math.PI*x))-lgamma(1-x);
-  x-=1;
-  var a=p[0];
-  var t=x+7.5;
-  for(var i=1;i<9;i++)a+=p[i]/(x+i);
-  return 0.5*Math.log(2*Math.PI)+(x+0.5)*Math.log(t)-t+Math.log(a);
-}
-function pStar(p){ if(p<0.001)return'***'; if(p<0.01)return'**'; if(p<0.05)return'*'; return'ns'; }
-
-function getConstructScores(data, key){
-  var items = constructs[key].items;
-  return data.map(function(row){
-    var vals = items.map(function(it){return parseFloat(row[it])||0;}).filter(function(v){return v>0;});
-    return vals.length?mean(vals):null;
-  }).filter(function(v){return v!==null;});
-}
-
-// ── 메인 분석 ──────────────────────────────
-function analyzeData(){
-  if(parsedData.length<5){alert('데이터가 너무 적거나 형식이 맞지 않아요. 샘플 데이터로 먼저 체험해보세요!');return;}
-
-  document.getElementById('results').style.display='block';
-  document.getElementById('results').scrollIntoView({behavior:'smooth'});
-
-  renderOverview();
-  renderDemo();
-  renderReliability();
-  renderDesc();
-  renderTTest();
-  renderCorr();
-}
-
-// ── 전체 현황 ──────────────────────────────
-var charts = {};
-function destroyChart(id){ if(charts[id]){charts[id].destroy();delete charts[id];} }
-
-function renderOverview(){
-  var n = parsedData.length;
-  var grpA = parsedData.filter(function(r){return r.group==='A';});
-  var grpB = parsedData.filter(function(r){return r.group==='B';});
-
-  document.getElementById('overview-metrics').innerHTML =
-    metric(n+'명','총 응답자','전체') +
-    metric(grpA.length+'명','그룹 A','고책임') +
-    metric(grpB.length+'명','그룹 B','저책임') +
-    metric((grpA.length/n*100).toFixed(0)+'%','그룹 A 비율','') +
-    metric(Object.keys(constructs).length+'개','측정 구성개념','') ;
-
-  // 그룹 파이차트
-  destroyChart('groupChart');
-  var gc = document.getElementById('groupChart').getContext('2d');
-  charts['groupChart'] = new Chart(gc,{type:'doughnut',data:{labels:['그룹 A (고책임)','그룹 B (저책임)'],datasets:[{data:[grpA.length,grpB.length],backgroundColor:['#1a2744','#5a9cf5'],borderWidth:0}]},options:{plugins:{legend:{position:'bottom',labels:{font:{family:'Noto Sans KR',size:12}}}},cutout:'65%'}});
-
-  // 구성개념 평균 바차트
-  destroyChart('constructChart');
-  var labels=[], vals=[], colors=[];
-  Object.keys(constructs).forEach(function(k){
-    labels.push(constructs[k].label);
-    vals.push(parseFloat(mean(getConstructScores(parsedData,k)).toFixed(2)));
-    colors.push(constructs[k].color);
-  });
-  var cc = document.getElementById('constructChart').getContext('2d');
-  charts['constructChart'] = new Chart(cc,{type:'bar',data:{labels:labels,datasets:[{data:vals,backgroundColor:colors,borderRadius:6}]},options:{plugins:{legend:{display:false}},scales:{y:{min:1,max:7,ticks:{font:{family:'Noto Sans KR'}}}},responsive:true}});
-}
-
-function metric(val,label,sub){
-  return '<div class="metric"><div class="mv">'+val+'</div><div class="ml">'+label+'</div><div class="msub">'+sub+'</div></div>';
-}
-
-// ── 인구통계 ──────────────────────────────
-function renderDemo(){
-  var fields=['rank','education','experience','ai_usage'];
-  var chartIds=['rankChart','eduChart','expChart','aiChart'];
-  fields.forEach(function(f,fi){
-    var counts={};
-    parsedData.forEach(function(r){ if(r[f])counts[r[f]]=(counts[r[f]]||0)+1; });
-    var labs=Object.keys(counts), vals=Object.values(counts);
-    destroyChart(chartIds[fi]);
-    var ctx=document.getElementById(chartIds[fi]).getContext('2d');
-    charts[chartIds[fi]]=new Chart(ctx,{type:'bar',data:{labels:labs,datasets:[{data:vals,backgroundColor:'#1a2744',borderRadius:5}]},options:{plugins:{legend:{display:false}},scales:{y:{ticks:{font:{family:'Noto Sans KR'},stepSize:1}}},responsive:true}});
-  });
-
-  // 요약표
-  var demoFields={field:'업무 분야',rank:'직급',education:'학력',experience:'경력',ai_usage:'AI 사용 경험'};
-  var html='';
-  Object.keys(demoFields).forEach(function(f){
-    var counts={};
-    parsedData.forEach(function(r){ if(r[f])counts[r[f]]=(counts[r[f]]||0)+1; });
-    var sorted=Object.keys(counts).sort(function(a,b){return counts[b]-counts[a];});
-    html+='<div style="margin-bottom:16px;"><div style="font-size:12px;font-weight:700;color:#1a2744;margin-bottom:8px;">'+demoFields[f]+'</div>';
-    html+='<table class="tbl"><tr><th>항목</th><th>빈도(명)</th><th>비율(%)</th></tr>';
-    sorted.forEach(function(k){
-      html+='<tr><td>'+k+'</td><td>'+counts[k]+'</td><td>'+(counts[k]/parsedData.length*100).toFixed(1)+'%</td></tr>';
-    });
-    html+='</table></div>';
-  });
-  document.getElementById('demo-table').innerHTML=html;
-}
-
-// ── 신뢰도 ──────────────────────────────
-function renderReliability(){
-  var html='<table class="tbl"><tr><th>구성개념</th><th>문항 수</th><th>Cronbach\'s α</th><th>평가</th><th>해석</th></tr>';
-  Object.keys(constructs).forEach(function(k){
-    var items=constructs[k].items;
-    var matrix=parsedData.map(function(row){
-      return items.map(function(it){return parseFloat(row[it])||0;});
-    }).filter(function(r){return r.some(function(v){return v>0;});});
-    var alpha=cronbachAlpha(matrix);
-    var badge=alpha>=0.9?'<span class="badge-ok">매우 좋음 ✅✅✅</span>':alpha>=0.8?'<span class="badge-ok">좋음 ✅✅</span>':alpha>=0.7?'<span class="badge-ok">양호 ✅</span>':alpha>=0.6?'<span class="badge-warn">보통 ⚠️</span>':'<span class="badge-bad">불량 ❌</span>';
-    var interp=alpha>=0.9?'매우 높은 내적 일관성':alpha>=0.8?'높은 내적 일관성':alpha>=0.7?'수용 가능한 신뢰도':alpha>=0.6?'개선 검토 필요':'문항 재검토 필요';
-    html+='<tr><td><strong>'+constructs[k].label+'</strong> ('+k+')</td><td>'+items.length+'개</td><td><strong>'+alpha.toFixed(3)+'</strong></td><td>'+badge+'</td><td style="font-size:11px;color:#666;">'+interp+'</td></tr>';
-  });
-  html+='</table>';
-  document.getElementById('reliability-table').innerHTML=html;
-  renderValidity();
-}
-
-// ── 기술통계 ──────────────────────────────
-function renderDesc(){
-  var html='<table class="tbl"><tr><th>구성개념</th><th>N</th><th>평균</th><th>표준편차</th><th>최솟값</th><th>최댓값</th><th>그룹A 평균</th><th>그룹B 평균</th></tr>';
-  var grpA=parsedData.filter(function(r){return r.group==='A';});
-  var grpB=parsedData.filter(function(r){return r.group==='B';});
-  Object.keys(constructs).forEach(function(k){
-    var all=getConstructScores(parsedData,k);
-    var a=getConstructScores(grpA,k);
-    var b=getConstructScores(grpB,k);
-    html+='<tr><td><strong>'+constructs[k].label+'</strong></td><td>'+all.length+'</td><td>'+mean(all).toFixed(2)+'</td><td>'+std(all).toFixed(2)+'</td><td>'+Math.min.apply(null,all).toFixed(2)+'</td><td>'+Math.max.apply(null,all).toFixed(2)+'</td><td style="color:#1a2744;font-weight:700;">'+mean(a).toFixed(2)+'</td><td style="color:#5a9cf5;font-weight:700;">'+mean(b).toFixed(2)+'</td></tr>';
-  });
-  html+='</table>';
-  document.getElementById('desc-table').innerHTML=html;
-}
-
-// ── t-검정 ──────────────────────────────
-function renderTTest(){
-  var grpA=parsedData.filter(function(r){return r.group==='A';});
-  var grpB=parsedData.filter(function(r){return r.group==='B';});
-  var html='<table class="tbl"><tr><th>구성개념</th><th>그룹 A 평균</th><th>그룹 B 평균</th><th>차이</th><th>t값</th><th>p값</th><th>유의성</th><th>해석</th></tr>';
-  var labels=[],aVals=[],bVals=[];
-
-  Object.keys(constructs).forEach(function(k){
-    var a=getConstructScores(grpA,k);
-    var b=getConstructScores(grpB,k);
-    var res=tTest(a,b);
-    var star=pStar(res.p);
-    var sig=star==='ns'?'<span class="ns">유의하지 않음</span>':'<span class="sig-star">유의함 '+star+'</span>';
-    var interp=res.p<0.05?(res.ma>res.mb?'고책임 그룹이 더 높음':'저책임 그룹이 더 높음'):'두 그룹 차이 없음';
-    html+='<tr><td><strong>'+constructs[k].label+'</strong></td><td style="color:#1a2744;font-weight:700;">'+res.ma.toFixed(2)+'</td><td style="color:#5a9cf5;font-weight:700;">'+res.mb.toFixed(2)+'</td><td>'+(res.ma-res.mb>0?'+':'')+((res.ma-res.mb).toFixed(2))+'</td><td>'+res.t.toFixed(3)+'</td><td>'+res.p.toFixed(3)+'</td><td>'+sig+'</td><td style="font-size:11px;color:#666;">'+interp+'</td></tr>';
-    labels.push(constructs[k].label);
-    aVals.push(parseFloat(res.ma.toFixed(2)));
-    bVals.push(parseFloat(res.mb.toFixed(2)));
-  });
-  html+='</table>';
-  document.getElementById('ttest-table').innerHTML=html;
-
-  // 그룹 비교 차트
-  destroyChart('groupCompChart');
-  var ctx=document.getElementById('groupCompChart').getContext('2d');
-  charts['groupCompChart']=new Chart(ctx,{type:'bar',data:{labels:labels,datasets:[{label:'그룹 A (고책임)',data:aVals,backgroundColor:'#1a2744',borderRadius:4},{label:'그룹 B (저책임)',data:bVals,backgroundColor:'#5a9cf5',borderRadius:4}]},options:{plugins:{legend:{position:'bottom',labels:{font:{family:'Noto Sans KR',size:12}}}},scales:{y:{min:1,max:7,ticks:{font:{family:'Noto Sans KR'}}}},responsive:true}});
-}
-
-// ── 상관관계 히트맵 ──────────────────────────
-function renderCorr(){
-  var keys=Object.keys(constructs);
-  var scores={};
-  keys.forEach(function(k){ scores[k]=getConstructScores(parsedData,k); });
-
-  function getColor(r){
-    if(r>0.7)return'#1a2744';
-    if(r>0.5)return'#2c5282';
-    if(r>0.3)return'#3b82f6';
-    if(r>0.1)return'#93c5fd';
-    if(r>-0.1)return'#f3f4f8';
-    if(r>-0.3)return'#fca5a5';
-    if(r>-0.5)return'#ef4444';
-    return'#991b1b';
-  }
-  function getTextColor(r){ return Math.abs(r)>0.4?'#fff':'#333'; }
-
-  var html='<tr><th></th>';
-  keys.forEach(function(k){ html+='<th>'+k+'</th>'; });
-  html+='</tr>';
-
-  keys.forEach(function(ki){
-    html+='<tr><th style="text-align:left;padding-right:12px;">'+ki+'<br><span style="font-weight:400;color:#aaa;font-size:9px;">'+constructs[ki].label+'</span></th>';
-    keys.forEach(function(kj){
-      if(ki===kj){
-        html+='<td style="background:#1a2744;color:#fff;">1.00</td>';
-      } else {
-        var n=Math.min(scores[ki].length,scores[kj].length);
-        var xi=scores[ki].slice(0,n), xj=scores[kj].slice(0,n);
-        var r=pearson(xi,xj);
-        var bg=getColor(r), tc=getTextColor(r);
-        html+='<td style="background:'+bg+';color:'+tc+';">'+r.toFixed(2)+'</td>';
-      }
-    });
-    html+='</tr>';
-  });
-  document.getElementById('heatmap-table').innerHTML=html;
-}
-
-// ── 타당도 (AVE·CR) ──────────────────────────────
-function renderValidity(){
-  var html='<table class="tbl"><tr><th>구성개념</th><th>문항 수</th><th>AVE</th><th>AVE 판정</th><th>CR</th><th>CR 판정</th></tr>';
-  Object.keys(constructs).forEach(function(k){
-    var items=constructs[k].items;
-    var matrix=parsedData.map(function(row){
-      return items.map(function(it){return parseFloat(row[it])||0;});
-    }).filter(function(r){return r.some(function(v){return v>0;});});
-    // 표준화 요인부하량 근사 (각 문항과 총점의 상관)
-    var totals=matrix.map(function(r){return mean(r);});
-    var loadings=items.map(function(it,j){
-      var col=matrix.map(function(r){return r[j];});
-      return Math.abs(pearson(col,totals));
-    });
-    var avgLoad=mean(loadings);
-    var ave=loadings.reduce(function(s,l){return s+l*l;},0)/loadings.length;
-    var cr=Math.pow(loadings.reduce(function(s,l){return s+l;},0),2)/(Math.pow(loadings.reduce(function(s,l){return s+l;},0),2)+loadings.reduce(function(s,l){return s+(1-l*l);},0));
-    var aveBadge=ave>=0.5?'<span class="badge-ok">✅ 확보 ('+ave.toFixed(3)+')</span>':'<span class="badge-warn">⚠️ 검토 필요 ('+ave.toFixed(3)+')</span>';
-    var crBadge=cr>=0.8?'<span class="badge-ok">✅✅ 좋음 ('+cr.toFixed(3)+')</span>':cr>=0.7?'<span class="badge-ok">✅ 양호 ('+cr.toFixed(3)+')</span>':'<span class="badge-warn">⚠️ 검토 필요 ('+cr.toFixed(3)+')</span>';
-    html+='<tr><td><strong>'+constructs[k].label+'</strong></td><td>'+items.length+'개</td><td>'+ave.toFixed(3)+'</td><td>'+aveBadge+'</td><td>'+cr.toFixed(3)+'</td><td>'+crBadge+'</td></tr>';
-  });
-  html+='</table>';
-  var el=document.getElementById('validity-table');
-  if(el)el.innerHTML=html;
-}
-
-// ── 정규성 (왜도·첨도) ──────────────────────────────
-function skewness(arr){
-  var m=mean(arr),s=std(arr),n=arr.length;
-  if(!s)return 0;
-  return arr.reduce(function(a,v){return a+Math.pow((v-m)/s,3);},0)/n;
-}
-function kurtosis(arr){
-  var m=mean(arr),s=std(arr),n=arr.length;
-  if(!s)return 0;
-  return arr.reduce(function(a,v){return a+Math.pow((v-m)/s,4);},0)/n-3;
-}
-function renderNormality(){
-  var html='<table class="tbl"><tr><th>구성개념</th><th>N</th><th>평균</th><th>왜도</th><th>왜도 판정</th><th>첨도</th><th>첨도 판정</th><th>정규성</th></tr>';
-  Object.keys(constructs).forEach(function(k){
-    var scores=getConstructScores(parsedData,k);
-    var sk=skewness(scores),ku=kurtosis(scores);
-    var skBadge=Math.abs(sk)<2?'<span class="badge-ok">✅ 양호</span>':'<span class="badge-warn">⚠️ 검토</span>';
-    var kuBadge=Math.abs(ku)<7?'<span class="badge-ok">✅ 양호</span>':'<span class="badge-warn">⚠️ 검토</span>';
-    var overall=Math.abs(sk)<2&&Math.abs(ku)<7?'<span class="badge-ok">✅ 정규성 확보</span>':'<span class="badge-warn">⚠️ PLS-SEM 권장</span>';
-    html+='<tr><td><strong>'+constructs[k].label+'</strong></td><td>'+scores.length+'</td><td>'+mean(scores).toFixed(2)+'</td><td>'+sk.toFixed(3)+'</td><td>'+skBadge+'</td><td>'+ku.toFixed(3)+'</td><td>'+kuBadge+'</td><td>'+overall+'</td></tr>';
-  });
-  html+='</table>';
-  var el=document.getElementById('normality-table');
-  if(el)el.innerHTML=html;
-}
-
-// ── 응답 편향 체크 ──────────────────────────────
-function renderBiasCheck(){
-  var n=parsedData.length;
-  var q=Math.floor(n*0.25);
-  var early=parsedData.slice(0,q);
-  var late=parsedData.slice(n-q);
-  var html='<table class="tbl"><tr><th>구성개념</th><th>초반 응답자 평균</th><th>후반 응답자 평균</th><th>차이</th><th>t값</th><th>p값</th><th>편향 판정</th></tr>';
-  Object.keys(constructs).forEach(function(k){
-    var a=getConstructScores(early,k);
-    var b=getConstructScores(late,k);
-    if(!a.length||!b.length)return;
-    var res=tTest(a,b);
-    var bias=res.p>=0.05?'<span class="badge-ok">✅ 편향 없음</span>':'<span class="badge-warn">⚠️ 차이 있음</span>';
-    html+='<tr><td><strong>'+constructs[k].label+'</strong></td><td>'+res.ma.toFixed(2)+'</td><td>'+res.mb.toFixed(2)+'</td><td>'+((res.ma-res.mb).toFixed(2))+'</td><td>'+res.t.toFixed(3)+'</td><td>'+res.p.toFixed(3)+'</td><td>'+bias+'</td></tr>';
-  });
-  html+='</table><div class="interp" style="margin-top:12px;">초반 <strong>'+q+'명</strong> vs 후반 <strong>'+q+'명</strong> 비교 (전체 '+n+'명 기준)</div>';
-  var el=document.getElementById('bias-table');
-  if(el)el.innerHTML=html;
-}
-
-// ── 매개효과 (Sobel Test) ──────────────────────────────
-function sobelTest(X, M, Y){
-  var a=pearson(X,M), b=pearson(M,Y);
-  var n=X.length;
-  var sa=Math.sqrt((1-a*a)/(n-2));
-  var sb=Math.sqrt((1-b*b)/(n-2));
+function logGamma(z){var c=[76.18009172947146,-86.50532032941677,24.01409824083091,-1.231739572450155,0.001208650973866179,-0.000005395239384953];var y=z,x=z,tmp=x+5.5;tmp-=(x+0.5)*Math.log(tmp);var ser=1.000000000190015;for(var j=0;j<6;j++){ser+=c[j]/++y;}return -tmp+Math.log(2.5066282746310005*ser/x);}
+function pStar(p){return p<.001?'***':p<.01?'**':p<.05?'*':'';}
+function skewness(arr){var m=mean(arr),s=std(arr),n=arr.length;if(!s)return 0;return arr.reduce(function(a,v){return a+Math.pow((v-m)/s,3);},0)/n;}
+function kurtosis(arr){var m=mean(arr),s=std(arr),n=arr.length;if(!s)return 0;return arr.reduce(function(a,v){return a+Math.pow((v-m)/s,4);},0)/n-3;}
+function fisherZ(r){if(Math.abs(r)>=1)return 0;return 0.5*Math.log((1+r)/(1-r));}
+function sobelTest(X,M,Y){
+  var a=pearson(X,M),b=pearson(M,Y),n=X.length;
+  var sa=Math.sqrt((1-a*a)/(n-2)),sb=Math.sqrt((1-b*b)/(n-2));
   var z=(a*b)/Math.sqrt(b*b*sa*sa+a*a*sb*sb);
   var p=2*(1-tCDF(Math.abs(z),n-2));
   return{a:a,b:b,indirect:a*b,z:z,p:p};
 }
-function renderMediation(){
-  var truScores=getConstructScores(parsedData,'TRU');
-  var ituScores=getConstructScores(parsedData,'ITU');
-  var n=Math.min(truScores.length,ituScores.length);
-  var tru=truScores.slice(0,n), itu=ituScores.slice(0,n);
-  var html='<table class="tbl"><tr><th>독립변수(X)</th><th>a경로 (X→TRU)</th><th>b경로 (TRU→ITU)</th><th>간접효과 (a×b)</th><th>Sobel Z</th><th>p값</th><th>매개 판정</th></tr>';
-  var medRows=[];
-  ['EXP','PU','EPR','AA'].forEach(function(k){
-    var xScores=getConstructScores(parsedData,k);
-    var nn=Math.min(xScores.length,n);
-    var x=xScores.slice(0,nn),m=tru.slice(0,nn),y=itu.slice(0,nn);
-    var res=sobelTest(x,m,y);
-    var sig=res.p<0.05?'<span class="badge-ok">✅ 매개효과 유의 '+pStar(res.p)+'</span>':'<span class="badge-warn">❌ 유의하지 않음</span>';
-    html+='<tr><td><strong>'+constructs[k].label+'</strong></td><td>'+res.a.toFixed(3)+'</td><td>'+res.b.toFixed(3)+'</td><td>'+res.indirect.toFixed(3)+'</td><td>'+res.z.toFixed(3)+'</td><td>'+res.p.toFixed(3)+'</td><td>'+sig+'</td></tr>';
-    medRows.push({label:constructs[k].label,indirect:res.indirect,sig:res.p<0.05});
-  });
-  html+='</table>';
-  var el=document.getElementById('mediation-table');
-  if(el)el.innerHTML=html;
-  // 매개효과 차트
-  destroyChart('mediationChart');
-  var ctx=document.getElementById('mediationChart');
-  if(ctx){
-    charts['mediationChart']=new Chart(ctx.getContext('2d'),{type:'bar',data:{labels:medRows.map(function(r){return r.label;}),datasets:[{label:'간접효과 크기',data:medRows.map(function(r){return parseFloat(r.indirect.toFixed(3));}),backgroundColor:medRows.map(function(r){return r.sig?'#1a2744':'#c7d7f8';}),borderRadius:6}]},options:{plugins:{legend:{display:false},tooltip:{callbacks:{label:function(c){return'간접효과: '+c.raw+(medRows[c.dataIndex].sig?' (유의*)':' (비유의)');}}}},scales:{y:{ticks:{font:{family:'Noto Sans KR'}}}},responsive:true}});
-  }
+
+function getConstructScores(data,k){
+  var items=constructs[k].items;
+  return data.map(function(row){
+    var vals=items.map(function(it){return parseFloat(row[it]);}).filter(function(v){return !isNaN(v);});
+    return vals.length===items.length?mean(vals):NaN;
+  }).filter(function(v){return !isNaN(v);});
 }
 
-// ── 조절효과 ──────────────────────────────
-function fisherZ(r){return 0.5*Math.log((1+r)/(1-r));}
-function renderModeration(){
-  var grpA=parsedData.filter(function(r){return r.group==='A';});
-  var grpB=parsedData.filter(function(r){return r.group==='B';});
-  var truA=getConstructScores(grpA,'TRU'), ituA=getConstructScores(grpA,'ITU');
-  var truB=getConstructScores(grpB,'TRU'), ituB=getConstructScores(grpB,'ITU');
-  var rA=pearson(truA,ituA), rB=pearson(truB,ituB);
-  var nA=truA.length, nB=truB.length;
-  var zA=fisherZ(rA), zB=fisherZ(rB);
-  var se=Math.sqrt(1/(nA-3)+1/(nB-3));
-  var z=(zA-zB)/se;
-  var p=2*(1-tCDF(Math.abs(z),nA+nB-4));
-  var html='<table class="tbl"><tr><th>경로</th><th>그룹 A (고책임)</th><th>그룹 B (저책임)</th><th>차이 (Z)</th><th>p값</th><th>조절효과</th></tr>';
-  html+='<tr><td><strong>TRU → ITU</strong></td><td>r = '+rA.toFixed(3)+' (n='+nA+')</td><td>r = '+rB.toFixed(3)+' (n='+nB+')</td><td>'+z.toFixed(3)+'</td><td>'+p.toFixed(3)+'</td><td>'+(p<0.05?'<span class="badge-ok">✅ 조절효과 유의 '+pStar(p)+'</span>':'<span class="badge-warn">❌ 유의하지 않음</span>')+'</td></tr>';
-  // 구성개념별 그룹 비교
-  Object.keys(constructs).forEach(function(k){
-    var xA=getConstructScores(grpA,k), xB=getConstructScores(grpB,k);
-    var truAk=truA.slice(0,Math.min(xA.length,truA.length));
-    var truBk=truB.slice(0,Math.min(xB.length,truB.length));
-    var rAk=pearson(xA.slice(0,truAk.length),truAk);
-    var rBk=pearson(xB.slice(0,truBk.length),truBk);
-    var nAk=truAk.length,nBk=truBk.length;
-    if(nAk<4||nBk<4)return;
-    var zAk=fisherZ(rAk),zBk=fisherZ(rBk);
-    var sek=Math.sqrt(1/(nAk-3)+1/(nBk-3));
-    var zk=(zAk-zBk)/sek;
-    var pk=2*(1-tCDF(Math.abs(zk),nAk+nBk-4));
-    html+='<tr><td>'+constructs[k].label+' → TRU</td><td>r = '+rAk.toFixed(3)+'</td><td>r = '+rBk.toFixed(3)+'</td><td>'+zk.toFixed(3)+'</td><td>'+pk.toFixed(3)+'</td><td>'+(pk<0.05?'<span class="badge-ok">✅ 유의 '+pStar(pk)+'</span>':'<span class="ns">비유의</span>')+'</td></tr>';
-  });
-  html+='</table>';
-  var el=document.getElementById('moderation-table');
-  if(el)el.innerHTML=html;
-  // 인터랙션 플롯
-  destroyChart('moderationChart');
-  var ctx=document.getElementById('moderationChart');
-  if(ctx){
-    var constructLabels=Object.keys(constructs).map(function(k){return constructs[k].label;});
-    var aVals=Object.keys(constructs).map(function(k){return parseFloat(mean(getConstructScores(grpA,k)).toFixed(2));});
-    var bVals=Object.keys(constructs).map(function(k){return parseFloat(mean(getConstructScores(grpB,k)).toFixed(2));});
-    charts['moderationChart']=new Chart(ctx.getContext('2d'),{type:'line',data:{labels:constructLabels,datasets:[{label:'그룹 A (고책임)',data:aVals,borderColor:'#1a2744',backgroundColor:'rgba(26,39,68,0.1)',pointRadius:6,tension:0.3},{label:'그룹 B (저책임)',data:bVals,borderColor:'#5a9cf5',backgroundColor:'rgba(90,156,245,0.1)',pointRadius:6,tension:0.3}]},options:{plugins:{legend:{position:'bottom',labels:{font:{family:'Noto Sans KR',size:12}}}},scales:{y:{min:1,max:7,ticks:{font:{family:'Noto Sans KR'}}}},responsive:true}});
-  }
+function getMCScores(data,k){
+  var items=mcItems[k].items;
+  return data.map(function(row){
+    var vals=items.map(function(it){return parseFloat(row[it]);}).filter(function(v){return !isNaN(v);});
+    return vals.length===items.length?mean(vals):NaN;
+  }).filter(function(v){return !isNaN(v);});
 }
 
-// ── 탭 전환 + 새 분석 렌더 ──────────────────────────────
+function destroyChart(id){if(charts[id]){charts[id].destroy();delete charts[id];}}
+
+// ── 탭 전환 ──────────────────────────────
 function switchTab(id){
   document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('active');});
   document.querySelectorAll('.tab-content').forEach(function(t){t.classList.remove('active');});
   event.target.classList.add('active');
   document.getElementById('tab-'+id).classList.add('active');
-  if(id==='mediation')renderMediation();
-  if(id==='moderation')renderModeration();
-  if(id==='normality'){renderNormality();renderBiasCheck();}
+  var renders={mancheck:renderMancheck,reliability:renderReliability,desc:renderDesc,anova:renderAnova,corr:renderCorr,mediation:renderMediation,moderation:renderModeration,normality:renderNormality,demo:renderDemo};
+  if(renders[id])renders[id]();
+}
+
+// ── 전체 렌더 ──────────────────────────────
+function renderAll(){
+  renderOverview();
+}
+
+// ── 전체 현황 ──────────────────────────────
+function renderOverview(){
+  var n=parsedData.length;
+  var g1=parsedData.filter(function(r){return r.group=='1';});
+  var g2=parsedData.filter(function(r){return r.group=='2';});
+  var g3=parsedData.filter(function(r){return r.group=='3';});
+  var g4=parsedData.filter(function(r){return r.group=='4';});
+  var highResp=parsedData.filter(function(r){return r.resp_cond==='고책임';});
+  var lowResp=parsedData.filter(function(r){return r.resp_cond==='저책임';});
+  var highExp=parsedData.filter(function(r){return r.exp_cond==='설명높음';});
+  var lowExp=parsedData.filter(function(r){return r.exp_cond==='설명낮음';});
+
+  var m=document.getElementById('overview-metrics');
+  m.innerHTML=
+    '<div class="metric"><div class="mv">'+n+'</div><div class="ml">전체 응답자</div></div>'+
+    '<div class="metric"><div class="mv">'+g1.length+'</div><div class="ml">그룹1 (고책임×설명高)</div><div class="ms">'+((g1.length/n*100)||0).toFixed(0)+'%</div></div>'+
+    '<div class="metric"><div class="mv">'+g2.length+'</div><div class="ml">그룹2 (고책임×설명低)</div><div class="ms">'+((g2.length/n*100)||0).toFixed(0)+'%</div></div>'+
+    '<div class="metric"><div class="mv">'+g3.length+'</div><div class="ml">그룹3 (저책임×설명高)</div><div class="ms">'+((g3.length/n*100)||0).toFixed(0)+'%</div></div>'+
+    '<div class="metric"><div class="mv">'+g4.length+'</div><div class="ml">그룹4 (저책임×설명低)</div><div class="ms">'+((g4.length/n*100)||0).toFixed(0)+'%</div></div>'+
+    '<div class="metric"><div class="mv">'+Object.keys(constructs).length+'</div><div class="ml">측정 구성개념</div></div>';
+
+  destroyChart('groupChart');
+  var gc=document.getElementById('groupChart').getContext('2d');
+  charts['groupChart']=new Chart(gc,{type:'doughnut',data:{labels:['그룹1','그룹2','그룹3','그룹4'],datasets:[{data:[g1.length,g2.length,g3.length,g4.length],backgroundColor:['#3b6de8','#dc2626','#16a34a','#d97706'],borderWidth:0}]},options:{plugins:{legend:{position:'bottom',labels:{font:{family:'Noto Sans KR',size:11}}}},cutout:'65%',responsive:true}});
+
+  destroyChart('condChart');
+  var cc=document.getElementById('condChart').getContext('2d');
+  charts['condChart']=new Chart(cc,{type:'bar',data:{labels:['고책임','저책임','설명높음','설명낮음'],datasets:[{label:'응답자 수',data:[highResp.length,lowResp.length,highExp.length,lowExp.length],backgroundColor:['#3b6de8','#8e44ad','#16a34a','#d97706'],borderRadius:6}]},options:{plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,ticks:{font:{family:'Noto Sans KR'}}}},responsive:true}});
+}
+
+// ── 조작점검 ──────────────────────────────
+function renderMancheck(){
+  // MCR
+  var highResp=parsedData.filter(function(r){return r.resp_cond==='고책임';});
+  var lowResp=parsedData.filter(function(r){return r.resp_cond==='저책임';});
+  var mcrHigh=getMCScores(highResp,'MCR');
+  var mcrLow=getMCScores(lowResp,'MCR');
+  var mcrRes=tTest(mcrHigh,mcrLow);
+
+  var html='<table class="tbl"><tr><th>문항</th><th>고책임 평균</th><th>저책임 평균</th><th>t값</th><th>p값</th><th>판정</th></tr>';
+  mcItems.MCR.items.forEach(function(item){
+    var a=highResp.map(function(r){return parseFloat(r[item]);}).filter(function(v){return !isNaN(v);});
+    var b=lowResp.map(function(r){return parseFloat(r[item]);}).filter(function(v){return !isNaN(v);});
+    var res=tTest(a,b);
+    var ok=res.p<.05&&res.ma>res.mb;
+    html+='<tr><td>'+item+'</td><td>'+res.ma.toFixed(2)+'</td><td>'+res.mb.toFixed(2)+'</td><td>'+res.t.toFixed(3)+'</td><td>'+res.p.toFixed(3)+pStar(res.p)+'</td><td>'+(ok?'<span class="badge-ok">✅ 성공</span>':'<span class="badge-warn">⚠️ 확인 필요</span>')+'</td></tr>';
+  });
+  html+='<tr style="font-weight:700;background:#f7f9ff"><td><strong>전체 MCR</strong></td><td>'+mcrRes.ma.toFixed(2)+'</td><td>'+mcrRes.mb.toFixed(2)+'</td><td>'+mcrRes.t.toFixed(3)+'</td><td>'+mcrRes.p.toFixed(3)+pStar(mcrRes.p)+'</td><td>'+(mcrRes.p<.05&&mcrRes.ma>mcrRes.mb?'<span class="badge-ok">✅ 조작 성공</span>':'<span class="badge-fail">❌ 조작 실패</span>')+'</td></tr>';
+  html+='</table>';
+  document.getElementById('mancheck-resp-table').innerHTML=html;
+
+  // MCE
+  var highExp=parsedData.filter(function(r){return r.exp_cond==='설명높음';});
+  var lowExp=parsedData.filter(function(r){return r.exp_cond==='설명낮음';});
+  var html2='<table class="tbl"><tr><th>문항</th><th>설명높음 평균</th><th>설명낮음 평균</th><th>t값</th><th>p값</th><th>판정</th></tr>';
+  mcItems.MCE.items.forEach(function(item){
+    var a=highExp.map(function(r){return parseFloat(r[item]);}).filter(function(v){return !isNaN(v);});
+    var b=lowExp.map(function(r){return parseFloat(r[item]);}).filter(function(v){return !isNaN(v);});
+    var res=tTest(a,b);
+    var ok=res.p<.05&&res.ma>res.mb;
+    html2+='<tr><td>'+item+'</td><td>'+res.ma.toFixed(2)+'</td><td>'+res.mb.toFixed(2)+'</td><td>'+res.t.toFixed(3)+'</td><td>'+res.p.toFixed(3)+pStar(res.p)+'</td><td>'+(ok?'<span class="badge-ok">✅ 성공</span>':'<span class="badge-warn">⚠️ 확인 필요</span>')+'</td></tr>';
+  });
+  var mceRes=tTest(getMCScores(highExp,'MCE'),getMCScores(lowExp,'MCE'));
+  html2+='<tr style="font-weight:700;background:#f7f9ff"><td><strong>전체 MCE</strong></td><td>'+mceRes.ma.toFixed(2)+'</td><td>'+mceRes.mb.toFixed(2)+'</td><td>'+mceRes.t.toFixed(3)+'</td><td>'+mceRes.p.toFixed(3)+pStar(mceRes.p)+'</td><td>'+(mceRes.p<.05&&mceRes.ma>mceRes.mb?'<span class="badge-ok">✅ 조작 성공</span>':'<span class="badge-fail">❌ 조작 실패</span>')+'</td></tr>';
+  html2+='</table>';
+  document.getElementById('mancheck-exp-table').innerHTML=html2;
+
+  // IMC
+  var imcPass=parsedData.filter(function(r){return r.IMC==='1';}).length;
+  var imcFail=parsedData.filter(function(r){return r.IMC&&r.IMC!=='1';}).length;
+  var imcRate=parsedData.length?(imcPass/parsedData.length*100).toFixed(1):0;
+  document.getElementById('imc-table').innerHTML=
+    '<table class="tbl"><tr><th>항목</th><th>수</th><th>비율</th><th>판정</th></tr>'+
+    '<tr><td>✅ 통과 (1번 선택)</td><td>'+imcPass+'명</td><td>'+imcRate+'%</td><td><span class="badge-ok">정상</span></td></tr>'+
+    '<tr><td>❌ 실패 (다른 번호 선택)</td><td>'+imcFail+'명</td><td>'+((imcFail/parsedData.length*100)||0).toFixed(1)+'%</td><td>'+(imcFail/parsedData.length>0.2?'<span class="badge-warn">⚠️ 데이터 정제 권장</span>':'<span class="badge-ok">양호</span>')+'</td></tr>'+
+    '</table><div class="interp" style="margin-top:10px;">IMC 통과율 <strong>'+imcRate+'%</strong> · IMC 실패자 제거 후 재분석 시 샘플 크기 감소 주의</div>';
+}
+
+// ── 신뢰도·타당도 ──────────────────────────────
+function renderReliability(){
+  var html='<table class="tbl"><tr><th>구성개념</th><th>문항 수</th><th>Cronbach α</th><th>판정</th></tr>';
+  Object.keys(constructs).forEach(function(k){
+    var items=constructs[k].items;
+    var matrix=parsedData.map(function(row){
+      return items.map(function(it){return parseFloat(row[it])||0;});
+    }).filter(function(r){return r.some(function(v){return v>0;});});
+    if(!matrix.length){html+='<tr><td colspan="4">데이터 없음</td></tr>';return;}
+    var n=matrix.length,p=items.length;
+    var itemVars=items.map(function(it,j){
+      var vals=matrix.map(function(r){return r[j];});
+      return Math.pow(std(vals),2);
+    });
+    var totalVars=matrix.map(function(r){return r.reduce(function(a,b){return a+b;},0);});
+    var totalVar=Math.pow(std(totalVars),2);
+    var alpha=totalVar?p/(p-1)*(1-itemVars.reduce(function(a,b){return a+b;},0)/totalVar):0;
+    var badge=alpha>=0.8?'<span class="badge-ok">✅✅ 우수 ('+alpha.toFixed(3)+')</span>':alpha>=0.7?'<span class="badge-ok">✅ 양호 ('+alpha.toFixed(3)+')</span>':'<span class="badge-warn">⚠️ 검토 필요 ('+alpha.toFixed(3)+')</span>';
+    html+='<tr><td><strong>'+constructs[k].label+'</strong> ('+k+')</td><td>'+p+'개</td><td>'+alpha.toFixed(3)+'</td><td>'+badge+'</td></tr>';
+  });
+  html+='</table>';
+  document.getElementById('reliability-table').innerHTML=html;
+
+  // AVE·CR
+  var html2='<table class="tbl"><tr><th>구성개념</th><th>AVE</th><th>AVE 판정</th><th>CR</th><th>CR 판정</th></tr>';
+  Object.keys(constructs).forEach(function(k){
+    var items=constructs[k].items;
+    var matrix=parsedData.map(function(row){return items.map(function(it){return parseFloat(row[it])||0;});}).filter(function(r){return r.some(function(v){return v>0;});});
+    if(!matrix.length)return;
+    var totals=matrix.map(function(r){return mean(r);});
+    var loadings=items.map(function(it,j){var col=matrix.map(function(r){return r[j];});return Math.abs(pearson(col,totals));});
+    var ave=loadings.reduce(function(s,l){return s+l*l;},0)/loadings.length;
+    var cr=Math.pow(loadings.reduce(function(s,l){return s+l;},0),2)/(Math.pow(loadings.reduce(function(s,l){return s+l;},0),2)+loadings.reduce(function(s,l){return s+(1-l*l);},0));
+    html2+='<tr><td><strong>'+constructs[k].label+'</strong></td><td>'+ave.toFixed(3)+'</td><td>'+(ave>=0.5?'<span class="badge-ok">✅ 확보</span>':'<span class="badge-warn">⚠️ 검토</span>')+'</td><td>'+cr.toFixed(3)+'</td><td>'+(cr>=0.7?'<span class="badge-ok">✅ 양호</span>':'<span class="badge-warn">⚠️ 검토</span>')+'</td></tr>';
+  });
+  html2+='</table>';
+  document.getElementById('validity-table').innerHTML=html2;
+}
+
+// ── 기술통계 ──────────────────────────────
+function renderDesc(){
+  var g1=parsedData.filter(function(r){return r.group=='1';});
+  var g2=parsedData.filter(function(r){return r.group=='2';});
+  var g3=parsedData.filter(function(r){return r.group=='3';});
+  var g4=parsedData.filter(function(r){return r.group=='4';});
+  var html='<table class="tbl"><tr><th>구성개념</th><th>N</th><th>전체 M</th><th>SD</th><th>Min</th><th>Max</th><th>G1</th><th>G2</th><th>G3</th><th>G4</th></tr>';
+  Object.keys(constructs).forEach(function(k){
+    var all=getConstructScores(parsedData,k);
+    var s1=getConstructScores(g1,k),s2=getConstructScores(g2,k),s3=getConstructScores(g3,k),s4=getConstructScores(g4,k);
+    html+='<tr><td><strong>'+constructs[k].label+'</strong></td><td>'+all.length+'</td><td>'+mean(all).toFixed(2)+'</td><td>'+std(all).toFixed(2)+'</td><td>'+(Math.min.apply(null,all)||0).toFixed(2)+'</td><td>'+(Math.max.apply(null,all)||0).toFixed(2)+'</td><td>'+mean(s1).toFixed(2)+'</td><td>'+mean(s2).toFixed(2)+'</td><td>'+mean(s3).toFixed(2)+'</td><td>'+mean(s4).toFixed(2)+'</td></tr>';
+  });
+  html+='</table><div style="font-size:11px;color:#888;margin-top:8px;">G1=고책임×설명高 · G2=고책임×설명低 · G3=저책임×설명高 · G4=저책임×설명低</div>';
+  document.getElementById('desc-table').innerHTML=html;
+}
+
+// ── 2×2 ANOVA ──────────────────────────────
+function renderAnova(){
+  var highResp=parsedData.filter(function(r){return r.resp_cond==='고책임';});
+  var lowResp=parsedData.filter(function(r){return r.resp_cond==='저책임';});
+  var highExp=parsedData.filter(function(r){return r.exp_cond==='설명높음';});
+  var lowExp=parsedData.filter(function(r){return r.exp_cond==='설명낮음';});
+  var g1=parsedData.filter(function(r){return r.group=='1';});
+  var g2=parsedData.filter(function(r){return r.group=='2';});
+  var g3=parsedData.filter(function(r){return r.group=='3';});
+  var g4=parsedData.filter(function(r){return r.group=='4';});
+
+  var targets=['TRU','ITU'];
+  var html='<table class="tbl"><tr><th>종속변수</th><th>주효과 A (책임)</th><th>주효과 B (설명)</th><th>상호작용 A×B</th></tr>';
+  var interactionData=[];
+
+  targets.forEach(function(k){
+    var aH=getConstructScores(highResp,k),aL=getConstructScores(lowResp,k);
+    var bH=getConstructScores(highExp,k),bL=getConstructScores(lowExp,k);
+    var resA=tTest(aH,aL),resB=tTest(bH,bL);
+
+    // 상호작용: (G1-G2) vs (G3-G4)
+    var s1=getConstructScores(g1,k),s2=getConstructScores(g2,k);
+    var s3=getConstructScores(g3,k),s4=getConstructScores(g4,k);
+    var diff1=mean(s1)-mean(s2);
+    var diff2=mean(s3)-mean(s4);
+    var allDiff1=s1.map(function(v,i){return v-(s2[i]||mean(s2));});
+    var allDiff2=s3.map(function(v,i){return v-(s4[i]||mean(s4));});
+    var intRes=tTest(allDiff1,allDiff2);
+
+    interactionData.push({k:k,g1:mean(s1),g2:mean(s2),g3:mean(s3),g4:mean(s4)});
+
+    html+='<tr><td><strong>'+constructs[k].label+'</strong></td>'+
+      '<td>t='+resA.t.toFixed(2)+', p='+resA.p.toFixed(3)+pStar(resA.p)+'<br><span style="font-size:11px;color:#666;">고책임 '+resA.ma.toFixed(2)+' vs 저책임 '+resA.mb.toFixed(2)+'</span></td>'+
+      '<td>t='+resB.t.toFixed(2)+', p='+resB.p.toFixed(3)+pStar(resB.p)+'<br><span style="font-size:11px;color:#666;">설명高 '+resB.ma.toFixed(2)+' vs 설명低 '+resB.mb.toFixed(2)+'</span></td>'+
+      '<td>'+(intRes.p<.05?'<span class="badge-ok">✅ 유의 '+pStar(intRes.p)+'</span>':'<span class="ns">비유의</span>')+' p='+intRes.p.toFixed(3)+'<br><span style="font-size:11px;color:#666;">Δ고책임='+diff1.toFixed(2)+' Δ저책임='+diff2.toFixed(2)+'</span></td>'+
+      '</tr>';
+  });
+  html+='</table>';
+  document.getElementById('anova-table').innerHTML=html;
+
+  // 상호작용 플롯
+  if(interactionData.length){
+    var d=interactionData[0];
+    destroyChart('interactionChart');
+    var ctx=document.getElementById('interactionChart').getContext('2d');
+    charts['interactionChart']=new Chart(ctx,{type:'line',data:{
+      labels:['설명 높음','설명 낮음'],
+      datasets:[
+        {label:'고책임',data:[d.g1,d.g2],borderColor:'#1a2744',backgroundColor:'rgba(26,39,68,0.1)',pointRadius:7,tension:0.3,borderWidth:2.5},
+        {label:'저책임',data:[d.g3,d.g4],borderColor:'#5a9cf5',backgroundColor:'rgba(90,156,245,0.1)',pointRadius:7,tension:0.3,borderWidth:2.5,borderDash:[5,5]}
+      ]
+    },options:{plugins:{legend:{position:'bottom',labels:{font:{family:'Noto Sans KR',size:12}}},title:{display:true,text:constructs[interactionData[0].k].label+' — 상호작용 플롯',font:{family:'Noto Sans KR',size:13}}},scales:{y:{min:1,max:7,ticks:{font:{family:'Noto Sans KR'}}}},responsive:true}});
+
+    // 4개 그룹 평균
+    destroyChart('groupMeanChart');
+    var ctx2=document.getElementById('groupMeanChart').getContext('2d');
+    var allMeans=Object.keys(constructs).map(function(k){
+      var s1=getConstructScores(parsedData.filter(function(r){return r.group=='1';}),k);
+      var s2=getConstructScores(parsedData.filter(function(r){return r.group=='2';}),k);
+      var s3=getConstructScores(parsedData.filter(function(r){return r.group=='3';}),k);
+      var s4=getConstructScores(parsedData.filter(function(r){return r.group=='4';}),k);
+      return{label:constructs[k].label,g1:mean(s1),g2:mean(s2),g3:mean(s3),g4:mean(s4)};
+    });
+    charts['groupMeanChart']=new Chart(ctx2,{type:'bar',data:{
+      labels:allMeans.map(function(d){return d.label;}),
+      datasets:[
+        {label:'G1 고책임×설명高',data:allMeans.map(function(d){return parseFloat(d.g1.toFixed(2));}),backgroundColor:'#3b6de8',borderRadius:4},
+        {label:'G2 고책임×설명低',data:allMeans.map(function(d){return parseFloat(d.g2.toFixed(2));}),backgroundColor:'#dc2626',borderRadius:4},
+        {label:'G3 저책임×설명高',data:allMeans.map(function(d){return parseFloat(d.g3.toFixed(2));}),backgroundColor:'#16a34a',borderRadius:4},
+        {label:'G4 저책임×설명低',data:allMeans.map(function(d){return parseFloat(d.g4.toFixed(2));}),backgroundColor:'#d97706',borderRadius:4}
+      ]
+    },options:{plugins:{legend:{position:'bottom',labels:{font:{family:'Noto Sans KR',size:11}}}},scales:{y:{min:1,max:7,ticks:{font:{family:'Noto Sans KR'}}}},responsive:true}});
+  }
+}
+
+// ── 상관관계 ──────────────────────────────
+function renderCorr(){
+  var keys=Object.keys(constructs);
+  var scores={};keys.forEach(function(k){scores[k]=getConstructScores(parsedData,k);});
+  var html='<tr><th></th>'+keys.map(function(k){return '<th>'+k+'</th>';}).join('')+'</tr>';
+  keys.forEach(function(k1,i){
+    html+='<tr><td><strong>'+k1+'</strong></td>';
+    keys.forEach(function(k2,j){
+      if(i===j){html+='<td style="background:#1a2744;color:#fff;font-weight:700;">'+(Math.sqrt(scores[k1].reduce(function(s,v){return s+Math.pow(v-mean(scores[k1]),2);},0)/scores[k1].length)||0).toFixed(2)+'</td>';}
+      else if(j<i){
+        var r=pearson(scores[k1],scores[k2]);
+        var bg=Math.abs(r)>0.7?'#fee2e2':Math.abs(r)>0.5?'#fef9c3':'#fff';
+        html+='<td style="background:'+bg+'">'+(r>=0?'+':'')+r.toFixed(3)+'</td>';
+      } else {html+='<td style="color:#ccc">—</td>';}
+    });
+    html+='</tr>';
+  });
+  document.getElementById('corr-table').innerHTML=html;
+}
+
+// ── 매개효과 ──────────────────────────────
+function renderMediation(){
+  var tru=getConstructScores(parsedData,'TRU');
+  var itu=getConstructScores(parsedData,'ITU');
+  var n=Math.min(tru.length,itu.length);
+  var html='<table class="tbl"><tr><th>독립변수</th><th>a경로 (X→TRU)</th><th>b경로 (TRU→ITU)</th><th>간접효과</th><th>Sobel Z</th><th>p값</th><th>판정</th></tr>';
+  var medRows=[];
+  ['EXP','PU','EPR','AA'].forEach(function(k){
+    var x=getConstructScores(parsedData,k);
+    var nn=Math.min(x.length,n);
+    var res=sobelTest(x.slice(0,nn),tru.slice(0,nn),itu.slice(0,nn));
+    var sig=res.p<.05?'<span class="badge-ok">✅ 유의 '+pStar(res.p)+'</span>':'<span class="ns">비유의</span>';
+    html+='<tr><td><strong>'+constructs[k].label+'</strong></td><td>'+res.a.toFixed(3)+'</td><td>'+res.b.toFixed(3)+'</td><td>'+res.indirect.toFixed(3)+'</td><td>'+res.z.toFixed(3)+'</td><td>'+res.p.toFixed(3)+'</td><td>'+sig+'</td></tr>';
+    medRows.push({label:constructs[k].label,v:parseFloat(res.indirect.toFixed(3)),sig:res.p<.05});
+  });
+  html+='</table>';
+  document.getElementById('mediation-table').innerHTML=html;
+
+  destroyChart('mediationChart');
+  var ctx=document.getElementById('mediationChart').getContext('2d');
+  charts['mediationChart']=new Chart(ctx,{type:'bar',data:{labels:medRows.map(function(r){return r.label;}),datasets:[{label:'간접효과',data:medRows.map(function(r){return r.v;}),backgroundColor:medRows.map(function(r){return r.sig?'#1a2744':'#c7d7f8';}),borderRadius:6}]},options:{plugins:{legend:{display:false}},scales:{y:{ticks:{font:{family:'Noto Sans KR'}}}},responsive:true}});
+}
+
+// ── 조절효과 ──────────────────────────────
+function renderModeration(){
+  var highResp=parsedData.filter(function(r){return r.resp_cond==='고책임';});
+  var lowResp=parsedData.filter(function(r){return r.resp_cond==='저책임';});
+  var truH=getConstructScores(highResp,'TRU'),ituH=getConstructScores(highResp,'ITU');
+  var truL=getConstructScores(lowResp,'TRU'),ituL=getConstructScores(lowResp,'ITU');
+  var rH=pearson(truH,ituH),rL=pearson(truL,ituL);
+  var nH=truH.length,nL=truL.length;
+  var se=Math.sqrt(1/(nH-3)+1/(nL-3));
+  var z=(fisherZ(rH)-fisherZ(rL))/se;
+  var p=2*(1-tCDF(Math.abs(z),nH+nL-4));
+
+  var html='<table class="tbl"><tr><th>경로</th><th>고책임 (r)</th><th>저책임 (r)</th><th>Fisher Z</th><th>p값</th><th>조절효과</th></tr>';
+  html+='<tr><td><strong>TRU → ITU</strong></td><td>'+rH.toFixed(3)+' (n='+nH+')</td><td>'+rL.toFixed(3)+' (n='+nL+')</td><td>'+z.toFixed(3)+'</td><td>'+p.toFixed(3)+pStar(p)+'</td><td>'+(p<.05?'<span class="badge-ok">✅ 유의</span>':'<span class="ns">비유의</span>')+'</td></tr>';
+  html+='</table>';
+  document.getElementById('moderation-table').innerHTML=html;
+
+  destroyChart('moderationChart');
+  var ctx=document.getElementById('moderationChart').getContext('2d');
+  var labels=Object.keys(constructs).map(function(k){return constructs[k].label;});
+  var hVals=Object.keys(constructs).map(function(k){return parseFloat(mean(getConstructScores(highResp,k)).toFixed(2));});
+  var lVals=Object.keys(constructs).map(function(k){return parseFloat(mean(getConstructScores(lowResp,k)).toFixed(2));});
+  charts['moderationChart']=new Chart(ctx,{type:'line',data:{labels:labels,datasets:[{label:'고책임',data:hVals,borderColor:'#1a2744',backgroundColor:'rgba(26,39,68,0.1)',pointRadius:6,tension:0.3},{label:'저책임',data:lVals,borderColor:'#5a9cf5',backgroundColor:'rgba(90,156,245,0.1)',pointRadius:6,tension:0.3,borderDash:[5,5]}]},options:{plugins:{legend:{position:'bottom',labels:{font:{family:'Noto Sans KR',size:12}}}},scales:{y:{min:1,max:7,ticks:{font:{family:'Noto Sans KR'}}}},responsive:true}});
+}
+
+// ── 정규성·편향 ──────────────────────────────
+function renderNormality(){
+  var html='<table class="tbl"><tr><th>구성개념</th><th>N</th><th>평균</th><th>왜도</th><th>첨도</th><th>정규성</th></tr>';
+  Object.keys(constructs).forEach(function(k){
+    var s=getConstructScores(parsedData,k);
+    var sk=skewness(s),ku=kurtosis(s);
+    var ok=Math.abs(sk)<2&&Math.abs(ku)<7;
+    html+='<tr><td><strong>'+constructs[k].label+'</strong></td><td>'+s.length+'</td><td>'+mean(s).toFixed(2)+'</td><td>'+sk.toFixed(3)+'</td><td>'+ku.toFixed(3)+'</td><td>'+(ok?'<span class="badge-ok">✅ 양호</span>':'<span class="badge-warn">⚠️ 검토</span>')+'</td></tr>';
+  });
+  html+='</table>';
+  document.getElementById('normality-table').innerHTML=html;
+
+  var n=parsedData.length,q=Math.floor(n*0.25);
+  var early=parsedData.slice(0,q),late=parsedData.slice(n-q);
+  var html2='<table class="tbl"><tr><th>구성개념</th><th>초반 평균</th><th>후반 평균</th><th>t값</th><th>p값</th><th>편향</th></tr>';
+  Object.keys(constructs).forEach(function(k){
+    var a=getConstructScores(early,k),b=getConstructScores(late,k);
+    if(!a.length||!b.length)return;
+    var res=tTest(a,b);
+    html2+='<tr><td><strong>'+constructs[k].label+'</strong></td><td>'+res.ma.toFixed(2)+'</td><td>'+res.mb.toFixed(2)+'</td><td>'+res.t.toFixed(3)+'</td><td>'+res.p.toFixed(3)+'</td><td>'+(res.p>=.05?'<span class="badge-ok">✅ 없음</span>':'<span class="badge-warn">⚠️ 차이 있음</span>')+'</td></tr>';
+  });
+  html2+='</table><div style="font-size:11px;color:#888;margin-top:6px;">초반 '+q+'명 vs 후반 '+q+'명 비교</div>';
+  document.getElementById('bias-table').innerHTML=html2;
+}
+
+// ── 인구통계 ──────────────────────────────
+function renderDemo(){
+  var demoFields=[
+    {key:'gender',label:'성별'},
+    {key:'age',label:'연령대'},
+    {key:'field',label:'업무 분야'},
+    {key:'industry',label:'산업 직군'},
+    {key:'compsize',label:'회사 규모'},
+    {key:'rank',label:'직급'},
+    {key:'experience',label:'경력'},
+    {key:'education',label:'학력'},
+    {key:'ai_usage',label:'AI 사용 경험'}
+  ];
+  var html='';
+  demoFields.forEach(function(f){
+    var counts={};
+    parsedData.forEach(function(r){var v=r[f.key]||'미응답';counts[v]=(counts[v]||0)+1;});
+    html+='<div style="margin-bottom:16px;"><strong style="font-size:13px;">'+f.label+'</strong><table class="tbl" style="margin-top:6px;"><tr><th>항목</th><th>빈도</th><th>비율</th></tr>';
+    Object.keys(counts).sort().forEach(function(v){
+      html+='<tr><td>'+v+'</td><td>'+counts[v]+'명</td><td>'+(counts[v]/parsedData.length*100).toFixed(1)+'%</td></tr>';
+    });
+    html+='</table></div>';
+  });
+  document.getElementById('demo-table').innerHTML=html;
+
+  // 그룹 간 동질성 (성별, 연령 chi-square 근사)
+  var html2='<table class="tbl"><tr><th>인구통계 변수</th><th>G1 최빈값</th><th>G2 최빈값</th><th>G3 최빈값</th><th>G4 최빈값</th><th>동질성</th></tr>';
+  ['gender','age','experience'].forEach(function(key){
+    var mode=function(data){
+      var c={};data.forEach(function(r){var v=r[key]||'';c[v]=(c[v]||0)+1;});
+      return Object.keys(c).sort(function(a,b){return c[b]-c[a];})[0]||'-';
+    };
+    var gs=[1,2,3,4].map(function(g){return parsedData.filter(function(r){return r.group==g;});});
+    html2+='<tr><td>'+key+'</td>'+gs.map(function(g){return '<td>'+mode(g)+'</td>';}).join('')+'<td><span class="badge-ok">확인 필요</span></td></tr>';
+  });
+  html2+='</table>';
+  document.getElementById('demo-group-table').innerHTML=html2;
 }
 
 // ── AI 해석 ──────────────────────────────
-async function getAIInterpretation(section){
-  var el=document.getElementById('ai-'+section);
-  el.style.display='block';
-  el.innerHTML='<div class="ai-loading"><div class="spin-sm"></div> AI가 분석 중...</div>';
+var aiPrompts={
+  overview:'지금 업로드된 설문 데이터의 전체 현황을 보고 있어요. 그룹 분포, 응답자 수, 4개 조건(고책임×설명高, 고책임×설명低, 저책임×설명高, 저책임×설명低)의 균형 여부를 3~4문장으로 설명해주세요. 채채 논문 연구자에게 친근하게요.',
+  mancheck:'조작점검 결과를 보고 있어요. MCR(책임 수준 조작)과 MCE(설명 수준 조작)의 t-검정 결과, IMC 통과율을 종합해서 실험 조작이 성공했는지 3~4문장으로 설명해주세요.',
+  reliability:'신뢰도(Cronbach α)와 타당도(AVE, CR) 결과를 보고 있어요. 각 구성개념의 측정 품질이 논문 기준을 충족하는지 3~4문장으로 설명해주세요.',
+  desc:'기술통계 결과를 보고 있어요. 4개 그룹의 평균 패턴에서 주목할 만한 점을 3~4문장으로 설명해주세요.',
+  anova:'2×2 이원분산분석 결과를 보고 있어요. 주효과 A(책임), 주효과 B(설명), 상호작용 효과 결과를 H7·H8 가설과 연결해서 3~4문장으로 설명해주세요.',
+  corr:'구성개념 간 상관관계 결과를 보고 있어요. 주목할 만한 상관관계 패턴을 3~4문장으로 설명해주세요.',
+  mediation:'매개효과 분석 결과를 보고 있어요. Sobel Test 결과를 H6 가설(EXP/PU/EPR/AA → TRU → ITU)과 연결해서 3~4문장으로 설명해주세요.',
+  moderation:'조절효과 분석 결과를 보고 있어요. Fisher Z 변환 결과를 H7·H8 가설과 연결해서 3~4문장으로 설명해주세요.',
+  normality:'정규성 검정과 무응답 편향 결과를 보고 있어요. PLS-SEM 적용 정당성과 편향 여부를 3~4문장으로 설명해주세요.',
+  demo:'인구통계 분포와 그룹 간 동질성 결과를 보고 있어요. 표본 특성을 3~4문장으로 설명해주세요.'
+};
 
-  var summaries={};
-  Object.keys(constructs).forEach(function(k){
-    var all=getConstructScores(parsedData,k);
-    var grpA=getConstructScores(parsedData.filter(function(r){return r.group==='A';}),k);
-    var grpB=getConstructScores(parsedData.filter(function(r){return r.group==='B';}),k);
-    summaries[k]={label:constructs[k].label,mean:mean(all).toFixed(2),sd:std(all).toFixed(2),meanA:mean(grpA).toFixed(2),meanB:mean(grpB).toFixed(2)};
-  });
-
-  var prompts={
-    overview:'다음은 논문 설문 분석 결과입니다. 총 '+parsedData.length+'명이 응답했으며 그룹 A(고책임)와 그룹 B(저책임)로 나뉩니다.\n\n구성개념별 평균:\n'+JSON.stringify(summaries,null,2)+'\n\n이 결과를 품질·인증 전문가 대상 AI 신뢰 연구 맥락에서 쉽고 친절하게 3~4문장으로 요약해주세요. 채채(연구자)에게 말하는 것처럼 부드럽게 설명해주세요.',
-    reliability:'다음 구성개념들의 기술통계 데이터를 바탕으로 신뢰도 분석 결과를 해석해주세요:\n'+JSON.stringify(summaries,null,2)+'\n\n각 구성개념의 Cronbach\'s alpha 결과가 논문에서 의미하는 바를 쉽게 3~4문장으로 설명해주세요. 연구자 채채에게 말하는 것처럼 친근하게요.',
-    desc:'다음 기술통계 결과를 해석해주세요:\n'+JSON.stringify(summaries,null,2)+'\n\n평균과 표준편차를 바탕으로 응답자들의 전반적인 인식 수준을 쉽게 3~4문장으로 설명해주세요.',
-    ttest:'그룹 A(고책임)와 그룹 B(저책임) 비교 결과입니다:\n'+JSON.stringify(summaries,null,2)+'\n\n두 그룹 간 차이가 연구 가설(고책임 조건에서 AI 신뢰가 낮을 것)과 어떻게 연결되는지 3~4문장으로 쉽게 설명해주세요.',
-    mediation:'다음은 TRU(AI 신뢰)의 매개효과 분석 결과입니다. EXP·PU·EPR·AA → TRU → ITU 경로에서 Sobel Test 결과를 H6 가설과 연결해서 쉽게 3~4문장으로 설명해주세요. 채채 논문 연구자에게 말하는 것처럼 친근하게요.',
-    moderation:'다음은 업무 책임 수준(그룹A 고책임 vs 그룹B 저책임)의 조절효과 분석 결과입니다. Fisher Z 변환 결과를 H7·H8 가설과 연결해서 쉽게 3~4문장으로 설명해주세요.',
-    normality:'다음은 왜도·첨도 정규성 검정과 응답편향 체크 결과입니다. PLS-SEM 사용의 정당성과 편향 없음을 논문 방법론 섹션에 어떻게 한 줄로 기재하면 좋은지 알려주세요.',
-    corr:'구성개념 간 상관관계 분석에 대해 설명해주세요. 변수들:\n'+Object.keys(constructs).map(function(k){return k+': '+constructs[k].label;}).join(', ')+'\n\n상관관계 히트맵에서 연구자가 주목해야 할 핵심 관계(EXP→TRU, TRU→ITU 등)를 쉽게 3~4문장으로 설명해주세요.'
-  };
-
+async function getAI(tab){
+  var btn=event.target;
+  var el=document.getElementById('ai-'+tab);
+  btn.textContent='분석 중...';btn.disabled=true;
+  el.style.display='block';el.textContent='AI가 분석 중입니다...';
   try{
-    var res=await fetch('https://api.anthropic.com/v1/messages',{
+    var resp=await fetch('https://api.anthropic.com/v1/messages',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({
-        model:'claude-sonnet-4-20250514',
-        max_tokens:1000,
-        messages:[{role:'user',content:prompts[section]}]
-      })
+      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,messages:[{role:'user',content:aiPrompts[tab]}]})
     });
-    var data=await res.json();
-    var txt=data.content&&data.content[0]?data.content[0].text:'해석을 불러오지 못했어요.';
-    el.innerHTML=txt;
+    var data=await resp.json();
+    el.textContent=data.content&&data.content[0]?data.content[0].text:'응답을 받지 못했습니다.';
   }catch(e){
-    el.innerHTML='AI 해석을 불러오지 못했어요. 분석 결과를 직접 확인해주세요.';
+    el.textContent='오류가 발생했습니다: '+e.message;
+  }finally{
+    btn.textContent='🤖 해석 요청';btn.disabled=false;
   }
 }
 </script>
 </body>
 </html>
-ENDHTML

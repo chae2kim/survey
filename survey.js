@@ -229,14 +229,12 @@ function buildLowExp(){
   return [
     {type:'upload'},
     {type:'ai',bub:'bai',tx:'문서를 수신했습니다. 분석을 시작합니다.'},
-    {type:'ai',bub:'bai',tx:'분석이 완료되었습니다.'},
-    {type:'ai',bub:'bwarn',tx:'문제 가능성이 감지되었습니다. 확인하시겠습니까?'},
-    {type:'btn',label:'내용 확인하기'},
-    {type:'ai',bub:'bwarn',tx:'문서에서 부적합 가능성이 감지되었습니다.'},
-    {type:'ai',bub:'bai',tx:'수정이 필요할 수 있습니다. 수정 초안을 요청하시겠습니까?'},
+    {type:'ai',bub:'bwarn',tx:'일부 항목에서 보완이 필요합니다.'},
+    {type:'btn',label:'확인하기'},
+    {type:'ai',bub:'bai',tx:'수정 초안을 요청하시겠습니까?'},
     {type:'btn',label:'수정 초안 요청'},
     {type:'ai',bub:'bai',tx:'수정 초안을 생성했습니다.'},
-    {type:'ai',bub:'bok',tx:'재검토 완료 — 이상 없음으로 판단됩니다.'},
+    {type:'ai',bub:'bok',tx:'재검토 완료.'},
     {type:'done'}
   ];
 }
@@ -337,7 +335,11 @@ function validate(){
     return v==='yes';
   }
   // cur===4: AI 채팅 — bnext는 채팅 완료 후 활성화되므로 항상 통과
-  if(cur===5)return[].concat(mcRespItems,mcExpItems).every(function(i){return document.querySelector('input[name="'+i.id+'"]:checked');});
+  if(cur===5){
+    var mcOk=[].concat(mcRespItems,mcExpItems).every(function(i){return document.querySelector('input[name="'+i.id+'"]:checked');});
+    var imcOk=!!document.querySelector('input[name="imc"]:checked');
+    return mcOk&&imcOk;
+  }
   if(cur===6)return s7Items.every(function(i){return document.querySelector('input[name="'+i.id+'"]:checked');});
   if(cur===7)return s8Items.every(function(i){return document.querySelector('input[name="'+i.id+'"]:checked');});
   if(cur===8)return s9Items.every(function(i){return document.querySelector('input[name="'+i.id+'"]:checked');});
@@ -371,7 +373,8 @@ function collectData(){
     timestamp:new Date().toLocaleString('ko-KR'),
     group:grp,
     resp_cond:isHighResp?'고책임':'저책임',
-    exp_cond:isHighExp?'설명높음':'설명낮음'
+    exp_cond:isHighExp?'설명높음':'설명낮음',
+    IMC:(document.querySelector('input[name="imc"]:checked')||{}).value||''
   };
   [].concat(mcRespItems,mcExpItems,s7Items,s8Items,s9Items).forEach(function(item){
     var el=document.querySelector('input[name="'+item.id+'"]:checked');
