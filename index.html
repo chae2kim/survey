@@ -184,17 +184,17 @@ body{font-family:'Noto Sans KR',sans-serif;background:#f0f2f7;min-height:100vh;d
 .rc-text strong{color:#1a2744;font-weight:700;}
 .remind-ai{background:#f0f4ff;border-left:3px solid #3b6de8;border-radius:0 8px 8px 0;padding:12px 14px;font-size:12.5px;color:#1a2744;line-height:1.7;margin-bottom:16px;word-break:keep-all;}
 .remind-ai strong{font-weight:700;}
-.ai-scale{padding:8px 0;}
-.ai-scale-labels{display:none;}
-.ai-scale-track{display:flex;align-items:center;justify-content:space-between;position:relative;padding:16px 0;}
-.ai-scale-track::before{content:'';position:absolute;top:50%;left:12px;right:12px;height:3px;background:#e5e7eb;transform:translateY(-50%);z-index:0;}
-.ai-opt{flex:1;display:flex;justify-content:center;cursor:pointer;position:relative;z-index:1;}
+
+
+
+
+
 .ai-opt input[type=radio]{display:none;}
-.ai-dot{width:26px;height:26px;border-radius:50%;border:2.5px solid #d1d5db;background:#fff;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-direction:column;}
-.ai-dot .ai-pct{font-size:9px;color:#aaa;margin-top:32px;position:absolute;white-space:nowrap;}
-.ai-opt input:checked+.ai-dot{background:#1a2744;border-color:#1a2744;}
-.ai-opt input:checked+.ai-dot .ai-pct{color:#1a2744;font-weight:700;}
-.ai-scale-desc{display:flex;justify-content:space-between;font-size:11px;color:#888;margin-top:4px;}
+
+
+.ai-opt input:checked+
+.ai-opt input:checked+
+
 
 </style>
 </head>
@@ -436,22 +436,11 @@ body{font-family:'Noto Sans KR',sans-serif;background:#f0f2f7;min-height:100vh;d
     </div>
     <div class="qb">
       <div class="ql"><span class="qn">9</span>AI 도구 사용 경험은 어느 정도입니까? <span style="font-size:12px;color:#888;font-weight:400;">(예: ChatGPT, Gemini, Claude 등)</span></div>
-      <div class="ai-scale">
-        <div class="ai-scale-labels">
-          <span>전혀 없음</span><span>가끔</span><span>자주</span><span>매일</span>
-        </div>
-        <div class="ai-scale-track">
-          <label class="ai-opt"><input type="radio" name="qai" value="없음"><div class="ai-dot"><span class="ai-pct">0%</span></div></label>
-          <label class="ai-opt"><input type="radio" name="qai" value="가끔 사용"><div class="ai-dot"><span class="ai-pct">33%</span></div></label>
-          <label class="ai-opt"><input type="radio" name="qai" value="자주 사용"><div class="ai-dot"><span class="ai-pct">66%</span></div></label>
-          <label class="ai-opt"><input type="radio" name="qai" value="업무에 통합"><div class="ai-dot"><span class="ai-pct">100%</span></div></label>
-        </div>
-        <div class="ai-scale-desc">
-          <span>전혀 없음</span>
-          <span>월 1~3회</span>
-          <span>주 1회 이상</span>
-          <span>거의 매일</span>
-        </div>
+      <div class="sg">
+        <label><input type="radio" name="qai" value="없음"><div class="sb">없음</div></label>
+        <label><input type="radio" name="qai" value="가끔 사용"><div class="sb">가끔 사용 (월 1~3회)</div></label>
+        <label><input type="radio" name="qai" value="자주 사용"><div class="sb">자주 사용 (주 1~2회)</div></label>
+        <label><input type="radio" name="qai" value="업무에 통합"><div class="sb">거의 매일 사용</div></label>
       </div>
     </div>
   </div>
