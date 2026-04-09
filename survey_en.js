@@ -9,7 +9,7 @@
 
 document.addEventListener('DOMContentLoaded',function(){
 
-var SHEET_URL='https://script.google.com/macros/s/AKfycbztXfNRHdYtPq9qGu7a2imzzbup5Kjb9Q4BMtLUwiiNNGUJoMZxOQLNtDVLrt0gkhZOdw/exec';
+var SHEET_URL='https://script.google.com/macros/s/AKfycbzXXb1ypwPUwWjGyfy5OojDpzkHO5O-5ON21r5rsHg46zzQih3MlsgdGUo_Lgc0wdWKSg/exec';
 
 var TOTAL=11;
 var cur=0;
