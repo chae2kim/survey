@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Survey on AI Document Support Tools</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Noto Sans',sans-serif;background:#f0f2f7;min-height:100vh;display:flex;justify-content:center;align-items:flex-start;padding:0 0 60px;word-break:normal;}
+.wrap{width:100%;max-width:520px;background:#fff;min-height:100vh;}
+.hband{background:#1a2744;padding:32px 24px 28px;}
+.hband .tag{font-size:11px;letter-spacing:.13em;text-transform:uppercase;color:#7a9bcc;margin-bottom:12px;}
+.hband h1{font-size:17px;font-weight:500;line-height:1.6;color:#fff;}
+.hband .sub{font-size:13px;color:#8fa8d8;margin-top:10px;line-height:1.7;}
+.pbar-wrap{background:#1a2744;padding:0 24px 22px;}
+.ptrack{height:3px;background:rgba(255,255,255,.15);border-radius:2px;overflow:hidden;}
+.pfill{height:100%;background:#5a9cf5;border-radius:2px;transition:width .4s ease;}
+.pmeta{font-size:12px;color:#7a9bcc;margin-top:8px;display:flex;justify-content:space-between;}
+.sec{display:none;padding:24px 24px 0;animation:fadeUp .3s ease;}
+.sec.active{display:block;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+.stitle{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#888;margin-bottom:20px;padding-bottom:10px;border-bottom:1px solid #eee;}
+.qb{margin-bottom:28px;}
+.ql{font-size:14px;font-weight:500;color:#1a2744;line-height:1.6;margin-bottom:14px;display:flex;align-items:flex-start;gap:8px;}
+.qn{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;min-width:22px;border-radius:50%;background:#1a2744;color:#fff;font-size:11px;font-weight:700;margin-top:1px;}
+.lanc{display:flex;justify-content:space-between;font-size:11px;color:#999;margin-bottom:8px;}
+.lrow{display:flex;gap:5px;}
+.lrow label{flex:1;}
+.lrow input[type=radio]{display:none;}
+.lbtn{display:flex;align-items:center;justify-content:center;height:42px;border-radius:8px;border:1px solid #e5e7eb;font-size:13px;color:#666;cursor:pointer;background:#f9fafb;width:100%;transition:all .15s;user-select:none;}
+.lrow input[type=radio]:checked+.lbtn{background:#1a2744;color:#fff;border-color:#1a2744;font-weight:700;}
+.lbtn:hover{border-color:#1a2744;color:#1a2744;}
+.sg{display:flex;flex-direction:column;gap:8px;}
+.sg label{cursor:pointer;}
+.sg input[type=radio]{display:none;}
+.sb{display:block;border:1px solid #e5e7eb;border-radius:10px;padding:13px 16px;font-size:14px;color:#333;line-height:1.5;background:#f9fafb;transition:all .15s;font-family:'Noto Sans',sans-serif;}
+.sg input[type=radio]:checked~.sb{border-color:#1a2744;background:#eef2fb;color:#1a2744;font-weight:500;}
+.sb:hover{border-color:#1a2744;}
+.oinput{display:none;margin-top:8px;width:100%;padding:12px 14px;border:1px solid #e5e7eb;border-radius:10px;font-size:14px;font-family:'Noto Sans',sans-serif;background:#f9fafb;color:#333;outline:none;}
+.oinput:focus{border-color:#1a2744;}
+.cbox-wrap{background:#f7f8fc;border:1px solid #e5e7eb;border-radius:12px;padding:18px;font-size:13px;color:#555;line-height:1.8;margin-bottom:20px;}
+.cbox-wrap strong{color:#1a2744;font-weight:700;}
+.ccheck{display:flex;align-items:flex-start;gap:12px;cursor:pointer;margin-bottom:8px;}
+.ccheck input[type=checkbox]{display:none;}
+.chk{width:22px;height:22px;min-width:22px;border:1.5px solid #ccc;border-radius:6px;display:flex;align-items:center;justify-content:center;background:#fff;transition:all .15s;margin-top:1px;}
+.ccheck input:checked+.chk{background:#1a2744;border-color:#1a2744;}
+.ccheck input:checked+.chk::after{content:'';width:11px;height:7px;border-left:2.5px solid #fff;border-bottom:2.5px solid #fff;transform:rotate(-45deg) translateY(-1px);display:block;}
+.ctxt{font-size:13.5px;color:#333;line-height:1.6;padding-top:2px;}
+.ecard{background:#f0f4ff;border:1px solid #c7d7f8;border-radius:14px;padding:22px 20px;margin-bottom:20px;}
+.ecard .ect{font-size:14px;font-weight:700;color:#1a2744;margin-bottom:12px;line-height:1.6;}
+.clist{display:flex;flex-direction:column;gap:10px;margin-bottom:16px;}
+.ci{display:flex;align-items:flex-start;gap:10px;font-size:13.5px;color:#333;line-height:1.6;}
+.ci::before{content:'✓';color:#3b6de8;font-weight:700;margin-top:1px;flex-shrink:0;}
+.yn{display:flex;gap:10px;}
+.yn label{flex:1;cursor:pointer;}
+.yn input[type=radio]{display:none;}
+.ynb{display:flex;align-items:center;justify-content:center;padding:14px;border-radius:10px;border:1.5px solid #e5e7eb;font-size:15px;font-weight:700;background:#f9fafb;color:#666;transition:all .15s;}
+.yn input:checked+.ynb.yes{background:#1a2744;color:#fff;border-color:#1a2744;}
+.yn input:checked+.ynb.no{background:#fee2e2;color:#991b1b;border-color:#fca5a5;}
+.intro-card{background:#f0f4ff;border:1.5px solid #c7d7f8;border-radius:14px;padding:22px;margin-bottom:20px;}
+.intro-card .ic-tag{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#3b6de8;margin-bottom:10px;}
+.intro-card .ic-text{font-size:13.5px;line-height:1.85;color:#2c3e6b;}
+.intro-card .ic-text strong{color:#1a2744;}
+.scenario-notice{background:#fffbeb;border:1.5px solid #f59e0b;border-radius:12px;padding:16px 18px;margin-bottom:20px;}
+.sn-text{font-size:13px;color:#78350f;line-height:1.7;}
+.sn-text strong{color:#92400e;font-weight:700;}
+.resp-card{border-radius:14px;padding:22px;margin-bottom:20px;}
+.resp-card{background:#f7f8fc;border:1.5px solid #e0e2ea;border-radius:14px;padding:22px;margin-bottom:20px;}
+.rc-text{font-size:13.5px;line-height:1.9;color:#2c3e6b;}
+.rc-text strong{color:#1a2744;font-weight:700;}
+.status-badge{display:inline-block;font-size:11px;font-weight:700;padding:4px 12px;border-radius:20px;margin-bottom:12px;}
+.badge-high{background:#fee2e2;color:#991b1b;}
+.badge-low{background:#dcfce7;color:#166534;}
+.aibox{background:#f3f4f8;border-radius:16px;overflow:hidden;margin-bottom:20px;border:1px solid #e0e2ea;}
+.aitop{background:#1a2744;padding:12px 16px;display:flex;align-items:center;gap:8px;}
+.dot{width:9px;height:9px;border-radius:50%;}
+.dr{background:#ff5f57;}.dy{background:#febc2e;}.dg{background:#28c840;}
+.aname{font-size:12px;color:#8fa8d8;margin-left:4px;}
+.sdot{width:7px;height:7px;border-radius:50%;background:#28c840;margin-left:auto;}
+.stxt2{font-size:11px;color:#5a9cf5;}
+.msgs{padding:16px;min-height:160px;display:flex;flex-direction:column;gap:10px;}
+.crow{display:flex;align-items:flex-end;gap:8px;opacity:0;transform:translateY(8px);transition:all .35s ease;}
+.crow.show{opacity:1;transform:translateY(0);}
+.crow.urow{flex-direction:row-reverse;}
+.av{width:30px;height:30px;min-width:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;}
+.av-ai{background:#1a2744;color:#fff;}
+.av-u{background:#e0e7ff;color:#3730a3;}
+.bub{max-width:80%;padding:10px 14px;border-radius:14px;font-size:13px;line-height:1.65;}
+.bai{background:#fff;color:#1a2744;border:1px solid #e0e2ea;border-bottom-left-radius:4px;}
+.bu{background:#1a2744;color:#fff;border-bottom-right-radius:4px;}
+.bwarn{background:#fff7ed;border:1px solid #fed7aa;color:#7c2d12;border-bottom-left-radius:4px;}
+.bok{background:#f0fdf4;border:1px solid #bbf7d0;color:#14532d;border-bottom-left-radius:4px;}
+.tdots{display:flex;gap:4px;align-items:center;padding:4px 2px;}
+.tdots span{width:7px;height:7px;border-radius:50%;background:#bbb;animation:blink 1.2s infinite ease-in-out;}
+.tdots span:nth-child(2){animation-delay:.2s;}.tdots span:nth-child(3){animation-delay:.4s;}
+.chat-btn-wrap{padding:0 16px 14px;display:flex;gap:8px;flex-wrap:wrap;}
+.chat-btn{padding:10px 16px;border:1.5px solid #1a2744;border-radius:20px;background:#fff;color:#1a2744;font-size:13px;font-weight:700;font-family:'Noto Sans',sans-serif;cursor:pointer;transition:all .2s;}
+.chat-btn:hover{background:#1a2744;color:#fff;}
+.chat-btn:disabled{opacity:.35;cursor:not-allowed;border-color:#ccc;color:#ccc;}
+.chat-btn.done{background:#f0fdf4;border-color:#86efac;color:#166534;cursor:default;}
+@keyframes blink{0%,80%,100%{opacity:.25;transform:scale(.9);}40%{opacity:1;transform:scale(1);}}
+.remind{background:#fffbeb;border-left:3px solid #f59e0b;border-radius:0 8px 8px 0;padding:12px 14px;font-size:12.5px;color:#78350f;line-height:1.7;margin-bottom:20px;}
+.action-group{display:flex;flex-direction:column;gap:10px;margin-bottom:8px;}
+.action-label{cursor:pointer;}
+.action-label input[type=radio]{display:none;}
+.action-box{display:block;border:1.5px solid #e5e7eb;border-radius:10px;padding:14px 16px;font-size:14px;color:#333;line-height:1.5;background:#f9fafb;transition:all .15s;font-family:'Noto Sans',sans-serif;}
+.action-label input:checked~.action-box{border-color:#1a2744;background:#eef2fb;color:#1a2744;font-weight:500;}
+.pvbox{background:#f7f8fc;border:1px solid #e5e7eb;border-radius:12px;padding:16px;font-size:13px;color:#555;line-height:1.8;margin-bottom:20px;}
+.pvbox strong{color:#1a2744;font-weight:700;}
+.otag{display:inline-block;font-size:11px;background:#e0e7ff;color:#3730a3;padding:2px 8px;border-radius:20px;margin-left:6px;font-weight:700;vertical-align:middle;}
+.tinput{width:100%;padding:13px 14px;border:1px solid #e5e7eb;border-radius:10px;font-size:14px;font-family:'Noto Sans',sans-serif;background:#f9fafb;color:#333;outline:none;margin-top:8px;transition:border .15s;}
+.tinput:focus{border-color:#1a2744;}
+.nav{display:flex;gap:10px;padding:20px 24px 32px;}
+.bprev{flex:1;padding:15px;border:1px solid #ddd;border-radius:10px;background:#fff;color:#666;font-size:14px;font-family:'Noto Sans',sans-serif;cursor:pointer;}
+.bnext{flex:2;padding:15px;border:none;border-radius:10px;background:#1a2744;color:#fff;font-size:14px;font-weight:700;font-family:'Noto Sans',sans-serif;cursor:pointer;transition:opacity .2s;}
+.bnext:hover{opacity:.88;}.bnext:active{opacity:.75;}.bnext:disabled{opacity:.4;cursor:not-allowed;}
+.lov{display:none;position:fixed;inset:0;background:rgba(26,39,68,.55);z-index:999;align-items:center;justify-content:center;flex-direction:column;gap:16px;}
+.lov.show{display:flex;}
+.spin{width:40px;height:40px;border:3px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .8s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.ltxt{color:#fff;font-size:14px;}
+.endw{display:none;padding:60px 24px 40px;text-align:center;}
+.endico{width:72px;height:72px;border-radius:50%;background:#fef3c7;margin:0 auto 24px;display:flex;align-items:center;justify-content:center;font-size:32px;}
+.endw h2{font-size:20px;font-weight:700;color:#1a2744;margin-bottom:12px;}
+.endw p{font-size:14px;color:#666;line-height:1.8;}
+.thkw{display:none;padding:60px 24px 40px;text-align:center;}
+.thkico{width:76px;height:76px;border-radius:50%;background:#eef2fb;margin:0 auto 24px;display:flex;align-items:center;justify-content:center;}
+.thkw h2{font-size:22px;font-weight:700;color:#1a2744;margin-bottom:12px;}
+.thkw p{font-size:14px;color:#666;line-height:1.8;margin-bottom:4px;}
+.thkd{margin-top:28px;background:#f7f8fc;border-radius:12px;padding:18px;text-align:left;}
+.tdr{display:flex;justify-content:space-between;align-items:center;font-size:13px;padding:8px 0;border-bottom:1px solid #eee;}
+.tdr:last-child{border-bottom:none;}.tdk{color:#888;}.tdv{color:#1a2744;font-weight:700;}
+.errmsg{display:none;background:#fff3f3;border:1px solid #ffcdd2;border-radius:8px;padding:12px 16px;font-size:13px;color:#c0392b;margin:0 24px 16px;line-height:1.5;}
+.errmsg.show{display:block;}
+.remind-box{border-radius:10px;padding:14px 16px;font-size:13px;line-height:1.75;margin-bottom:16px;}
+.remind-resp{background:#f0f4ff;border:1px solid #c7d7f8;color:#1a2744;}
+.remind-exp{background:#f0fdf4;border:1px solid #bbf7d0;color:#14532d;}
+.remind-box strong{font-weight:700;}
+.upload-bub{padding:0!important;overflow:hidden;min-width:210px;max-width:270px;}
+.upl-row{display:flex;align-items:center;gap:10px;padding:12px;}
+.upl-icon{width:34px;height:42px;background:rgba(255,255,255,.18);border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#fff;flex-shrink:0;}
+.upl-info{flex:1;min-width:0;}
+.upl-name{font-size:11px;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.upl-size{font-size:10px;color:rgba(255,255,255,.7);margin-top:1px;}
+.upl-track{margin-top:6px;height:3px;background:rgba(255,255,255,.25);border-radius:2px;overflow:hidden;}
+.upl-fill{height:100%;background:#fff;border-radius:2px;width:0%;transition:width .08s;}
+.upl-foot{font-size:10px;color:rgba(255,255,255,.8);margin-top:3px;display:flex;justify-content:space-between;}
+.chat-done-msg{font-size:12px;color:#888;text-align:center;padding:10px 0;}
+.pv-section{background:#f7f8fc;border:1px solid #e5e7eb;border-radius:12px;padding:16px;}
+.pv-header{margin-bottom:6px;}
+.pv-check-label{display:flex;align-items:center;gap:10px;cursor:pointer;}
+.pv-check-label input[type=checkbox]{display:none;}
+.pv-chk{width:20px;height:20px;min-width:20px;border:1.5px solid #ccc;border-radius:5px;display:flex;align-items:center;justify-content:center;background:#fff;transition:all .15s;}
+.pv-check-label input:checked+.pv-chk{background:#1a2744;border-color:#1a2744;}
+.pv-check-label input:checked+.pv-chk::after{content:'';width:10px;height:6px;border-left:2px solid #fff;border-bottom:2px solid #fff;transform:rotate(-45deg) translateY(-1px);display:block;}
+.pv-title{font-size:14px;font-weight:700;color:#1a2744;}
+.pv-desc{font-size:12px;color:#888;line-height:1.6;padding-left:30px;}
+.remind-ai{background:#f0f4ff;border-left:3px solid #3b6de8;border-radius:0 8px 8px 0;padding:12px 14px;font-size:12.5px;color:#1a2744;line-height:1.7;margin-bottom:16px;}
+.remind-ai strong{font-weight:700;}
+</style>
+</head>
+<body>
+<div class="lov" id="lov"><div class="spin"></div><div class="ltxt">Saving your response...</div></div>
+<div class="wrap">
+  <div class="hband">
+    <div class="tag">Master's Thesis Research — Kyung Hee University Graduate School of Business</div>
+    <h1>Perceptions and Acceptance of<br>AI Document Support Tools</h1>
+    <div class="sub">Researcher: Chaei Kim, AI Business, Kyung Hee University GSB<br>Contact: <span class="em-placeholder"></span><br>Advisor: Prof. Sang-gyun Kim, Kyung Hee University GSB</div>
+  </div>
+  <div class="pbar-wrap">
+    <div class="ptrack"><div class="pfill" id="pfill" style="width:0%"></div></div>
+    <div class="pmeta"><span id="ptxt">Get Started</span><span id="ppct">0%</span></div>
+  </div>
+
+  <!-- S0: Consent -->
+  <div class="sec active" id="s0">
+    <div class="stitle">Research Participation Consent</div>
+    <div class="cbox-wrap">
+      <strong>Background &amp; Purpose</strong><br>
+      AI-based document support tools are increasingly being considered for adoption in quality and certification work environments. However, actual use remains limited due to insufficient trust in AI within high-responsibility, high-stakes contexts.<br><br>
+      This study examines how the <strong>explainability (XAI)</strong> of AI document support tools affects <strong>trust and intention to use</strong> among quality and certification professionals, and how this relationship varies depending on <strong>workplace responsibility level</strong>.<br><br>
+      <strong>Participation Information</strong><br>
+      • Estimated time: approximately 10–15 minutes<br>
+      • Responses are anonymous and will be used for research purposes only.<br>
+      • You may withdraw from participation at any time.<br><br>
+      <div style="background:#fff8e1;border-left:3px solid #f59e0b;border-radius:0 8px 8px 0;padding:12px 14px;margin-bottom:4px;"><strong style="color:#92400e;">📌 There are no right or wrong answers in this survey.</strong><br><span style="font-size:13px;color:#78350f;">Please respond honestly based on what you actually feel in each situation. Your candid responses are most valuable to this research.</span></div><br>
+      <strong>Researcher</strong>: Chaei Kim, AI Business, Kyung Hee University GSB<br>
+      <strong>Advisor</strong>: Prof. Sang-gyun Kim, Kyung Hee University GSB<br>
+      <strong>Contact</strong>: <span class="em-placeholder"></span>
+    </div>
+    <label class="ccheck"><input type="checkbox" id="consent"><div class="chk"></div><span class="ctxt">I have read and understood the above information and agree to participate in this research.</span></label>
+  </div>
+
+  <!-- S1: Eligibility -->
+  <div class="sec" id="s1">
+    <div class="stitle">Eligibility Check</div>
+    <div class="ecard">
+      <div class="ect">In the past 12 months, have you performed any of the following tasks?</div>
+      <div class="clist">
+        <div class="ci">Drafting, reviewing, or managing documents related to certification standards (e.g., ISO, KC, IATF, GMP, HACCP, CE, UL)</div>
+        <div class="ci">Preparing for, responding to, or conducting certification audits (including internal audits)</div>
+        <div class="ci">Conducting internal audits, process control, or quality improvement activities</div>
+        <div class="ci">Reviewing and ensuring compliance with regulatory or compliance documents</div>
+        <div class="ci">Performing Quality Assurance (QA) or Quality Control (QC) work</div>
+        <div class="ci">Handling customer complaints, nonconformance management, or corrective actions (CAPA)</div>
+      </div>
+      <div class="yn">
+        <label><input type="radio" name="elig" value="yes"><div class="ynb yes">Yes, I have</div></label>
+        <label><input type="radio" name="elig" value="no"><div class="ynb no">No</div></label>
+      </div>
+    </div>
+  </div>
+
+  <!-- S2: Scenario Introduction -->
+  <div class="sec" id="s2">
+    <div class="stitle">Hypothetical Scenario</div>
+    <div class="scenario-notice">
+      <div class="sn-text"><strong>The following is a hypothetical experimental scenario.</strong> The situation below has been set up for research purposes and does not reflect a real event. Please read it <strong>as if you were actually in that situation.</strong></div>
+    </div>
+    <div class="intro-card">
+      <div class="ic-text">
+        You are a <strong>quality and certification practitioner</strong> at a company.<br><br>
+        You are responsible for reviewing relevant documents using an <strong>AI document support tool</strong> recently introduced at your workplace.<br><br>
+        A specific work situation will be presented on the next screen.<br>
+        Please read it <strong>as if it were your own real work situation.</strong>
+      </div>
+    </div>
+  </div>
+
+  <!-- S3: Responsibility Manipulation -->
+  <div class="sec" id="s3">
+    <div class="stitle">Work Situation</div>
+    <div id="resp-box"></div>
+    <div class="remind">💡 Please read the situation carefully before proceeding. All subsequent questions should be answered based on this scenario.</div>
+  </div>
+
+  <!-- S4: AI Chat -->
+  <div class="sec" id="s4">
+    <div class="stitle">AI Tool Analysis Results</div>
+    <div class="aibox">
+      <div class="aitop">
+        <div class="dot dr"></div><div class="dot dy"></div><div class="dot dg"></div>
+        <span class="aname">AI Document Assistant</span>
+        <div class="sdot"></div><span class="stxt2">Connected</span>
+      </div>
+      <div class="msgs" id="chatbox"></div>
+    </div>
+  </div>
+
+  <!-- S5: Manipulation Check -->
+  <div class="sec" id="s5">
+    <div class="stitle">Situation Awareness Check</div>
+    <div style="font-size:12px;color:#888;margin-bottom:16px;line-height:1.6;">(1 = Strongly Disagree &nbsp;~&nbsp; 7 = Strongly Agree)</div>
+    <div id="remind-mcr"></div>
+    <div style="font-size:13px;font-weight:700;color:#1a2744;margin-bottom:14px;">A. Level of Work Responsibility</div>
+    <div id="mc-resp-box"></div>
+    <div id="remind-mce" style="margin-top:24px;"></div>
+    <div style="font-size:13px;font-weight:700;color:#1a2744;margin-bottom:14px;">B. Level of AI Explanation</div>
+    <div id="mc-exp-box"></div>
+    <div style="margin-top:28px;padding-top:20px;border-top:1px solid #f0f0f0;">
+      <div class="qb">
+        <div class="ql">This item is included to verify survey attention. Please select <strong style="color:#1a2744;">"Strongly Disagree (1)."</strong></div>
+        <div class="lanc"><span>Strongly Disagree</span><span>Strongly Agree</span></div>
+        <div class="lrow">
+          <label><input type="radio" name="imc" value="1"><div class="lbtn">1</div></label>
+          <label><input type="radio" name="imc" value="2"><div class="lbtn">2</div></label>
+          <label><input type="radio" name="imc" value="3"><div class="lbtn">3</div></label>
+          <label><input type="radio" name="imc" value="4"><div class="lbtn">4</div></label>
+          <label><input type="radio" name="imc" value="5"><div class="lbtn">5</div></label>
+          <label><input type="radio" name="imc" value="6"><div class="lbtn">6</div></label>
+          <label><input type="radio" name="imc" value="7"><div class="lbtn">7</div></label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- S6: EXP + TRU -->
+  <div class="sec" id="s6">
+    <div class="stitle">Perceptions of the AI System (1/2)</div>
+    <div id="remind-s6"></div>
+    <div class="remind">Please respond while recalling the AI's response you just reviewed.</div>
+    <div style="font-size:12px;color:#888;margin-bottom:20px;line-height:1.6;">(1 = Strongly Disagree &nbsp;~&nbsp; 7 = Strongly Agree)</div>
+    <div id="s6box"></div>
+  </div>
+
+  <!-- S7: PU + EPR + AA -->
+  <div class="sec" id="s7">
+    <div class="stitle">Perceptions of the AI System (2/2)</div>
+    <div id="remind-s7"></div>
+    <div class="remind">Please respond while considering that you are the one who must make the judgment in this situation.</div>
+    <div style="font-size:12px;color:#888;margin-bottom:20px;line-height:1.6;">(1 = Strongly Disagree &nbsp;~&nbsp; 7 = Strongly Agree)</div>
+    <div id="s7box"></div>
+  </div>
+
+  <!-- S8: ITU -->
+  <div class="sec" id="s8">
+    <div class="stitle">Intention to Use</div>
+    <div id="remind-s8"></div>
+    <div class="remind">After experiencing the above situation, please respond to the following items.</div>
+    <div style="font-size:12px;color:#888;margin-bottom:20px;line-height:1.6;">(1 = Strongly Disagree &nbsp;~&nbsp; 7 = Strongly Agree)</div>
+    <div id="s8box"></div>
+  </div>
+
+  <!-- S9: Demographics -->
+  <div class="sec" id="s9">
+    <div class="stitle">Basic Information</div>
+    <div class="qb">
+      <div class="ql"><span class="qn">1</span>What is your gender?</div>
+      <div class="sg">
+        <label><input type="radio" name="qgender" value="Male"><div class="sb">Male</div></label>
+        <label><input type="radio" name="qgender" value="Female"><div class="sb">Female</div></label>
+        <label><input type="radio" name="qgender" value="Prefer not to say"><div class="sb">Prefer not to say</div></label>
+      </div>
+    </div>
+    <div class="qb">
+      <div class="ql"><span class="qn">2</span>What is your age group?</div>
+      <div class="sg">
+        <label><input type="radio" name="qage" value="20s"><div class="sb">20s</div></label>
+        <label><input type="radio" name="qage" value="30s"><div class="sb">30s</div></label>
+        <label><input type="radio" name="qage" value="40s"><div class="sb">40s</div></label>
+        <label><input type="radio" name="qage" value="50s"><div class="sb">50s</div></label>
+        <label><input type="radio" name="qage" value="60+"><div class="sb">60 or above</div></label>
+      </div>
+    </div>
+    <div class="qb">
+      <div class="ql"><span class="qn">3</span>What is your primary area of work?</div>
+      <div class="sg">
+        <label><input type="radio" name="qfield" value="Quality Control"><div class="sb">Quality Control (QC)</div></label>
+        <label><input type="radio" name="qfield" value="Quality Assurance"><div class="sb">Quality Assurance (QA)</div></label>
+        <label><input type="radio" name="qfield" value="Certification Audit"><div class="sb">Certification / Internal Audit</div></label>
+        <label><input type="radio" name="qfield" value="Regulatory Compliance"><div class="sb">Regulatory Compliance</div></label>
+        <label><input type="radio" name="qfield" value="Process Quality"><div class="sb">Process Control / Production Quality</div></label>
+        <label><input type="radio" name="qfield" value="EHS"><div class="sb">Environment, Health &amp; Safety (EHS)</div></label>
+        <label><input type="radio" name="qfield" value="SQM"><div class="sb">Supplier / Supply Chain Quality (SQM)</div></label>
+        <label><input type="radio" name="qfield" value="RnD"><div class="sb">R&amp;D / Product Validation</div></label>
+        <label><input type="radio" name="qfield" value="Other"><div class="sb">Other</div></label>
+      </div>
+      <input type="text" class="oinput" id="field-etc" placeholder="Please describe your work area">
+    </div>
+    <div class="qb">
+      <div class="ql"><span class="qn">4</span>What industry do you work in?</div>
+      <div class="sg">
+        <label><input type="radio" name="qindustry" value="Manufacturing"><div class="sb">Manufacturing (Automotive, Electronics, Machinery, etc.)</div></label>
+        <label><input type="radio" name="qindustry" value="Pharma/Bio/Medical"><div class="sb">Pharmaceuticals / Biotech / Medical Devices</div></label>
+        <label><input type="radio" name="qindustry" value="Food/Beverage"><div class="sb">Food &amp; Beverage</div></label>
+        <label><input type="radio" name="qindustry" value="Chemical/Petrochemical"><div class="sb">Chemical / Petrochemical</div></label>
+        <label><input type="radio" name="qindustry" value="Construction/Engineering"><div class="sb">Construction / Engineering</div></label>
+        <label><input type="radio" name="qindustry" value="IT/Software"><div class="sb">IT / Software</div></label>
+        <label><input type="radio" name="qindustry" value="Public/Government"><div class="sb">Public Sector / Government</div></label>
+        <label><input type="radio" name="qindustry" value="Services"><div class="sb">Services</div></label>
+        <label><input type="radio" name="qindustry" value="Other"><div class="sb">Other</div></label>
+      </div>
+      <input type="text" class="oinput" id="industry-etc" placeholder="Please describe your industry">
+    </div>
+    <div class="qb">
+      <div class="ql"><span class="qn">5</span>What is the size of your organization?</div>
+      <div class="sg">
+        <label><input type="radio" name="qcompsize" value="<10"><div class="sb">Micro (fewer than 10 employees)</div></label>
+        <label><input type="radio" name="qcompsize" value="10-49"><div class="sb">Small (10–49 employees)</div></label>
+        <label><input type="radio" name="qcompsize" value="50-299"><div class="sb">Medium (50–299 employees)</div></label>
+        <label><input type="radio" name="qcompsize" value="300-999"><div class="sb">Large-Medium (300–999 employees)</div></label>
+        <label><input type="radio" name="qcompsize" value="1000+"><div class="sb">Large (1,000+ employees)</div></label>
+        <label><input type="radio" name="qcompsize" value="Public/Government"><div class="sb">Public Sector / Government</div></label>
+      </div>
+    </div>
+    <div class="qb">
+      <div class="ql"><span class="qn">6</span>What is your job level?</div>
+      <div class="sg">
+        <label><input type="radio" name="qrank" value="Intern"><div class="sb">Intern</div></label>
+        <label><input type="radio" name="qrank" value="Entry-level"><div class="sb">Entry-level (e.g., Associate, Assistant)</div></label>
+        <label><input type="radio" name="qrank" value="Junior"><div class="sb">Junior / Specialist</div></label>
+        <label><input type="radio" name="qrank" value="Senior"><div class="sb">Senior / Lead</div></label>
+        <label><input type="radio" name="qrank" value="Manager"><div class="sb">Manager</div></label>
+        <label><input type="radio" name="qrank" value="Senior Manager"><div class="sb">Senior Manager / Assistant Director</div></label>
+        <label><input type="radio" name="qrank" value="Director+"><div class="sb">Director / VP / Executive</div></label>
+        <label><input type="radio" name="qrank" value="Other"><div class="sb">Other</div></label>
+      </div>
+      <input type="text" class="oinput" id="rank-etc" placeholder="Please describe your job level">
+    </div>
+    <div class="qb">
+      <div class="ql"><span class="qn">7</span>How many years of relevant work experience do you have?</div>
+      <div class="sg">
+        <label><input type="radio" name="qexp" value="<1 year"><div class="sb">Less than 1 year</div></label>
+        <label><input type="radio" name="qexp" value="1-3 years"><div class="sb">1–3 years</div></label>
+        <label><input type="radio" name="qexp" value="4-7 years"><div class="sb">4–7 years</div></label>
+        <label><input type="radio" name="qexp" value="8-15 years"><div class="sb">8–15 years</div></label>
+        <label><input type="radio" name="qexp" value="16+ years"><div class="sb">16 years or more</div></label>
+      </div>
+    </div>
+    <div class="qb">
+      <div class="ql"><span class="qn">8</span>What is your highest level of education?</div>
+      <div class="sg">
+        <label><input type="radio" name="qedu" value="High School"><div class="sb">High School Diploma</div></label>
+        <label><input type="radio" name="qedu" value="Associate"><div class="sb">Associate Degree / 2-year College</div></label>
+        <label><input type="radio" name="qedu" value="Bachelor"><div class="sb">Bachelor's Degree</div></label>
+        <label><input type="radio" name="qedu" value="Master"><div class="sb">Master's Degree (completed or enrolled)</div></label>
+        <label><input type="radio" name="qedu" value="Doctorate"><div class="sb">Doctorate (completed or enrolled)</div></label>
+      </div>
+    </div>
+    <div class="qb">
+      <div class="ql"><span class="qn">9</span>How frequently do you use AI tools? <span style="font-size:12px;color:#888;font-weight:400;">(e.g., ChatGPT, Gemini, Claude, etc.)</span></div>
+      <div class="sg">
+        <label><input type="radio" name="qai" value="Never"><div class="sb">Never</div></label>
+        <label><input type="radio" name="qai" value="Occasionally"><div class="sb">Occasionally (1–3 times per month)</div></label>
+        <label><input type="radio" name="qai" value="Regularly"><div class="sb">Regularly (1–2 times per week)</div></label>
+        <label><input type="radio" name="qai" value="Daily"><div class="sb">Almost every day</div></label>
+      </div>
+    </div>
+  </div>
+
+  <!-- S10: Optional Info (research notification only) -->
+  <div class="sec" id="s10">
+    <div class="stitle">Additional Information <span class="otag">Optional</span></div>
+    <p style="font-size:13px;color:#666;line-height:1.7;margin-bottom:20px;">This item is optional. Your choice will not affect submission of the survey.</p>
+
+    <div class="pv-section">
+      <div class="pv-header">
+        <label class="pv-check-label">
+          <input type="checkbox" id="chk-research">
+          <div class="pv-chk"></div>
+          <span class="pv-title">📄 Receive Research Results</span>
+        </label>
+      </div>
+      <div class="pv-desc">We will send you the completed paper and findings by email. · Data will be deleted immediately after the study concludes in August 2026.</div>
+      <div id="research-fields" style="display:none;margin-top:12px;">
+        <input type="text" class="tinput" id="i-research" placeholder="Enter your email address">
+      </div>
+    </div>
+  </div>
+
+  <div class="errmsg" id="errmsg">An error occurred while saving your response. Please try again in a moment.</div>
+  <div class="nav" id="navrow">
+    <button class="bprev" id="bprev" style="display:none">← Back</button>
+    <button class="bnext" id="bnext">Next →</button>
+  </div>
+  <div class="endw" id="endw">
+    <div class="endico">🙏</div>
+    <h2>Survey Ended</h2>
+    <p>This study is conducted with professionals who have experience in quality, certification, or audit-related work.</p>
+    <p style="margin-top:12px;">Thank you sincerely for your time.</p>
+  </div>
+  <div class="thkw" id="thkw">
+    <div class="thkico"><svg viewBox="0 0 38 38" fill="none"><circle cx="19" cy="19" r="19" fill="#1a2744"/><path d="M11 19l6 6 10-12" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    <h2>Survey Complete</h2>
+    <p>Thank you so much for taking the time</p>
+    <p>to participate in this research 🙏</p>
+    <p style="margin-top:8px;font-size:13px;">Your responses will be used meaningfully in academic research.</p>
+    <div class="thkd" id="thkd"></div>
+  </div>
+</div>
+
+<script src="survey_en.js"></script>
+</body>
+</html>
