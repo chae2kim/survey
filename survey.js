@@ -14,25 +14,14 @@ var TOTAL=11;
 var cur=0;
 var chatDone=false;
 
-// 2x2 균형 랜덤 배정 (4개 순환)
+// URL 파라미터 우선 배정 → 없으면 랜덤
 function assignGroup(){
-  var key='survey_grp_queue';
-  var queue=[];
-  try{
-    var stored=localStorage.getItem(key);
-    if(stored)queue=JSON.parse(stored);
-  }catch(e){}
-  // 큐가 비었으면 1~4 섞어서 채우기
-  if(!queue||queue.length===0){
-    queue=[1,2,3,4];
-    for(var i=queue.length-1;i>0;i--){
-      var j=Math.floor(Math.random()*(i+1));
-      var tmp=queue[i];queue[i]=queue[j];queue[j]=tmp;
-    }
-  }
-  var g=queue.shift();
-  try{localStorage.setItem(key,JSON.stringify(queue));}catch(e){}
-  return g;
+  // URL에 ?g=1~4 있으면 그걸 사용
+  var params=new URLSearchParams(window.location.search);
+  var gParam=parseInt(params.get('g'));
+  if(gParam>=1&&gParam<=4)return gParam;
+  // 없으면 랜덤
+  return Math.floor(Math.random()*4)+1;
 }
 var grp=assignGroup();
 var isHighResp=(grp===1||grp===2);
