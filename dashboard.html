@@ -84,6 +84,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:#f0f2f7;min-height:100vh;p
       <div class="tab" onclick="switchTab('corr')">🌡️ 상관관계</div>
       <div class="tab" onclick="switchTab('mediation')">🔗 매개효과</div>
       <div class="tab" onclick="switchTab('moderation')">🎛️ 조절효과</div>
+      <div class="tab" onclick="switchTab('rcode')">📋 R seminr 코드</div>
       <div class="tab" onclick="switchTab('normality')">📐 정규성·편향</div>
       <div class="tab" onclick="switchTab('demo')">👥 인구통계</div>
     </div>
@@ -149,6 +150,11 @@ body{font-family:'Noto Sans KR',sans-serif;background:#f0f2f7;min-height:100vh;p
         <h3><span class="ico">✓</span>타당도 (AVE · CR)</h3>
         <div class="interp"><strong>AVE ≥ 0.5</strong> → 수렴타당도 확보 · <strong>CR ≥ 0.7</strong> → 합성신뢰도 양호</div>
         <div id="validity-table"></div>
+      </div>
+      <div class="card">
+        <h3><span class="ico">⚖</span>판별타당도 (HTMT 비율)</h3>
+        <div class="interp"><strong>HTMT &lt; 0.85</strong> → 보수적 기준 ✅ · <strong>HTMT &lt; 0.90</strong> → 자유 기준 ✅ · 그 이상 ⚠️ (Henseler et al., 2015)</div>
+        <div id="htmt-table"></div>
       </div>
       <div class="card">
         <h3><span class="ico">AI</span>AI 신뢰도·타당도 해석</h3>
@@ -250,6 +256,34 @@ body{font-family:'Noto Sans KR',sans-serif;background:#f0f2f7;min-height:100vh;p
         <h3><span class="ico">AI</span>AI 조절효과 해석</h3>
         <button class="btn-ai" onclick="getAI('moderation')">🤖 해석 요청</button>
         <div id="ai-moderation" class="ai-interp" style="display:none"></div>
+      </div>
+    </div>
+
+    <!-- R seminr 코드 -->
+    <div class="tab-content" id="tab-rcode">
+      <div class="card">
+        <h3><span class="ico">📋</span>R seminr 코드 자동 생성</h3>
+        <div class="interp">
+          이 CSV 데이터에 맞춰 자동 생성된 PLS-SEM 분석 스크립트예요. R/RStudio에서 그대로 실행하면 부트스트랩 5000회 기반 정식 결과가 나옵니다.<br>
+          <strong>대시보드 사전 진단 결과를 주석으로 자동 반영</strong> · 사용자의 가설 매핑(H1~H8)에 맞게 구조모형 부분만 수정하세요.
+        </div>
+        <div style="margin:12px 0;">
+          <button class="btn-ai" onclick="copyRCode()">📋 코드 전체 복사</button>
+          <button class="btn-ai" onclick="downloadRCode()" style="margin-left:8px;">💾 .R 파일로 저장</button>
+        </div>
+        <pre id="rcode-block" style="background:#0f172a;color:#e2e8f0;padding:16px;border-radius:8px;overflow-x:auto;font-family:'Menlo','Consolas',monospace;font-size:12px;line-height:1.5;max-height:600px;overflow-y:auto;"></pre>
+      </div>
+      <div class="card">
+        <h3><span class="ico">📦</span>R 환경 준비 안내</h3>
+        <div style="font-size:13px;line-height:1.7;">
+          <strong>1단계 — R/RStudio 설치 (이미 있으면 건너뛰기)</strong><br>
+          • R: <code>https://cran.r-project.org</code><br>
+          • RStudio: <code>https://posit.co/download/rstudio-desktop</code><br><br>
+          <strong>2단계 — 필요한 패키지 한 번에 설치</strong><br>
+          <pre style="background:#f5f5f5;padding:10px;border-radius:4px;font-size:12px;">install.packages(c("seminr", "readr", "dplyr"))</pre>
+          <strong>3단계 — CSV 파일과 R 스크립트를 같은 폴더에 두고 실행</strong><br>
+          부트스트랩 5000회는 표본 134명 기준 약 1~2분 소요됩니다.
+        </div>
       </div>
     </div>
 
@@ -416,6 +450,109 @@ function sobelTest(X,M,Y){
   return{a:a,b:b,indirect:a*b,z:z,p:p};
 }
 
+// ── 다중회귀 분석 (Gauss-Jordan 기반) ──
+function matInverse(M){
+  var n=M.length;
+  var A=M.map(function(r){return r.slice();});
+  var I=[];
+  for(var i=0;i<n;i++){var row=[];for(var j=0;j<n;j++)row.push(i===j?1:0);I.push(row);}
+  for(var i=0;i<n;i++){
+    var maxRow=i, maxVal=Math.abs(A[i][i]);
+    for(var k=i+1;k<n;k++){if(Math.abs(A[k][i])>maxVal){maxVal=Math.abs(A[k][i]);maxRow=k;}}
+    if(maxVal<1e-12)return null;
+    if(maxRow!==i){var ta=A[i];A[i]=A[maxRow];A[maxRow]=ta;var ti=I[i];I[i]=I[maxRow];I[maxRow]=ti;}
+    var pv=A[i][i];
+    for(var j=0;j<n;j++){A[i][j]/=pv;I[i][j]/=pv;}
+    for(var k2=0;k2<n;k2++){if(k2===i)continue;var f=A[k2][i];for(var j=0;j<n;j++){A[k2][j]-=f*A[i][j];I[k2][j]-=f*I[i][j];}}
+  }
+  return I;
+}
+// 다중회귀: y = Xβ + ε (X는 상수항 포함된 design matrix)
+function mlr(X, y){
+  var n=X.length, k=X[0].length;
+  if(n<=k)return null;
+  var XtX=[];
+  for(var i=0;i<k;i++){var row=[];for(var j=0;j<k;j++){var s=0;for(var t=0;t<n;t++)s+=X[t][i]*X[t][j];row.push(s);}XtX.push(row);}
+  var XtXinv=matInverse(XtX);
+  if(!XtXinv)return null;
+  var Xty=[];for(var i=0;i<k;i++){var s=0;for(var t=0;t<n;t++)s+=X[t][i]*y[t];Xty.push(s);}
+  var beta=[];for(var i=0;i<k;i++){var s=0;for(var j=0;j<k;j++)s+=XtXinv[i][j]*Xty[j];beta.push(s);}
+  var yhat=X.map(function(r){var s=0;for(var i=0;i<k;i++)s+=r[i]*beta[i];return s;});
+  var sse=0,sst=0,my=mean(y);
+  for(var i=0;i<n;i++){var e=y[i]-yhat[i];sse+=e*e;sst+=Math.pow(y[i]-my,2);}
+  var sigma2=sse/(n-k);
+  var se=beta.map(function(_,i){return Math.sqrt(sigma2*XtXinv[i][i]);});
+  var tvals=beta.map(function(b,i){return b/se[i];});
+  var pvals=tvals.map(function(t){return 2*(1-tCDF(Math.abs(t),n-k));});
+  return {beta:beta, se:se, t:tvals, p:pvals, r2:1-sse/sst, n:n, df:n-k};
+}
+
+// 정식 매개효과: a는 단순회귀, b는 X 통제한 다중회귀, Sobel z (회귀 SE 기반)
+function mediationProper(X, M, Y){
+  var n=X.length;
+  var c=mlr(X.map(function(v){return [1,v];}), Y);                                // Y ~ X (총효과)
+  var a=mlr(X.map(function(v){return [1,v];}), M);                                // M ~ X
+  var bc=mlr(X.map(function(v,i){return [1,M[i],v];}), Y);                        // Y ~ M + X
+  if(!c||!a||!bc)return null;
+  var aCoef=a.beta[1], se_a=a.se[1], p_a=a.p[1];
+  var bCoef=bc.beta[1], se_b=bc.se[1], p_b=bc.p[1];
+  var indirect=aCoef*bCoef;
+  var z=indirect/Math.sqrt(bCoef*bCoef*se_a*se_a + aCoef*aCoef*se_b*se_b);
+  var p_sobel=2*(1-tCDF(Math.abs(z), n-3));
+  var type=p_sobel>=0.05?'매개 없음':(bc.p[2]<0.05?'부분매개':'완전매개');
+  return {
+    a:aCoef, b:bCoef, c:c.beta[1], cPrime:bc.beta[2],
+    p_a:p_a, p_b:p_b, p_c:c.p[1], p_cp:bc.p[2],
+    indirect:indirect, z:z, p:p_sobel, type:type
+  };
+}
+
+// 정식 조절효과: Y ~ X + W + X·W (X, W 평균중심화)
+function moderationProper(X, W, Y){
+  var n=X.length;
+  var mx=mean(X), mw=mean(W);
+  var Xc=X.map(function(v){return v-mx;});
+  var Wc=W.map(function(v){return v-mw;});
+  var design=Xc.map(function(v,i){return [1, v, Wc[i], v*Wc[i]];});
+  var reg=mlr(design, Y);
+  if(!reg)return null;
+  return {
+    b_X:reg.beta[1], p_X:reg.p[1],
+    b_W:reg.beta[2], p_W:reg.p[2],
+    b_int:reg.beta[3], p_int:reg.p[3], t_int:reg.t[3],
+    r2:reg.r2
+  };
+}
+
+// HTMT 비율 (Heterotrait-Monotrait): Henseler et al. 2015
+function htmtRatio(constructA, constructB){
+  var itemsA=constructs[constructA].items;
+  var itemsB=constructs[constructB].items;
+  // monotrait: A 내부 상관 평균, B 내부 상관 평균
+  function avgWithin(items){
+    var rs=[], cnt=0;
+    for(var i=0;i<items.length;i++)for(var j=i+1;j<items.length;j++){
+      var ci=parsedData.map(function(r){return parseFloat(r[items[i]])||0;});
+      var cj=parsedData.map(function(r){return parseFloat(r[items[j]])||0;});
+      rs.push(Math.abs(pearson(ci,cj)));cnt++;
+    }
+    return cnt?rs.reduce(function(a,b){return a+b;},0)/cnt:0;
+  }
+  function avgBetween(itemsA, itemsB){
+    var rs=[], cnt=0;
+    itemsA.forEach(function(ia){itemsB.forEach(function(ib){
+      var ci=parsedData.map(function(r){return parseFloat(r[ia])||0;});
+      var cj=parsedData.map(function(r){return parseFloat(r[ib])||0;});
+      rs.push(Math.abs(pearson(ci,cj)));cnt++;
+    });});
+    return cnt?rs.reduce(function(a,b){return a+b;},0)/cnt:0;
+  }
+  var monoA=avgWithin(itemsA), monoB=avgWithin(itemsB);
+  var hetero=avgBetween(itemsA, itemsB);
+  if(monoA<=0||monoB<=0)return 0;
+  return hetero/Math.sqrt(monoA*monoB);
+}
+
 function getConstructScores(data,k){
   var items=constructs[k].items;
   return data.map(function(row){
@@ -440,7 +577,7 @@ function switchTab(id){
   document.querySelectorAll('.tab-content').forEach(function(t){t.classList.remove('active');});
   event.target.classList.add('active');
   document.getElementById('tab-'+id).classList.add('active');
-  var renders={mancheck:renderMancheck,reliability:renderReliability,desc:renderDesc,anova:renderAnova,corr:renderCorr,mediation:renderMediation,moderation:renderModeration,normality:renderNormality,demo:renderDemo};
+  var renders={mancheck:renderMancheck,reliability:renderReliability,desc:renderDesc,anova:renderAnova,corr:renderCorr,mediation:renderMediation,moderation:renderModeration,normality:renderNormality,demo:renderDemo,rcode:renderRCode};
   if(renders[id])renders[id]();
 }
 
@@ -564,6 +701,33 @@ function renderReliability(){
   });
   html2+='</table>';
   document.getElementById('validity-table').innerHTML=html2;
+
+  // HTMT 표
+  var keys=Object.keys(constructs);
+  var html3='<table class="tbl"><tr><th></th>'+keys.map(function(k){return '<th>'+k+'</th>';}).join('')+'</tr>';
+  var maxHTMT=0, anyOver85=false, anyOver90=false;
+  keys.forEach(function(k1,i){
+    html3+='<tr><td><strong>'+k1+'</strong></td>';
+    keys.forEach(function(k2,j){
+      if(i===j){html3+='<td style="background:#f5f5f5;color:#999">—</td>';}
+      else if(j<i){
+        var h=htmtRatio(k1,k2);
+        if(h>maxHTMT)maxHTMT=h;
+        var bg='#fff', mark='';
+        if(h>=0.90){bg='#fecaca';mark=' ⚠⚠';anyOver90=true;anyOver85=true;}
+        else if(h>=0.85){bg='#fed7aa';mark=' ⚠';anyOver85=true;}
+        else if(h>=0.75){bg='#fef9c3';}
+        html3+='<td style="background:'+bg+'">'+h.toFixed(3)+mark+'</td>';
+      } else {html3+='<td style="color:#ccc">—</td>';}
+    });
+    html3+='</tr>';
+  });
+  html3+='</table>';
+  var summary=anyOver90?'<span class="badge-warn">⚠️ HTMT ≥ 0.90 위반 — 판별타당도 심각</span>':
+              anyOver85?'<span class="badge-warn">⚠️ HTMT ≥ 0.85 위반 — 보수 기준 미충족</span>':
+              '<span class="badge-ok">✅ 모든 HTMT &lt; 0.85 — 판별타당도 확보</span>';
+  html3+='<div style="margin-top:8px;font-size:12px;">최대 HTMT = '+maxHTMT.toFixed(3)+' · '+summary+'</div>';
+  document.getElementById('htmt-table').innerHTML=html3;
 }
 
 // ── 기술통계 ──────────────────────────────
@@ -768,44 +932,107 @@ function renderCorr(){
 
 // ── 매개효과 ──────────────────────────────
 function renderMediation(){
-  var tru=getConstructScores(parsedData,'TRU');
-  var itu=getConstructScores(parsedData,'ITU');
-  var n=Math.min(tru.length,itu.length);
-  var html='<table class="tbl"><tr><th>독립변수</th><th>a경로 (X→TRU)</th><th>b경로 (TRU→ITU)</th><th>간접효과</th><th>Sobel Z</th><th>p값</th><th>판정</th></tr>';
+  var M=getConstructScores(parsedData,'TRU');
+  var Y=getConstructScores(parsedData,'ITU');
+  var html='<table class="tbl"><tr><th>독립변수</th><th>a (X→TRU)</th><th>b (TRU→ITU, X통제)</th><th>c (총효과)</th><th>c\' (직접)</th><th>간접 a·b</th><th>Sobel z, p</th><th>매개 유형</th></tr>';
   var medRows=[];
   ['EXP','PU','EPR','AA'].forEach(function(k){
-    var x=getConstructScores(parsedData,k);
-    var nn=Math.min(x.length,n);
-    var res=sobelTest(x.slice(0,nn),tru.slice(0,nn),itu.slice(0,nn));
-    var sig=res.p<.05?'<span class="badge-ok">✅ 유의 '+pStar(res.p)+'</span>':'<span class="ns">비유의</span>';
-    html+='<tr><td><strong>'+constructs[k].label+'</strong></td><td>'+res.a.toFixed(3)+'</td><td>'+res.b.toFixed(3)+'</td><td>'+res.indirect.toFixed(3)+'</td><td>'+res.z.toFixed(3)+'</td><td>'+res.p.toFixed(3)+'</td><td>'+sig+'</td></tr>';
-    medRows.push({label:constructs[k].label,v:parseFloat(res.indirect.toFixed(3)),sig:res.p<.05});
+    var X=getConstructScores(parsedData,k);
+    var n=Math.min(X.length, M.length, Y.length);
+    var res=mediationProper(X.slice(0,n), M.slice(0,n), Y.slice(0,n));
+    if(!res)return;
+    var typeBadge = res.type==='완전매개'?'<span class="badge-ok">✅ 완전매개</span>':
+                    res.type==='부분매개'?'<span class="badge-ok">✅ 부분매개</span>':
+                    '<span class="ns">매개 없음</span>';
+    var sobelSig=res.p<.05?pStar(res.p):'';
+    html+='<tr><td><strong>'+constructs[k].label+'</strong></td>'+
+      '<td>'+res.a.toFixed(3)+pStar(res.p_a)+'</td>'+
+      '<td>'+res.b.toFixed(3)+pStar(res.p_b)+'</td>'+
+      '<td>'+res.c.toFixed(3)+pStar(res.p_c)+'</td>'+
+      '<td>'+res.cPrime.toFixed(3)+pStar(res.p_cp)+'</td>'+
+      '<td><strong>'+res.indirect.toFixed(3)+'</strong></td>'+
+      '<td>z='+res.z.toFixed(2)+', p='+res.p.toFixed(3)+' '+sobelSig+'</td>'+
+      '<td>'+typeBadge+'</td>'+
+      '</tr>';
+    medRows.push({label:constructs[k].label, v:parseFloat(res.indirect.toFixed(3)), sig:res.p<.05});
   });
   html+='</table>';
+  html+='<div style="font-size:11px;color:#888;margin-top:8px;">a, c는 단순회귀 · b, c\'는 X 통제한 다중회귀 · 모두 비표준화 계수 · 정식 부트스트랩 신뢰구간은 seminr/SmartPLS 권장</div>';
   document.getElementById('mediation-table').innerHTML=html;
 
   destroyChart('mediationChart');
   var ctx=document.getElementById('mediationChart').getContext('2d');
-  charts['mediationChart']=new Chart(ctx,{type:'bar',data:{labels:medRows.map(function(r){return r.label;}),datasets:[{label:'간접효과',data:medRows.map(function(r){return r.v;}),backgroundColor:medRows.map(function(r){return r.sig?'#1a2744':'#c7d7f8';}),borderRadius:6}]},options:{plugins:{legend:{display:false}},scales:{y:{ticks:{font:{family:'Noto Sans KR'}}}},responsive:true}});
+  charts['mediationChart']=new Chart(ctx,{type:'bar',data:{labels:medRows.map(function(r){return r.label;}),datasets:[{label:'간접효과 a·b',data:medRows.map(function(r){return r.v;}),backgroundColor:medRows.map(function(r){return r.sig?'#1a2744':'#c7d7f8';}),borderRadius:6}]},options:{plugins:{legend:{display:false}},scales:{y:{ticks:{font:{family:'Noto Sans KR'}}}},responsive:true}});
 }
 
 // ── 조절효과 ──────────────────────────────
 function renderModeration(){
+  var TRU=getConstructScores(parsedData,'TRU');
+  var ITU=getConstructScores(parsedData,'ITU');
+  var EXP=getConstructScores(parsedData,'EXP');
+  var PU=getConstructScores(parsedData,'PU');
+  var AA=getConstructScores(parsedData,'AA');
+
+  // 방법 1: 회귀 interaction (AA가 진짜 조절변수, H7·H8)
+  var html='<h4 style="margin:0 0 8px 0;">방법 1: AA(조절변수) 회귀 interaction — 가설 검정용</h4>';
+  html+='<table class="tbl"><tr><th>경로 (X→Y)</th><th>X 효과 β</th><th>AA 효과 β</th><th>X×AA 교호 β</th><th>p (교호)</th><th>R²</th><th>조절효과</th></tr>';
+  var paths=[
+    {label:'TRU → ITU', X:TRU, Y:ITU},
+    {label:'EXP → TRU', X:EXP, Y:TRU},
+    {label:'EXP → ITU', X:EXP, Y:ITU},
+    {label:'PU → ITU',  X:PU,  Y:ITU}
+  ];
+  paths.forEach(function(p){
+    var n=Math.min(p.X.length, p.Y.length, AA.length);
+    var res=moderationProper(p.X.slice(0,n), AA.slice(0,n), p.Y.slice(0,n));
+    if(!res)return;
+    var sig=res.p_int<.05?'<span class="badge-ok">✅ 유의 '+pStar(res.p_int)+'</span>':'<span class="ns">비유의</span>';
+    html+='<tr><td><strong>'+p.label+'</strong></td>'+
+      '<td>'+res.b_X.toFixed(3)+pStar(res.p_X)+'</td>'+
+      '<td>'+res.b_W.toFixed(3)+pStar(res.p_W)+'</td>'+
+      '<td><strong>'+res.b_int.toFixed(3)+'</strong>'+pStar(res.p_int)+'</td>'+
+      '<td>'+res.p_int.toFixed(3)+'</td>'+
+      '<td>'+res.r2.toFixed(3)+'</td>'+
+      '<td>'+sig+'</td></tr>';
+  });
+  html+='</table>';
+  html+='<div style="font-size:11px;color:#888;margin:6px 0 18px 0;">AA와 X 모두 평균중심화 · X×AA 유의 = AA 수준에 따라 X→Y 강도 달라짐</div>';
+
+  // 방법 2: 책임 조건별 상관 비교 (Fisher Z, MGA 식 보조분석)
+  html+='<h4 style="margin:0 0 8px 0;">방법 2: 책임 조건별 상관 차이 (Fisher Z, MGA식 보조)</h4>';
   var highResp=parsedData.filter(function(r){return r.resp_cond==='고책임';});
   var lowResp=parsedData.filter(function(r){return r.resp_cond==='저책임';});
-  var truH=getConstructScores(highResp,'TRU'),ituH=getConstructScores(highResp,'ITU');
-  var truL=getConstructScores(lowResp,'TRU'),ituL=getConstructScores(lowResp,'ITU');
-  var rH=pearson(truH,ituH),rL=pearson(truL,ituL);
-  var nH=truH.length,nL=truL.length;
-  var se=Math.sqrt(1/(nH-3)+1/(nL-3));
-  var z=(fisherZ(rH)-fisherZ(rL))/se;
-  var p=2*(1-tCDF(Math.abs(z),nH+nL-4));
-
-  var html='<table class="tbl"><tr><th>경로</th><th>고책임 (r)</th><th>저책임 (r)</th><th>Fisher Z</th><th>p값</th><th>조절효과</th></tr>';
-  html+='<tr><td><strong>TRU → ITU</strong></td><td>'+rH.toFixed(3)+' (n='+nH+')</td><td>'+rL.toFixed(3)+' (n='+nL+')</td><td>'+z.toFixed(3)+'</td><td>'+p.toFixed(3)+pStar(p)+'</td><td>'+(p<.05?'<span class="badge-ok">✅ 유의</span>':'<span class="ns">비유의</span>')+'</td></tr>';
+  html+='<table class="tbl"><tr><th>경로</th><th>고책임 (r, n)</th><th>저책임 (r, n)</th><th>Fisher Z</th><th>p값</th><th>조절효과</th></tr>';
+  var fishPaths=[
+    {label:'TRU → ITU', a:'TRU', b:'ITU'},
+    {label:'EXP → TRU', a:'EXP', b:'TRU'},
+    {label:'EXP → ITU', a:'EXP', b:'ITU'},
+    {label:'PU → ITU',  a:'PU',  b:'ITU'}
+  ];
+  fishPaths.forEach(function(p){
+    var aH=getConstructScores(highResp,p.a), bH=getConstructScores(highResp,p.b);
+    var aL=getConstructScores(lowResp,p.a),  bL=getConstructScores(lowResp,p.b);
+    var rH=pearson(aH,bH), rL=pearson(aL,bL);
+    var nH=aH.length, nL=aL.length;
+    if(nH<4||nL<4)return;
+    var se=Math.sqrt(1/(nH-3)+1/(nL-3));
+    var z=(fisherZ(rH)-fisherZ(rL))/se;
+    // 표준정규 근사: df 매우 크게 설정하면 t-dist가 정규에 수렴
+    var pval=2*(1-tCDF(Math.abs(z), 10000));
+    var sig=pval<.05?'<span class="badge-ok">✅ 유의 '+pStar(pval)+'</span>':'<span class="ns">비유의</span>';
+    html+='<tr><td><strong>'+p.label+'</strong></td>'+
+      '<td>'+rH.toFixed(3)+' (n='+nH+')</td>'+
+      '<td>'+rL.toFixed(3)+' (n='+nL+')</td>'+
+      '<td>'+z.toFixed(3)+'</td>'+
+      '<td>'+pval.toFixed(3)+'</td>'+
+      '<td>'+sig+'</td></tr>';
+  });
   html+='</table>';
+  html+='<div style="font-size:11px;color:#888;margin-top:6px;">실험조작 책임 수준을 그룹으로 사용 · 가설 검정은 방법 1을 우선 참조</div>';
+
   document.getElementById('moderation-table').innerHTML=html;
 
+  // 인터랙션 플롯 (기존 유지)
   destroyChart('moderationChart');
   var ctx=document.getElementById('moderationChart').getContext('2d');
   var labels=Object.keys(constructs).map(function(k){return constructs[k].label;});
@@ -876,6 +1103,261 @@ function renderDemo(){
   });
   html2+='</table>';
   document.getElementById('demo-group-table').innerHTML=html2;
+}
+
+// ── R seminr 코드 자동 생성 ──────────────────────────────
+function generateRCode(){
+  // dashboard 사전 진단 결과 수집
+  var diagNotes=[];
+  try {
+    // HTMT 최대값 체크
+    var keys=Object.keys(constructs), maxH=0, maxPair='';
+    keys.forEach(function(k1,i){keys.forEach(function(k2,j){if(j<i){
+      var h=htmtRatio(k1,k2);
+      if(h>maxH){maxH=h;maxPair=k1+'-'+k2;}
+    }});});
+    if(maxH>=0.90)diagNotes.push('# ⚠⚠ HTMT('+maxPair+') = '+maxH.toFixed(3)+' → 0.90 보수기준도 위반. 측정모형 검토 필요');
+    else if(maxH>=0.85)diagNotes.push('# ⚠ HTMT('+maxPair+') = '+maxH.toFixed(3)+' → 0.85 기준 위반. 자유기준 0.90으로 보고 검토');
+    else diagNotes.push('# ✅ HTMT 최대값 = '+maxH.toFixed(3)+' (모두 < 0.85, 판별타당도 양호)');
+
+    // 매개효과 진단
+    var medResults=[];
+    ['EXP','PU','EPR','AA'].forEach(function(k){
+      var X=getConstructScores(parsedData,k);
+      var M=getConstructScores(parsedData,'TRU');
+      var Y=getConstructScores(parsedData,'ITU');
+      var n=Math.min(X.length,M.length,Y.length);
+      var r=mediationProper(X.slice(0,n),M.slice(0,n),Y.slice(0,n));
+      if(r){medResults.push(k+': ab='+r.indirect.toFixed(3)+' (z='+r.z.toFixed(2)+', '+r.type+')');}
+    });
+    diagNotes.push('# 매개효과 사전 진단: '+medResults.join(' | '));
+
+    // 조절효과 진단 (AA × X → Y)
+    var AA=getConstructScores(parsedData,'AA');
+    var TRU=getConstructScores(parsedData,'TRU');
+    var ITU=getConstructScores(parsedData,'ITU');
+    var EXP=getConstructScores(parsedData,'EXP');
+    var modResults=[];
+    [['EXP→TRU',EXP,TRU],['TRU→ITU',TRU,ITU]].forEach(function(p){
+      var r=moderationProper(p[1],AA,p[2]);
+      if(r){modResults.push(p[0]+': β_int='+r.b_int.toFixed(3)+' (p='+r.p_int.toFixed(3)+')');}
+    });
+    diagNotes.push('# 조절효과 사전 진단 (AA): '+modResults.join(' | '));
+  } catch(e){diagNotes.push('# 사전 진단 실패: 데이터 확인 후 다시 시도');}
+
+  // 구성개념별 measurement 정의
+  var measLines=Object.keys(constructs).map(function(k){
+    var items=constructs[k].items;
+    // 항목명에서 prefix 추출 (예: EXP1, EXP2, ... → "EXP", 1:4)
+    var prefix=k;
+    var nums=items.map(function(it){return parseInt(it.replace(prefix,''),10);}).filter(function(n){return !isNaN(n);});
+    var min=Math.min.apply(null,nums), max=Math.max.apply(null,nums);
+    return '  composite("'+k+'", multi_items("'+prefix+'", '+min+':'+max+'), weights = mode_A)';
+  }).join(',\n');
+
+  // 현재 시간
+  var now=new Date();
+  var dateStr=now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0')+'-'+String(now.getDate()).padStart(2,'0');
+
+  var code='';
+  code+='# ════════════════════════════════════════════════════════════════════\n';
+  code+='# XAI 설명가능성 → AI 신뢰 → 사용의도: PLS-SEM 분석 (AA 조절)\n';
+  code+='# Dashboard 자동 생성 ('+dateStr+') · 표본 n='+parsedData.length+'\n';
+  code+='# ════════════════════════════════════════════════════════════════════\n';
+  code+='\n';
+  code+='# ─── Dashboard 사전 진단 요약 ─────────────────────────────────────\n';
+  code+=diagNotes.join('\n')+'\n';
+  code+='# ─────────────────────────────────────────────────────────────────\n';
+  code+='\n';
+  code+='# 0. 패키지 로드 (최초 1회만 install.packages 실행)\n';
+  code+='# install.packages(c("seminr", "readr", "dplyr"))\n';
+  code+='library(seminr)\n';
+  code+='library(readr)\n';
+  code+='library(dplyr)\n';
+  code+='\n';
+  code+='# ─── 1. 데이터 불러오기 ───────────────────────────────────────────\n';
+  code+='# CSV 파일을 R 스크립트와 같은 폴더에 두고 파일명을 정확히 입력\n';
+  code+='raw <- read_csv("설문조사_응답.csv", show_col_types = FALSE)\n';
+  code+='cat("원본 응답 수:", nrow(raw), "\\n")\n';
+  code+='\n';
+  code+='# ─── 2. 응답자 정제 ───────────────────────────────────────────────\n';
+  code+='# IMC 실패자 제거 (Oppenheimer 주의력 체크: 정답 = 1)\n';
+  code+='data <- raw %>% filter(IMC == 1)\n';
+  code+='cat("IMC 통과 후:", nrow(data), "\\n")\n';
+  code+='\n';
+  code+='# (선택) 조작점검 실패자 추가 제거\n';
+  code+='# 고책임 조건인데 MCR 평균 < 4, 또는 저책임인데 > 4 인 응답자 제외 등\n';
+  code+='# data <- data %>% filter(\n';
+  code+='#   (resp_cond == "고책임" & rowMeans(select(., MCR1:MCR4)) >= 4) |\n';
+  code+='#   (resp_cond == "저책임" & rowMeans(select(., MCR1:MCR4)) < 4)\n';
+  code+='# )\n';
+  code+='\n';
+  code+='# ─── 3. 측정모형 정의 (반영형 composite, Mode A) ──────────────────\n';
+  code+='measurements <- constructs(\n';
+  code+=measLines+',\n';
+  code+='  # 조절효과를 위한 interaction term (two-stage 방식)\n';
+  code+='  interaction_term(iv = "EXP", moderator = "AA", method = two_stage),\n';
+  code+='  interaction_term(iv = "TRU", moderator = "AA", method = two_stage)\n';
+  code+=')\n';
+  code+='\n';
+  code+='# ─── 4. 구조모형 정의 — 본인의 가설(H1~H8)에 맞게 수정하세요 ──\n';
+  code+='# 아래는 일반적인 PLS-SEM 모형 예시 (Davis TAM + Trust + AA 조절)\n';
+  code+='structure <- relationships(\n';
+  code+='  paths(from = "EXP", to = c("PU", "TRU", "EPR")),   # H1, H2, H3 (가정)\n';
+  code+='  paths(from = "PU",  to = c("TRU", "ITU")),         # H4, H5\n';
+  code+='  paths(from = "EPR", to = "TRU"),                   # 추가\n';
+  code+='  paths(from = "AA",  to = "TRU"),                   # 추가\n';
+  code+='  paths(from = "TRU", to = "ITU"),                   # H6 (매개 경로)\n';
+  code+='  paths(from = c("EXP*AA", "TRU*AA"), to = c("TRU", "ITU"))  # H7, H8 조절\n';
+  code+=')\n';
+  code+='\n';
+  code+='# ─── 5. 모델 추정 (PLS 알고리즘) ──────────────────────────────────\n';
+  code+='model <- estimate_pls(\n';
+  code+='  data = data,\n';
+  code+='  measurement_model = measurements,\n';
+  code+='  structural_model = structure,\n';
+  code+='  inner_weights = path_weighting,\n';
+  code+='  missing = mean_replacement\n';
+  code+=')\n';
+  code+='\n';
+  code+='summary_model <- summary(model)\n';
+  code+='\n';
+  code+='# ─── 6. 측정모형 검증 ─────────────────────────────────────────────\n';
+  code+='# 6-1. 신뢰도 (Cronbach α, rhoA, CR) + AVE\n';
+  code+='print(summary_model$reliability)\n';
+  code+='\n';
+  code+='# 6-2. 외부 적재량 (Outer loadings) — 권장: > 0.708\n';
+  code+='print(summary_model$loadings)\n';
+  code+='\n';
+  code+='# 6-3. Fornell-Larcker 판별타당도\n';
+  code+='print(summary_model$validity$fl_criteria)\n';
+  code+='\n';
+  code+='# 6-4. HTMT 비율 — 핵심! 0.85 또는 0.90 미만이어야 함\n';
+  code+='# ⚠ Dashboard 사전 진단에서 일부 HTMT가 경계 또는 위반으로 나옴\n';
+  code+='print(summary_model$validity$htmt)\n';
+  code+='\n';
+  code+='# 6-5. VIF (collinearity 점검) — < 5\n';
+  code+='print(summary_model$validity$vif_items)\n';
+  code+='\n';
+  code+='# ─── 7. 구조모형 결과 (직접효과 H1~H5) ────────────────────────────\n';
+  code+='# 7-1. 경로계수 (β), R², adjusted R²\n';
+  code+='print(summary_model$paths)\n';
+  code+='\n';
+  code+='# 7-2. f² 효과크기 — 0.02 작음, 0.15 중, 0.35 큼\n';
+  code+='print(summary_model$fSquare)\n';
+  code+='\n';
+  code+='# ─── 8. 부트스트랩 5000회 — 정식 유의성 검정 ──────────────────────\n';
+  code+='# 코어 수에 따라 1~3분 소요\n';
+  code+='set.seed(123)  # 재현성을 위해 시드 고정\n';
+  code+='boot_model <- bootstrap_model(\n';
+  code+='  seminr_model = model,\n';
+  code+='  nboot = 5000,\n';
+  code+='  cores = parallel::detectCores() - 1\n';
+  code+=')\n';
+  code+='\n';
+  code+='summary_boot <- summary(boot_model, alpha = 0.05)\n';
+  code+='\n';
+  code+='# 8-1. 부트스트랩 경로계수 (t값, p값, 95% CI)\n';
+  code+='print(summary_boot$bootstrapped_paths)\n';
+  code+='\n';
+  code+='# 8-2. 부트스트랩 적재량\n';
+  code+='print(summary_boot$bootstrapped_loadings)\n';
+  code+='\n';
+  code+='# 8-3. 부트스트랩 HTMT (이게 정식 보고용 수치)\n';
+  code+='print(summary_boot$bootstrapped_HTMT)\n';
+  code+='\n';
+  code+='# ─── 9. 매개효과 분석 (H6) ────────────────────────────────────────\n';
+  code+='# 부트스트랩 신뢰구간 기반 (정식 방법)\n';
+  code+='# EXP → TRU → ITU\n';
+  code+='specific_effect_significance(\n';
+  code+='  boot_seminr_model = boot_model,\n';
+  code+='  from = "EXP", through = "TRU", to = "ITU",\n';
+  code+='  alpha = 0.05\n';
+  code+=')\n';
+  code+='\n';
+  code+='# PU → TRU → ITU\n';
+  code+='specific_effect_significance(boot_model, from = "PU", through = "TRU", to = "ITU", alpha = 0.05)\n';
+  code+='\n';
+  code+='# EPR → TRU → ITU\n';
+  code+='specific_effect_significance(boot_model, from = "EPR", through = "TRU", to = "ITU", alpha = 0.05)\n';
+  code+='\n';
+  code+='# 전체 간접효과 한 번에 보기\n';
+  code+='print(summary_boot$bootstrapped_total_paths)\n';
+  code+='\n';
+  code+='# ─── 10. 조절효과 분석 (H7, H8) ──────────────────────────────────\n';
+  code+='# interaction_term의 경로계수가 유의하면 조절효과 존재\n';
+  code+='# bootstrapped_paths에서 "EXP*AA -> TRU", "TRU*AA -> ITU" 행 확인\n';
+  code+='\n';
+  code+='# 단순기울기 분석 (조절효과 시각적 해석)\n';
+  code+='slope_analysis(\n';
+  code+='  moderated_model = model,\n';
+  code+='  dv = "TRU",\n';
+  code+='  moderator = "AA",\n';
+  code+='  iv = "EXP",\n';
+  code+='  leg = 1  # ±1 SD\n';
+  code+=')\n';
+  code+='\n';
+  code+='slope_analysis(\n';
+  code+='  moderated_model = model,\n';
+  code+='  dv = "ITU",\n';
+  code+='  moderator = "AA",\n';
+  code+='  iv = "TRU",\n';
+  code+='  leg = 1\n';
+  code+=')\n';
+  code+='\n';
+  code+='# ─── 11. 모형 적합도 ──────────────────────────────────────────────\n';
+  code+='# SRMR < 0.08 (수용가능), < 0.05 (양호)\n';
+  code+='print(summary_model$descriptives$correlations$constructs)\n';
+  code+='\n';
+  code+='# ─── 12. 예측력 평가 (Q²) ─────────────────────────────────────────\n';
+  code+='predict_model <- predict_pls(\n';
+  code+='  model = model,\n';
+  code+='  technique = predict_DA,\n';
+  code+='  noFolds = 10,\n';
+  code+='  reps = 10\n';
+  code+=')\n';
+  code+='print(predict_model)\n';
+  code+='\n';
+  code+='# ─── 13. 결과 저장 ────────────────────────────────────────────────\n';
+  code+='saveRDS(model, "pls_model.rds")\n';
+  code+='saveRDS(boot_model, "pls_boot_5000.rds")\n';
+  code+='\n';
+  code+='# 표 형식으로 export\n';
+  code+='write.csv(summary_boot$bootstrapped_paths, "paths_results.csv", row.names = TRUE)\n';
+  code+='write.csv(summary_model$reliability, "reliability.csv", row.names = TRUE)\n';
+  code+='write.csv(summary_model$validity$htmt, "htmt.csv", row.names = TRUE)\n';
+  code+='\n';
+  code+='cat("\\n✅ 분석 완료. paths_results.csv를 열어 논문 Table에 옮기세요.\\n")\n';
+
+  return code;
+}
+
+function renderRCode(){
+  var code=generateRCode();
+  document.getElementById('rcode-block').textContent=code;
+}
+
+function copyRCode(){
+  var code=document.getElementById('rcode-block').textContent;
+  navigator.clipboard.writeText(code).then(function(){
+    alert('R 코드가 클립보드에 복사되었습니다!\nRStudio에서 새 .R 파일에 붙여넣고 실행하세요.');
+  }).catch(function(){
+    // fallback
+    var ta=document.createElement('textarea');
+    ta.value=code;document.body.appendChild(ta);ta.select();
+    document.execCommand('copy');document.body.removeChild(ta);
+    alert('R 코드가 복사되었습니다!');
+  });
+}
+
+function downloadRCode(){
+  var code=document.getElementById('rcode-block').textContent;
+  var blob=new Blob([code],{type:'text/plain;charset=utf-8'});
+  var url=URL.createObjectURL(blob);
+  var a=document.createElement('a');
+  a.href=url; a.download='pls_sem_analysis.R';
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  URL.revokeObjectURL(url);
 }
 
 // ── AI 해석 ──────────────────────────────
