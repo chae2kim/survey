@@ -201,7 +201,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:#f0f2f7;min-height:100vh;p
     <div class="tab-content" id="tab-corr">
       <div class="card">
         <h3><span class="ico">🌡️</span>구성개념 간 상관관계</h3>
-        <div class="interp">r &gt; 0.7 이면 다중공선성 주의 · 대각선: AVE 제곱근 (판별타당도)</div>
+        <div class="interp">대각선: √AVE · Fornell-Larcker 기준: 각 √AVE가 같은 행·열의 모든 |r|보다 커야 판별타당도 확보 · ⚠ 또는 빨간 셀은 위반</div>
         <div style="overflow-x:auto"><table class="tbl" id="corr-table"></table></div>
       </div>
       <div class="card">
@@ -632,19 +632,55 @@ function renderAnova(){
   }
 }
 
-// ── 상관관계 ──────────────────────────────
+// ── 상관관계 (Fornell-Larcker) ──────────────────────────────
 function renderCorr(){
   var keys=Object.keys(constructs);
   var scores={};keys.forEach(function(k){scores[k]=getConstructScores(parsedData,k);});
+
+  // 각 구성개념의 AVE 계산 (타당도 탭과 동일 로직)
+  var aveMap={};
+  keys.forEach(function(k){
+    var items=constructs[k].items;
+    var matrix=parsedData.map(function(row){return items.map(function(it){return parseFloat(row[it])||0;});}).filter(function(r){return r.some(function(v){return v>0;});});
+    if(!matrix.length){aveMap[k]=0;return;}
+    var totals=matrix.map(function(r){return mean(r);});
+    var loadings=items.map(function(it,j){var col=matrix.map(function(r){return r[j];});return Math.abs(pearson(col,totals));});
+    aveMap[k]=loadings.reduce(function(s,l){return s+l*l;},0)/loadings.length;
+  });
+  var sqrtAveMap={};keys.forEach(function(k){sqrtAveMap[k]=Math.sqrt(aveMap[k]||0);});
+
+  // 상관계수 미리 계산 (판별타당도 판정용)
+  var corrMatrix={};
+  keys.forEach(function(k1){corrMatrix[k1]={};keys.forEach(function(k2){
+    corrMatrix[k1][k2]=k1===k2?1:pearson(scores[k1],scores[k2]);
+  });});
+
+  // Fornell-Larcker 위반: 같은 행/열의 |r|이 √AVE보다 크면 위반
+  var violations={};
+  keys.forEach(function(k1){
+    violations[k1]=false;
+    keys.forEach(function(k2){
+      if(k1!==k2 && Math.abs(corrMatrix[k1][k2])>=sqrtAveMap[k1]){violations[k1]=true;}
+    });
+  });
+
   var html='<tr><th></th>'+keys.map(function(k){return '<th>'+k+'</th>';}).join('')+'</tr>';
   keys.forEach(function(k1,i){
     html+='<tr><td><strong>'+k1+'</strong></td>';
     keys.forEach(function(k2,j){
-      if(i===j){html+='<td style="background:#1a2744;color:#fff;font-weight:700;">'+(Math.sqrt(scores[k1].reduce(function(s,v){return s+Math.pow(v-mean(scores[k1]),2);},0)/scores[k1].length)||0).toFixed(2)+'</td>';}
+      if(i===j){
+        var sa=sqrtAveMap[k1];
+        var diagBg=violations[k1]?'#991b1b':'#1a2744';
+        var mark=violations[k1]?' ⚠':'';
+        html+='<td style="background:'+diagBg+';color:#fff;font-weight:700;" title="√AVE = '+sa.toFixed(3)+(violations[k1]?' · 판별타당도 위반':'')+'">'+sa.toFixed(3)+mark+'</td>';
+      }
       else if(j<i){
-        var r=pearson(scores[k1],scores[k2]);
-        var bg=Math.abs(r)>0.7?'#fee2e2':Math.abs(r)>0.5?'#fef9c3':'#fff';
-        html+='<td style="background:'+bg+'">'+(r>=0?'+':'')+r.toFixed(3)+'</td>';
+        var r=corrMatrix[k1][k2];
+        // 같은 행/열의 √AVE보다 큰 상관계수는 빨간색 강조 (Fornell-Larcker 위반)
+        var rowViolation=Math.abs(r)>=sqrtAveMap[k1] || Math.abs(r)>=sqrtAveMap[k2];
+        var bg=rowViolation?'#fecaca':Math.abs(r)>0.7?'#fee2e2':Math.abs(r)>0.5?'#fef9c3':'#fff';
+        var weight=rowViolation?'font-weight:700;':'';
+        html+='<td style="background:'+bg+';'+weight+'">'+(r>=0?'+':'')+r.toFixed(3)+'</td>';
       } else {html+='<td style="color:#ccc">—</td>';}
     });
     html+='</tr>';
