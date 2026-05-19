@@ -347,6 +347,7 @@ var mcItems={
 
 // ── CSV 파싱 ──────────────────────────────────
 function parseCSV(text){
+  text = text.replace(/\r\n/g,'\n').replace(/\r/g,'\n');  // 줄바꿈 정규화 (Windows \r\n → \n)
   var lines=text.trim().split('\n');
   var headers=lines[0].split(',').map(function(h){return h.trim().replace(/^"|"$/g,'');});
   return lines.slice(1).filter(function(l){return l.trim();}).map(function(line){
@@ -1042,6 +1043,18 @@ function renderModeration(){
 }
 
 // ── 정규성·편향 ──────────────────────────────
+// 한국어 timestamp 파서 ("2026. 4. 9. 오후 12:18:27" 형식)
+function parseKoreanTimestamp(ts){
+  if(!ts)return 0;
+  var m=ts.match(/(\d+)\.\s*(\d+)\.\s*(\d+)\.\s*(오전|오후)\s*(\d+):(\d+):(\d+)/);
+  if(!m){var d=new Date(ts);return isNaN(d)?0:d.getTime();}  // 표준 형식 fallback
+  var year=parseInt(m[1]),month=parseInt(m[2])-1,day=parseInt(m[3]);
+  var ampm=m[4],hour=parseInt(m[5]),min=parseInt(m[6]),sec=parseInt(m[7]);
+  if(ampm==='오후'&&hour<12)hour+=12;
+  if(ampm==='오전'&&hour===12)hour=0;
+  return new Date(year,month,day,hour,min,sec).getTime();
+}
+
 function renderNormality(){
   var html='<table class="tbl"><tr><th>구성개념</th><th>N</th><th>평균</th><th>왜도</th><th>첨도</th><th>정규성</th></tr>';
   Object.keys(constructs).forEach(function(k){
@@ -1053,8 +1066,18 @@ function renderNormality(){
   html+='</table>';
   document.getElementById('normality-table').innerHTML=html;
 
-  var n=parsedData.length,q=Math.floor(n*0.25);
-  var early=parsedData.slice(0,q),late=parsedData.slice(n-q);
+  // timestamp 자동 정렬 후 초반/후반 split
+  var sorted=parsedData.slice();
+  var hasTimestamp=sorted[0]&&sorted[0].timestamp;
+  var sortNote='';
+  if(hasTimestamp){
+    sorted.sort(function(a,b){return parseKoreanTimestamp(a.timestamp)-parseKoreanTimestamp(b.timestamp);});
+    sortNote=' · ⏱ timestamp 기준 자동 정렬됨';
+  } else {
+    sortNote=' · ⚠ timestamp 컬럼 없음, 입력 순서로 분할';
+  }
+  var n=sorted.length,q=Math.floor(n*0.25);
+  var early=sorted.slice(0,q),late=sorted.slice(n-q);
   var html2='<table class="tbl"><tr><th>구성개념</th><th>초반 평균</th><th>후반 평균</th><th>t값</th><th>p값</th><th>편향</th></tr>';
   Object.keys(constructs).forEach(function(k){
     var a=getConstructScores(early,k),b=getConstructScores(late,k);
@@ -1062,7 +1085,7 @@ function renderNormality(){
     var res=tTest(a,b);
     html2+='<tr><td><strong>'+constructs[k].label+'</strong></td><td>'+res.ma.toFixed(2)+'</td><td>'+res.mb.toFixed(2)+'</td><td>'+res.t.toFixed(3)+'</td><td>'+res.p.toFixed(3)+'</td><td>'+(res.p>=.05?'<span class="badge-ok">✅ 없음</span>':'<span class="badge-warn">⚠️ 차이 있음</span>')+'</td></tr>';
   });
-  html2+='</table><div style="font-size:11px;color:#888;margin-top:6px;">초반 '+q+'명 vs 후반 '+q+'명 비교</div>';
+  html2+='</table><div style="font-size:11px;color:#888;margin-top:6px;">초반 '+q+'명 vs 후반 '+q+'명 비교'+sortNote+'</div>';
   document.getElementById('bias-table').innerHTML=html2;
 }
 
